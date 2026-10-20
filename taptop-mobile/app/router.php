@@ -59,7 +59,9 @@ function normalize_request_path(string $uri): ?string
         return '/';
     }
     $path = rawurldecode($path);
-    if (str_contains($path, "\0") || str_contains($path, '\\') || str_contains($path, '..')) {
+    // Sin caracteres de control ni espacios: el navegador borra tabs y saltos de una URL, y
+    // "/%09/otro-sitio.com/" terminaría redirigiendo a "//otro-sitio.com".
+    if (preg_match('/[\x00-\x20\x7F]/', $path) === 1 || str_contains($path, '\\') || str_contains($path, '..')) {
         return null;
     }
     $path = preg_replace('#/{2,}#', '/', $path) ?? $path;

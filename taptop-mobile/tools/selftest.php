@@ -179,6 +179,7 @@ expect(e('<script>"x"</script>') === '&lt;script&gt;&quot;x&quot;&lt;/script&gt;
 expect(e_todo('NIT [por completar]') === 'NIT <mark class="todo">[por completar]</mark>', 'e_todo resalta lo pendiente');
 expect(normalize_request_path('/productos/../app/config.php') === null, 'ruta con .. rechazada');
 expect(normalize_request_path('/productos//iphone-17') === '/productos/iphone-17', 'barras dobles normalizadas');
+expect(normalize_request_path('/%09/otro-sitio.com/') === null, 'ruta con tab rechazada (sin redirección a otro sitio)');
 $siteHost = strtolower((string) parse_url((string) config('site_url'), PHP_URL_HOST));
 expect(!str_ends_with($siteHost, '.hostingersite.com') || is_noindex(), 'noindex activo mientras site_url sea el dominio temporal');
 
