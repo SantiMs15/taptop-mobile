@@ -97,7 +97,7 @@ $realErrors = array_merge($report['errors'], ...array_map(static fn ($e) => $e['
 expect($realErrors === [], 'catálogo real: sin errores', $realErrors);
 expect(count($report['products']) === 23, 'catálogo real: 23 productos', count($report['products']));
 $variantTotal = array_sum(array_map(static fn ($e) => count($e['product']['variants'] ?? []), $report['products']));
-expect($variantTotal === 30, 'catálogo real: 30 variantes (filas de la hoja)', $variantTotal);
+expect($variantTotal === 32, 'catálogo real: 32 variantes (filas de la hoja + Borgoña del 18 Pro Max)', $variantTotal);
 $bySlug = [];
 foreach ($real['products'] as $item) {
     $bySlug[$item['slug']] = $item;
