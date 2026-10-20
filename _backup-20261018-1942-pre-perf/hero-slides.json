@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "notes": "Carrusel del Inicio (5.1 del brief). Un slide por categoría; textos provisionales sacados del catálogo, confirmar con el cliente. 'image': {src, width, height, fit, mobile}. fit 'cover' (por defecto) = foto 16:9 de fondo completo (2400 × 1350) con el tercio superior libre para el texto; fit 'cutout' = equipo recortado con fondo transparente (WebP con alfa, ~1600 px de alto) que flota sobre el estudio de CSS. 'mobile' opcional = versión vertical 9:16 (1080 × 1920) para pantallas verticales. Mientras image sea null se dibuja 'placeholder'. 'duration_ms' es opcional (por defecto autoplay_ms).",
+  "autoplay_ms": 3000,
+  "slides": [
+    {
+      "id": "iphone",
+      "type": "image",
+      "tab": "iPhone",
+      "title": "iPhone",
+      "subtitle": "iPhone 18 Pro, 18 Pro Max, 17 Pro Max, 17 y 16. Originales, con envío a toda Colombia.",
+      "cta": {
+        "label": "Ver iPhone",
+        "href": "/productos?categoria=iphone"
+      },
+      "image": {
+        "src": "/assets/images/hero/iphone.webp",
+        "width": 1433,
+        "height": 865,
+        "fit": "cutout"
+      },
+      "alt": "iPhone 18 Pro en Black, Silver, Glacier y Burgundy",
+      "placeholder": {
+        "kind": "phone-pro",
+        "colors": [
+          "#2A2B2E",
+          "#DADBDD",
+          "#CFE1EA",
+          "#6A2433"
+        ]
+      }
+    },
+    {
+      "id": "samsung",
+      "type": "image",
+      "tab": "Samsung",
+      "title": "Samsung Galaxy",
+      "subtitle": "Galaxy S26 Ultra, S26+, Z Fold8 y Z Flip8.",
+      "cta": {
+        "label": "Ver Samsung",
+        "href": "/productos?categoria=samsung"
+      },
+      "image": {
+        "src": "/assets/images/hero/samsung.webp",
+        "width": 1126,
+        "height": 894,
+        "fit": "cutout"
+      },
+      "alt": "Samsung Galaxy S26 Ultra con S Pen y Galaxy Z Fold",
+      "placeholder": {
+        "kind": "phone-galaxy",
+        "colors": [
+          "#4A3E86",
+          "#A8C8E6"
+        ]
+      }
+    },
+    {
+      "id": "mac",
+      "type": "image",
+      "tab": "Mac",
+      "title": "Mac",
+      "subtitle": "MacBook Air M5, Mac mini M4 y Mac mini M4 Pro.",
+      "cta": {
+        "label": "Ver Mac",
+        "href": "/productos?categoria=mac"
+      },
+      "image": {
+        "src": "/assets/images/hero/mac.webp",
+        "width": 1444,
+        "height": 465,
+        "fit": "cutout",
+        "mobile": {
+          "src": "/assets/images/hero/mac-movil.webp",
+          "width": 984,
+          "height": 465
+        }
+      },
+      "alt": "MacBook Neo, MacBook Pro y MacBook Air de frente con la pantalla abierta",
+      "placeholder": {
+        "kind": "laptop",
+        "colors": [
+          "#C3D4E3",
+          "#2F3034",
+          "#DFE0E2"
+        ]
+      }
+    },
+    {
+      "id": "ipad",
+      "type": "image",
+      "tab": "iPad",
+      "title": "iPad Pro",
+      "subtitle": "iPad Pro de 11 pulgadas con chip M5.",
+      "cta": {
+        "label": "Ver iPad",
+        "href": "/productos?categoria=ipad"
+      },
+      "image": null,
+      "alt": "iPad Pro de 11 pulgadas",
+      "placeholder": {
+        "kind": "tablet",
+        "colors": [
+          "#2F3034"
+        ]
+      }
+    },
+    {
+      "id": "relojes",
+      "type": "image",
+      "tab": "Relojes",
+      "title": "Apple Watch",
+      "subtitle": "Apple Watch Ultra 4 y Apple Watch Series 12.",
+      "cta": {
+        "label": "Ver relojes",
+        "href": "/productos?categoria=relojes"
+      },
+      "image": null,
+      "alt": "Apple Watch Ultra 4",
+      "placeholder": {
+        "kind": "watch-ultra",
+        "colors": [
+          "#C8C1B5",
+          "#2B2A29"
+        ]
+      }
+    },
+    {
+      "id": "airpods",
+      "type": "image",
+      "tab": "AirPods",
+      "title": "AirPods",
+      "subtitle": "AirPods Pro 3 y AirPods 4 con cancelación activa de ruido.",
+      "cta": {
+        "label": "Ver AirPods",
+        "href": "/productos?categoria=airpods"
+      },
+      "image": null,
+      "alt": "AirPods Pro 3",
+      "placeholder": {
+        "kind": "earbuds",
+        "colors": [
+          "#F4F4F2"
+        ]
+      }
+    },
+    {
+      "id": "accesorios",
+      "type": "image",
+      "tab": "Accesorios",
+      "title": "Accesorios",
+      "subtitle": "Apple Pencil Pro y adaptadores Apple y Nicols.",
+      "cta": {
+        "label": "Ver accesorios",
+        "href": "/productos?categoria=accesorios"
+      },
+      "image": null,
+      "alt": "Apple Pencil Pro",
+      "placeholder": {
+        "kind": "pencil",
+        "colors": [
+          "#F4F4F2"
+        ]
+      }
+    }
+  ]
+}

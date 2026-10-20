@@ -1,0 +1,299 @@
+/**
+ * Animación del logo (5.0 del brief).
+ *
+ * Intro: video corto del modelo (9 s a 3x = 3 s), solo en la primera página de la sesión
+ * y solo si es el Inicio (head.php ya decidió y puso <html class="intro-on">). Botón
+ * "Saltar", cierre automático y salidas de emergencia: si el video no arranca, se cierra;
+ * si este archivo no carga, el CSS lo oculta solo a los 5 s.
+ *
+ * Hero 3D: <model-viewer> autoalojado, cargado después del contenido, en un momento
+ * ocioso y solo con el escenario a la vista. Plan B: imagen fija con movimiento reducido,
+ * ahorro de datos, red lenta o equipo modesto; video si lo único que falla es WebGL.
+ */
+(function () {
+  'use strict';
+
+  var doc = document;
+  var root = doc.documentElement;
+
+  // --- Intro ------------------------------------------------------------------------------
+  function initIntro() {
+    var intro = doc.querySelector('[data-intro]');
+    if (!intro) {
+      return;
+    }
+    if (!root.classList.contains('intro-on')) {
+      intro.parentNode.removeChild(intro);
+      return;
+    }
+
+    var video = intro.querySelector('video');
+    var skip = intro.querySelector('[data-intro-skip]');
+    var closed = false;
+    var startTimer = setTimeout(close, 1800);
+    var maxTimer = setTimeout(close, 4200);
+
+    function close() {
+      if (closed) {
+        return;
+      }
+      closed = true;
+      clearTimeout(startTimer);
+      clearTimeout(maxTimer);
+      var hadFocus = doc.activeElement === skip;
+      root.classList.add('intro-leaving');
+      intro.classList.add('is-leaving');
+      if (video) {
+        video.pause();
+      }
+      var theme = doc.querySelector('meta[name="theme-color"]');
+      if (theme) {
+        theme.setAttribute('content', '#FFFFFF');
+      }
+      setTimeout(function () {
+        root.classList.remove('intro-on', 'intro-leaving');
+        if (intro.parentNode) {
+          intro.parentNode.removeChild(intro);
+        }
+        if (hadFocus) {
+          var main = doc.getElementById('contenido');
+          if (main) {
+            main.focus({ preventScroll: true });
+          }
+        }
+        doc.dispatchEvent(new CustomEvent('tt:intro-done'));
+      }, 720);
+    }
+
+    if (skip) {
+      skip.addEventListener('click', close);
+    }
+    doc.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        close();
+      }
+    });
+
+    if (!video) {
+      close();
+      return;
+    }
+    video.defaultPlaybackRate = 3;
+    video.playbackRate = 3;
+    video.addEventListener('loadedmetadata', function () {
+      video.playbackRate = 3;
+    });
+    video.addEventListener('playing', function () {
+      clearTimeout(startTimer);
+    });
+    video.addEventListener('ended', close);
+    video.addEventListener('error', close);
+    video.src = video.getAttribute('data-src');
+    var attempt = video.play();
+    if (attempt && typeof attempt.catch === 'function') {
+      attempt.catch(close);
+    }
+  }
+
+  // --- Hero 3D ----------------------------------------------------------------------------
+  function hasWebGL() {
+    try {
+      var canvas = doc.createElement('canvas');
+      var context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+      if (!context) {
+        return false;
+      }
+      var lose = context.getExtension('WEBGL_lose_context');
+      if (lose) {
+        lose.loseContext();
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /** 'model' (3D), 'video' (sin WebGL) o 'image' (plan B fijo). */
+  function decideMode() {
+    var connection = navigator.connection || {};
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || connection.saveData) {
+      return 'image';
+    }
+    if (/^(slow-2g|2g|3g)$/.test(connection.effectiveType || '')) {
+      return 'image';
+    }
+    if ((navigator.deviceMemory && navigator.deviceMemory < 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4)) {
+      return 'image';
+    }
+    return hasWebGL() ? 'model' : 'video';
+  }
+
+  function whenCalmAndVisible(element, callback) {
+    function idle() {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(visible, { timeout: 2500 });
+      } else {
+        setTimeout(visible, 600);
+      }
+    }
+    function visible() {
+      if (!('IntersectionObserver' in window)) {
+        callback();
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          observer.disconnect();
+          callback();
+        }
+      }, { rootMargin: '100px' });
+      observer.observe(element);
+    }
+    if (doc.readyState === 'complete') {
+      idle();
+    } else {
+      window.addEventListener('load', idle, { once: true });
+    }
+  }
+
+  function mountVideo(box) {
+    var video = doc.createElement('video');
+    video.className = 'logo3d__video';
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('aria-hidden', 'true');
+    video.src = box.getAttribute('data-video');
+    video.addEventListener('playing', function () {
+      box.classList.add('is-3d');
+    });
+    box.appendChild(video);
+    var attempt = video.play();
+    if (attempt && typeof attempt.catch === 'function') {
+      attempt.catch(function () {
+        video.parentNode.removeChild(video);
+      });
+    }
+  }
+
+  function mountModel(box) {
+    var viewer = doc.createElement('model-viewer');
+    var attributes = {
+      src: box.getAttribute('data-model'),
+      alt: 'Logo de Taptop Mobile en 3D. Arrástralo para girarlo.',
+      'camera-controls': '',
+      'disable-zoom': '',
+      'disable-pan': '',
+      'touch-action': 'pan-y',
+      'auto-rotate': '',
+      'auto-rotate-delay': '0',
+      'rotation-per-second': '22deg',
+      'interaction-prompt': 'none',
+      'camera-orbit': '20deg 80deg auto', // mismo encuadre que el poster (relevo sin salto)
+      'min-camera-orbit': 'auto 64deg auto',
+      'max-camera-orbit': 'auto 100deg auto',
+      'field-of-view': '26deg',
+      'environment-image': 'neutral',
+      exposure: '1.1',
+      'shadow-intensity': '0.9',
+      'shadow-softness': '0.9',
+      loading: 'eager',
+      reveal: 'auto'
+    };
+    Object.keys(attributes).forEach(function (name) {
+      viewer.setAttribute(name, attributes[name]);
+    });
+    viewer.className = 'logo3d__viewer';
+    viewer.addEventListener('load', function () {
+      box.classList.add('is-3d');
+    });
+    viewer.addEventListener('error', function () {
+      box.classList.remove('is-3d');
+      if (viewer.parentNode) {
+        viewer.parentNode.removeChild(viewer);
+      }
+    });
+    viewer.addEventListener('camera-change', function (event) {
+      if (event.detail && event.detail.source === 'user-interaction') {
+        doc.dispatchEvent(new CustomEvent('tt:carousel-stop'));
+      }
+    });
+    box.appendChild(viewer);
+
+    // Sin giro automático mientras su slide no está a la vista: no gasta batería.
+    var slide = box.closest('[data-slide]');
+    doc.addEventListener('tt:slide', function () {
+      if (!slide) {
+        return;
+      }
+      if (slide.classList.contains('is-active')) {
+        viewer.setAttribute('auto-rotate', '');
+      } else {
+        viewer.removeAttribute('auto-rotate');
+      }
+    });
+  }
+
+  function initModel() {
+    var box = doc.querySelector('[data-logo3d]');
+    if (!box) {
+      return;
+    }
+    var mode = decideMode();
+    box.setAttribute('data-mode', mode);
+    if (mode === 'image') {
+      return;
+    }
+    whenCalmAndVisible(box, function () {
+      if (mode === 'video') {
+        mountVideo(box);
+        return;
+      }
+      afterSlideChange(function () {
+        loadViewer(box);
+      });
+    });
+  }
+
+  /**
+   * Cargar el visor (~1 MB de JS + compilar shaders) es una tarea larga del hilo principal. Si cae
+   * a mitad de un cambio de slide, la transición se traba; se espera a que termine uno (tt:slide)
+   * para aprovechar los 3 s quietos. Sin carrusel o con el autoplay detenido, se carga ya.
+   */
+  function afterSlideChange(callback) {
+    var stage = doc.querySelector('[data-carousel]');
+    if (!stage || stage.classList.contains('is-stopped')) {
+      callback();
+      return;
+    }
+    var done = false;
+    var fallback = setTimeout(run, 4500);
+    function run() {
+      if (done) {
+        return;
+      }
+      done = true;
+      clearTimeout(fallback);
+      doc.removeEventListener('tt:slide', onSlide);
+      callback();
+    }
+    function onSlide() {
+      setTimeout(run, 60);
+    }
+    doc.addEventListener('tt:slide', onSlide);
+  }
+
+  function loadViewer(box) {
+    import(box.getAttribute('data-viewer'))
+      .then(function () {
+        mountModel(box);
+      })
+      .catch(function () {
+        box.setAttribute('data-mode', 'image');
+      });
+  }
+
+  initIntro();
+  initModel();
+})();

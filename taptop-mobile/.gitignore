@@ -1,0 +1,12 @@
+# Credenciales y datos sensibles: nunca en Git (sección 10.8 del brief)
+app/config.local.php
+app/backups/*
+!app/backups/.gitkeep
+
+# Registros
+app/logs/*
+!app/logs/.gitkeep
+
+# Sistema
+.DS_Store
+Thumbs.db

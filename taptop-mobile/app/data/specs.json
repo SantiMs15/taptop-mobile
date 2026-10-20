@@ -1,0 +1,359 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-15",
+  "notes": "Fichas técnicas desde TAPTOP-MOBILE-specs-borrador.md (fuentes oficiales y, donde no cargaron, terceros). Estado 'borrador' = se muestra en la Etapa 0 para que el cliente las revise contra el equipo real; 'pendiente' = no se publica hasta confirmar. Se omiten los datos marcados como dudosos en el borrador. Los titulares de 'slides' son datos de la ficha, sin texto comercial.",
+  "products": {
+    "iphone-16": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla OLED de 6,1 pulgadas", "image": null },
+        { "title": "Chip A18", "image": null },
+        { "title": "Cámara Fusion de 48 MP", "image": null },
+        { "title": "Hasta 22 h de reproducción de video", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "6,1\" OLED Super Retina XDR, 2556 × 1179, 460 ppi, hasta 2000 nits en exteriores" },
+        { "title": "Chip", "detail": "A18, CPU de 6 núcleos, GPU de 5 núcleos, Neural Engine de 16 núcleos" },
+        { "title": "Cámara trasera", "detail": "Fusion principal de 48 MP (ƒ/1,6), telefoto 2x de 12 MP, ultra gran angular de 12 MP" },
+        { "title": "Cámara frontal", "detail": "TrueDepth de 12 MP" },
+        { "title": "Batería", "detail": "Hasta 22 h de video; carga rápida al 50 % en unos 30 min (adaptador de 20 W o más); MagSafe y Qi2 hasta 25 W" },
+        { "title": "Conectividad", "detail": "5G, Wi-Fi 7, Bluetooth 5.3, NFC, Ultra Wideband, satélite (SOS)" },
+        { "title": "SIM", "detail": "Solo eSIM (sin SIM física)" },
+        { "title": "Resistencia", "detail": "IP68 (6 m, 30 min)" },
+        { "title": "Puerto", "detail": "USB-C (USB 2, 480 Mb/s)" },
+        { "title": "Materiales", "detail": "Aluminio, Ceramic Shield al frente" },
+        { "title": "Peso", "detail": "170 g" }
+      ]
+    },
+    "iphone-17": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla de 6,3 pulgadas a 120 Hz", "image": null },
+        { "title": "Chip A19", "image": null },
+        { "title": "Cámara Fusion de 48 MP", "image": null },
+        { "title": "Hasta 30 h de video", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "6,3\" OLED Super Retina XDR, 2622 × 1206, 460 ppi, 120 Hz, siempre activa, Dynamic Island" },
+        { "title": "Chip", "detail": "A19, CPU de 6 núcleos, GPU de 5 núcleos, Neural Engine de 16 núcleos" },
+        { "title": "Cámara trasera", "detail": "Fusion principal de 48 MP (ƒ/1,6), telefoto 2x de 12 MP, ultra gran angular de 48 MP" },
+        { "title": "Cámara frontal", "detail": "Center Stage de 18 MP" },
+        { "title": "Batería", "detail": "Hasta 30 h de video; carga rápida al 50 % en unos 20 min (40 W); MagSafe y Qi2 hasta 25 W" },
+        { "title": "Conectividad", "detail": "5G, Wi-Fi 7, Bluetooth 6, chip N1, NFC, Ultra Wideband, satélite" },
+        { "title": "SIM", "detail": "Solo eSIM" },
+        { "title": "Resistencia", "detail": "IP68; frente Ceramic Shield 2" },
+        { "title": "Puerto", "detail": "USB-C (USB 2)" },
+        { "title": "Peso", "detail": "177 g" }
+      ]
+    },
+    "iphone-17-pro-max": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla de 6,9 pulgadas", "image": null },
+        { "title": "Chip A19 Pro", "image": null },
+        { "title": "Tres cámaras de 48 MP", "image": null },
+        { "title": "Hasta 39 h de video", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "6,9\" OLED Super Retina XDR, 2868 × 1320, 460 ppi, 120 Hz, 1600 nits HDR, 3000 nits en exteriores" },
+        { "title": "Chip", "detail": "A19 Pro, CPU de 6 núcleos, GPU de 6 núcleos con Neural Accelerators, Neural Engine de 16 núcleos" },
+        { "title": "Cámara trasera", "detail": "Tres cámaras de 48 MP (principal, ultra gran angular y telefoto 4x), zoom óptico hasta 8x" },
+        { "title": "Cámara frontal", "detail": "Center Stage de 18 MP" },
+        { "title": "Video", "detail": "4K Dolby Vision hasta 120 fps, ProRes, Apple Log 2" },
+        { "title": "Batería", "detail": "Hasta 39 h de video; carga rápida al 50 % en unos 20 min (40 W o más); MagSafe y Qi2 hasta 25 W" },
+        { "title": "Conectividad", "detail": "5G, Wi-Fi 7, Bluetooth 6, NFC, Ultra Wideband, satélite" },
+        { "title": "SIM", "detail": "Dos versiones, cada una con su precio: solo eSIM y con SIM física" },
+        { "title": "Resistencia", "detail": "IP68; aluminio unibody, Ceramic Shield 2 al frente" },
+        { "title": "Puerto", "detail": "USB-C (USB 3, 10 Gb/s)" },
+        { "title": "Peso", "detail": "233 g" }
+      ]
+    },
+    "iphone-18-pro": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip A20 Pro", "image": null },
+        { "title": "Cámara Fusion de 48 MP con apertura variable", "image": null },
+        { "title": "Hasta 36 h de video en la versión eSIM", "image": null }
+      ],
+      "specs": [
+        { "title": "Chip", "detail": "A20 Pro (2 nm), CPU de 6 núcleos, GPU de 7 núcleos, Neural Engine dual de 16 núcleos" },
+        { "title": "Cámara principal", "detail": "Fusion de 48 MP con apertura variable (ƒ/1,48 a ƒ/4)" },
+        { "title": "Batería", "detail": "Hasta 36 h de video (versión solo eSIM)" },
+        { "title": "Conectividad", "detail": "Chip N1 (Wi-Fi 7, Bluetooth 6, Thread), módem C2, satélite" },
+        { "title": "Sistema", "detail": "iOS 27" }
+      ]
+    },
+    "iphone-18-pro-max": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip A20 Pro", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-trasera.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-trasera.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-trasera.webp" } },
+        { "title": "Cámara Fusion de 48 MP con apertura variable", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-camara.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-camara.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-camara.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-camara.webp" } },
+        { "title": "Hasta 29 h de uso por carga", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-frontal.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-frontal.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-frontal.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-frontal.webp" } }
+      ],
+      "specs": [
+        { "title": "Chip", "detail": "A20 Pro (2 nm), CPU de 6 núcleos, GPU de 7 núcleos, Neural Engine dual de 16 núcleos" },
+        { "title": "Cámara principal", "detail": "Fusion de 48 MP con apertura variable (ƒ/1,48 a ƒ/4)" },
+        { "title": "Batería", "detail": "Hasta 29 h de uso por carga; hasta 43 h de reproducción de video" },
+        { "title": "Conectividad", "detail": "Chip N1 (Wi-Fi 7, Bluetooth 6, Thread), satélite" },
+        { "title": "Sistema", "detail": "iOS 27" }
+      ]
+    },
+    "samsung-galaxy-s25-ultra": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla de 6,9 pulgadas a 120 Hz", "image": null },
+        { "title": "Snapdragon 8 Elite", "image": null },
+        { "title": "Cámara principal de 200 MP", "image": null },
+        { "title": "Batería de 5000 mAh", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "6,9\" Dynamic LTPO AMOLED 2X, 1440 × 3120, 120 Hz, hasta 2600 nits, Gorilla Armor 2" },
+        { "title": "Procesador", "detail": "Snapdragon 8 Elite" },
+        { "title": "Memoria", "detail": "12 GB de RAM (hay versiones de 16 GB según el mercado), sin microSD" },
+        { "title": "Cámaras traseras", "detail": "Principal de 200 MP, ultra gran angular de 50 MP, telefoto 3x de 10 MP y telefoto 5x de 50 MP" },
+        { "title": "Cámara frontal", "detail": "12 MP" },
+        { "title": "Batería", "detail": "5000 mAh; carga de 45 W e inalámbrica de 15 W" },
+        { "title": "Conectividad", "detail": "5G, Wi-Fi 7, Bluetooth 5.4, NFC, UWB, USB-C 3.2" },
+        { "title": "Resistencia", "detail": "IP68" },
+        { "title": "Medidas y peso", "detail": "162,8 × 77,6 × 8,2 mm; 218 g" }
+      ]
+    },
+    "samsung-galaxy-s26-ultra": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla QHD+ de 6,9 pulgadas", "image": null },
+        { "title": "Snapdragon 8 Elite Gen 5 for Galaxy", "image": null },
+        { "title": "Cámara principal de 200 MP", "image": null },
+        { "title": "Video 8K a 30 fps", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "6,9\" Dynamic AMOLED 2X QHD+ (1440 × 3120, ~498 ppi), 120 Hz, hasta 2600 nits, Privacy Display, Gorilla Armor 2" },
+        { "title": "Procesador", "detail": "Snapdragon 8 Elite Gen 5 for Galaxy (3 nm)" },
+        { "title": "Memoria", "detail": "12 GB o 16 GB de RAM según la versión; sin microSD" },
+        { "title": "Cámaras traseras", "detail": "Principal de 200 MP (ƒ/1,4), ultra gran angular de 50 MP, telefoto periscopio de 50 MP (5x óptico) y telefoto de 10 MP (3x)" },
+        { "title": "Cámara frontal", "detail": "12 MP" },
+        { "title": "Video", "detail": "8K a 30 fps" },
+        { "title": "Batería", "detail": "5000 mAh; carga cableada de 60 W e inalámbrica de 25 W (Qi2)" },
+        { "title": "Conectividad", "detail": "5G, Wi-Fi 7, Bluetooth 5.4, NFC, doble SIM (nano + eSIM)" },
+        { "title": "Resistencia", "detail": "IP68" },
+        { "title": "Medidas y peso", "detail": "163,6 × 78,1 × 7,9 mm; 214 g" }
+      ]
+    },
+    "samsung-galaxy-s26-plus": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla QHD+ de 6,7 pulgadas", "image": null },
+        { "title": "Cámara principal de 50 MP", "image": null },
+        { "title": "Batería de 4900 mAh", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "6,7\" Dynamic AMOLED 2X QHD+ (1440 × 3120, 513 ppi), 120 Hz, hasta 2600 nits, Gorilla Armor 2" },
+        { "title": "Memoria", "detail": "12 GB de RAM; sin microSD" },
+        { "title": "Cámaras traseras", "detail": "Principal de 50 MP (ƒ/1,8), ultra gran angular de 12 MP y telefoto de 10 MP (3x óptico)" },
+        { "title": "Cámara frontal", "detail": "12 MP" },
+        { "title": "Batería", "detail": "4900 mAh; carga cableada de 45 W e inalámbrica de 25 W" },
+        { "title": "Conectividad", "detail": "5G, Wi-Fi 7, NFC, doble SIM" },
+        { "title": "Resistencia", "detail": "IP68" },
+        { "title": "Medidas y peso", "detail": "158,4 × 75,8 × 7,3 mm; 190 g" },
+        { "title": "Software", "detail": "Android 16 con One UI; 7 años de actualizaciones" }
+      ]
+    },
+    "samsung-galaxy-z-fold8-ultra": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla principal de 8 pulgadas", "image": null },
+        { "title": "Cámara principal de 200 MP", "image": null },
+        { "title": "Batería de 5000 mAh", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla principal", "detail": "8,0\" Dynamic LTPO AMOLED 2X (2256 × 2504), 120 Hz, hasta 3000 nits" },
+        { "title": "Pantalla externa", "detail": "6,5\"" },
+        { "title": "Procesador", "detail": "Snapdragon 8 Elite Gen 5 (3 nm)" },
+        { "title": "Memoria", "detail": "12 GB o 16 GB de RAM según la versión" },
+        { "title": "Cámaras traseras", "detail": "Principal de 200 MP, ultra gran angular de 50 MP y telefoto de 10 MP (3x)" },
+        { "title": "Cámaras frontales", "detail": "Dos de 10 MP" },
+        { "title": "Batería", "detail": "5000 mAh; carga de 45 W e inalámbrica de 20 W (Qi2.2)" },
+        { "title": "Durabilidad", "detail": "Armor FlexHinge, Gorilla Glass Ceramic 3, IP48, 200.000 pliegues" },
+        { "title": "Medidas y peso", "detail": "Desplegado 158,4 × 143,2 × 4,1 mm; 215 g" }
+      ]
+    },
+    "samsung-galaxy-z-fold8": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla principal de 7,6 pulgadas", "image": null },
+        { "title": "Cámara principal de 50 MP", "image": null },
+        { "title": "Batería de 4800 mAh", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla principal", "detail": "7,6\" (4:3), hasta 3000 nits" },
+        { "title": "Pantalla externa", "detail": "5,5\"" },
+        { "title": "Cámaras traseras", "detail": "Principal de 50 MP y ultra gran angular de 50 MP" },
+        { "title": "Cámaras frontales", "detail": "Dos de 10 MP" },
+        { "title": "Batería", "detail": "4800 mAh; Super Fast Charging 2.0 y carga inalámbrica rápida" },
+        { "title": "Durabilidad", "detail": "Armor FlexHinge, Gorilla Glass Ceramic 3, IP48, 200.000 pliegues" }
+      ]
+    },
+    "samsung-galaxy-z-flip8": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Pantalla principal de 6,7 pulgadas", "image": null },
+        { "title": "Pantalla externa FlexWindow de 4,1 pulgadas", "image": null },
+        { "title": "Batería de 4300 mAh", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla principal", "detail": "6,7\"" },
+        { "title": "Pantalla externa", "detail": "FlexWindow de 4,1\"" },
+        { "title": "Cámaras traseras", "detail": "Principal de 50 MP y ultra gran angular de 12 MP" },
+        { "title": "Cámara frontal", "detail": "10 MP" },
+        { "title": "Batería", "detail": "4300 mAh; Super Fast Charging y carga inalámbrica rápida 2.0" },
+        { "title": "Durabilidad", "detail": "Armor FlexHinge, Advanced Armor Aluminum, IP48, 200.000 pliegues" }
+      ]
+    },
+    "airpods-pro-3": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip H2", "image": null },
+        { "title": "Cancelación activa de ruido", "image": null },
+        { "title": "Hasta 8 h por carga", "image": null }
+      ],
+      "specs": [
+        { "title": "Chip", "detail": "H2; estuche con Ultra Wideband" },
+        { "title": "Audio", "detail": "Cancelación activa de ruido, modo Transparencia, Audio adaptable, Aislamiento de voz" },
+        { "title": "Batería", "detail": "Hasta 8 h por carga con cancelación de ruido; hasta 24 h con el estuche" },
+        { "title": "Resistencia", "detail": "IP57 (auriculares y estuche)" },
+        { "title": "Conectividad", "detail": "Bluetooth 5.3" },
+        { "title": "Funciones", "detail": "Sensor de ritmo cardíaco, Prueba y asistencia auditiva, Traducción en vivo (Apple Intelligence)" },
+        { "title": "Carga del estuche", "detail": "MagSafe, cargador del Apple Watch, Qi y USB-C" }
+      ]
+    },
+    "airpods-4-cancelacion-activa-de-ruido": {
+      "status": "pendiente",
+      "slides": [],
+      "specs": []
+    },
+    "apple-watch-ultra-4": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Caja de titanio de 49 mm", "image": null },
+        { "title": "Pantalla de hasta 3000 nits", "image": null },
+        { "title": "Hasta 50 h de batería", "image": null },
+        { "title": "Resistente al agua hasta 100 m", "image": null }
+      ],
+      "specs": [
+        { "title": "Caja", "detail": "Titanio grado 5, 49 × 44 × 12 mm; acabados Natural y Negro; titanio 100 % reciclado; 63 g" },
+        { "title": "Pantalla", "detail": "Retina OLED LTPO3 siempre activa, 422 × 514 px, 326 ppi, hasta 3000 nits, cristal de zafiro plano" },
+        { "title": "Chip", "detail": "S11, Neural Engine de 4 núcleos, 64 GB de almacenamiento" },
+        { "title": "Batería", "detail": "Hasta 50 h de uso normal; hasta 84 h en modo Ahorrar Batería; carga rápida al 80 % en unos 45 min" },
+        { "title": "Resistencia", "detail": "WR100 (100 m, ISO 22810:2010), buceo recreativo hasta 40 m con app compatible; polvo IP6X; MIL-STD-810H" },
+        { "title": "Conectividad", "detail": "GPS de doble frecuencia, Bluetooth 5.3, Wi-Fi 4, Ultra Wideband de 2.ª generación, Apple Pay; modelo celular con LTE y 5G" },
+        { "title": "Funciones", "detail": "Botón de Acción personalizable, sirena de hasta 180 m" },
+        { "title": "Requisitos", "detail": "iPhone 11 o posterior con iOS 27 o posterior" },
+        { "title": "Correa", "detail": "Una incluida según disponibilidad" }
+      ]
+    },
+    "apple-watch-series-12-46mm": {
+      "status": "pendiente",
+      "slides": [
+        { "title": "Chip S11", "image": null },
+        { "title": "Hasta 24 h de batería", "image": null },
+        { "title": "Resistente al agua hasta 50 m", "image": null }
+      ],
+      "specs": [
+        { "title": "Chip", "detail": "S11, Neural Engine de 4 núcleos, 64 GB" },
+        { "title": "Batería", "detail": "Hasta 24 h de uso normal; hasta 38 h en modo Ahorrar Batería; carga rápida al 80 % en unos 30 min" },
+        { "title": "Resistencia", "detail": "50 m (ISO 22810:2010), para natación; polvo IP6X" },
+        { "title": "Sensores", "detail": "Frecuencia cardiaca eléctrica y óptica, oxígeno en sangre, temperatura de muñeca, brújula, altímetro, profundímetro hasta 6 m" },
+        { "title": "Funciones", "detail": "ECG, notificaciones de apnea del sueño, Control del ciclo, Emergencia SOS, Detección de caídas y choques" }
+      ]
+    },
+    "macbook-air-m5": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip M5", "image": null },
+        { "title": "Hasta 18 h de video en streaming", "image": null },
+        { "title": "Pantalla Liquid Retina", "image": null },
+        { "title": "Wi-Fi 7 y Bluetooth 6", "image": null }
+      ],
+      "specs": [
+        { "title": "Tamaños", "detail": "13\" y 15\"" },
+        { "title": "Chip", "detail": "M5, CPU de 10 núcleos; GPU de 8 o 10 núcleos (13\") o de 10 núcleos (15\")" },
+        { "title": "Memoria unificada", "detail": "16 GB o 24 GB" },
+        { "title": "Almacenamiento", "detail": "1 TB" },
+        { "title": "Pantalla", "detail": "13,6\" o 15,3\" Liquid Retina" },
+        { "title": "Batería", "detail": "53,8 Wh (13\") o 66,5 Wh (15\"); hasta 18 h de video en streaming y 15 h de navegación web" },
+        { "title": "Carga", "detail": "Adaptador de 40 W (hasta 60 W); carga rápida con adaptador USB-C de 70 W o más y cable MagSafe 3" },
+        { "title": "Puertos", "detail": "MagSafe 3, 2 Thunderbolt 4 (USB-C, USB 4 hasta 40 Gb/s) y entrada de audífonos de 3,5 mm" },
+        { "title": "Pantallas externas", "detail": "Hasta dos monitores" },
+        { "title": "Cámara y audio", "detail": "Center Stage de 12 MP; 4 bocinas (13\") o 6 bocinas (15\"), 3 micrófonos" },
+        { "title": "Conectividad", "detail": "Wi-Fi 7, Bluetooth 6, Thread" },
+        { "title": "Peso y grosor", "detail": "1,23 kg (13\") o 1,51 kg (15\"); 1,13 cm (13\") o 1,15 cm (15\")" }
+      ]
+    },
+    "ipad-pro-11-m5": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip M5", "image": null },
+        { "title": "Pantalla Ultra Retina XDR de 11 pulgadas", "image": null },
+        { "title": "Compatible con Apple Pencil Pro", "image": null }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "Ultra Retina XDR tandem OLED de 11\", 2420 × 1668 (264 ppi), ProMotion 120 Hz, 1000 nits SDR y 1600 nits HDR, True Tone, P3" },
+        { "title": "Chip", "detail": "Apple M5; CPU de 9 o 10 núcleos según el almacenamiento, GPU de 10 núcleos" },
+        { "title": "Memoria", "detail": "12 GB (256 GB y 512 GB) o 16 GB (1 TB y 2 TB)" },
+        { "title": "Cámaras", "detail": "Trasera de 12 MP con LiDAR; frontal de 12 MP Center Stage con Face ID" },
+        { "title": "Batería", "detail": "Hasta 10 h" },
+        { "title": "Puerto", "detail": "Thunderbolt / USB 4" },
+        { "title": "Conectividad", "detail": "Wi-Fi 7, Bluetooth 6; versión Wi-Fi o Wi-Fi + celular (solo eSIM)" },
+        { "title": "Compatibilidad", "detail": "Apple Pencil Pro y Apple Pencil (USB-C)" },
+        { "title": "Medidas y peso", "detail": "249,7 × 177,5 × 5,3 mm; 444 g (Wi-Fi) o 446 g (celular)" }
+      ]
+    },
+    "mac-mini-m4": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip M4", "image": null },
+        { "title": "Dos puertos USB-C al frente", "image": null },
+        { "title": "Mide 12,7 × 12,7 cm", "image": null }
+      ],
+      "specs": [
+        { "title": "Chip", "detail": "M4: CPU de 10 núcleos, GPU de 10 núcleos, Neural Engine de 16 núcleos" },
+        { "title": "Memoria", "detail": "16 GB o 24 GB según la configuración" },
+        { "title": "Almacenamiento", "detail": "256 GB o 512 GB según la configuración" },
+        { "title": "Puertos frontales", "detail": "2 USB-C (USB 3, 10 Gb/s) y audífonos de 3,5 mm" },
+        { "title": "Puertos traseros", "detail": "Ethernet Gigabit, HDMI y 3 Thunderbolt 4" },
+        { "title": "Conectividad", "detail": "Wi-Fi 6E, Bluetooth 5.3" },
+        { "title": "Tamaño y peso", "detail": "12,7 × 12,7 × 5,0 cm; 670 g" }
+      ]
+    },
+    "mac-mini-m4-pro": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip M4 Pro", "image": null },
+        { "title": "Tres puertos Thunderbolt 5", "image": null },
+        { "title": "Mide 12,7 × 12,7 cm", "image": null }
+      ],
+      "specs": [
+        { "title": "Chip", "detail": "M4 Pro: CPU de 12 núcleos, GPU de 16 núcleos" },
+        { "title": "Memoria", "detail": "24 GB" },
+        { "title": "Almacenamiento", "detail": "512 GB" },
+        { "title": "Puertos frontales", "detail": "2 USB-C (USB 3, 10 Gb/s) y audífonos de 3,5 mm" },
+        { "title": "Puertos traseros", "detail": "Ethernet Gigabit, HDMI y 3 Thunderbolt 5" },
+        { "title": "Conectividad", "detail": "Wi-Fi 6E, Bluetooth 5.3" },
+        { "title": "Tamaño y peso", "detail": "12,7 × 12,7 × 5,0 cm; 730 g" }
+      ]
+    },
+    "apple-pencil-pro": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Aprieta para abrir la paleta de herramientas", "image": null },
+        { "title": "Giroscopio para girar el trazo", "image": null },
+        { "title": "Respuesta háptica", "image": null }
+      ],
+      "specs": [
+        { "title": "Funciones", "detail": "Apretar (paleta de herramientas), girar (giroscopio), respuesta háptica, doble toque, sensibilidad a la presión y a la inclinación, puntero flotante, Encontrar" },
+        { "title": "Compatibilidad", "detail": "iPad Pro 11\" y 13\" (M4 y M5), iPad Air 11\" y 13\" (M2, M3 y M4) e iPad mini (A17 Pro)" },
+        { "title": "Carga", "detail": "Se acopla y carga de forma magnética en el lateral del iPad" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,192 @@
+/**
+ * Taptop Mobile: comportamiento común.
+ * - Header: transparente sobre el escenario del Inicio, vidrio al hacer scroll; menú móvil.
+ * - Interruptor de vidrio (.switch): la cápsula sigue al hover o al foco y vuelve a la
+ *   opción activa. La posición va en variables CSS (--cap-x, --cap-w), nunca en left/width
+ *   en línea, para que los estados por clase sigan mandando.
+ * - Brillo del vidrio que sigue al puntero (--glass-x, --glass-y).
+ */
+(function () {
+  'use strict';
+
+  var doc = document;
+
+  function debounce(fn, wait) {
+    var timer = null;
+    return function () {
+      clearTimeout(timer);
+      timer = setTimeout(fn, wait);
+    };
+  }
+
+  function onMediaChange(query, handler) {
+    if (query.addEventListener) {
+      query.addEventListener('change', handler);
+    } else if (query.addListener) {
+      query.addListener(handler);
+    }
+  }
+
+  // --- Header -----------------------------------------------------------------
+  function initHeader() {
+    var header = doc.querySelector('[data-header]');
+    if (!header) {
+      return;
+    }
+    var stage = doc.querySelector('[data-carousel]');
+
+    if (header.classList.contains('site-header--overlay') && 'IntersectionObserver' in window) {
+      var sentinel = doc.createElement('div');
+      sentinel.setAttribute('aria-hidden', 'true');
+      sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:48px;pointer-events:none;';
+      doc.body.insertBefore(sentinel, doc.body.firstChild);
+      new IntersectionObserver(function (entries) {
+        header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+      }).observe(sentinel);
+    } else if (header.classList.contains('site-header--overlay')) {
+      header.classList.add('is-scrolled');
+    }
+
+    if (stage && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        doc.body.classList.toggle('hero-in-view', entries[0].isIntersecting);
+      }, { threshold: 0.4 }).observe(stage);
+    }
+
+    var toggle = header.querySelector('[data-menu-toggle]');
+    var nav = doc.getElementById('site-nav');
+    if (!toggle || !nav) {
+      return;
+    }
+    function setOpen(open) {
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      header.classList.toggle('is-open', open);
+    }
+    toggle.addEventListener('click', function () {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    doc.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && header.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    var desktop = window.matchMedia('(min-width: 900px)');
+    onMediaChange(desktop, function () {
+      if (desktop.matches) {
+        setOpen(false);
+      }
+    });
+  }
+
+  // --- Brillo del vidrio que sigue al puntero ------------------------------------
+  function trackGlass(element) {
+    var frame = 0;
+    var lastEvent = null;
+    element.addEventListener('pointermove', function (event) {
+      lastEvent = event;
+      if (frame) {
+        return;
+      }
+      frame = window.requestAnimationFrame(function () {
+        frame = 0;
+        var rect = element.getBoundingClientRect();
+        if (!rect.width || !lastEvent) {
+          return;
+        }
+        var x = ((lastEvent.clientX - rect.left) / rect.width) * 100;
+        var y = ((lastEvent.clientY - rect.top) / rect.height) * 100;
+        element.style.setProperty('--glass-x', x.toFixed(1) + '%');
+        element.style.setProperty('--glass-y', y.toFixed(1) + '%');
+      });
+    });
+  }
+
+  // --- Interruptor de vidrio --------------------------------------------------------
+  function initSwitch(element) {
+    var capsule = element.querySelector('.switch__capsule');
+    var items = Array.prototype.slice.call(element.querySelectorAll('.switch__item'));
+    if (!capsule || !items.length) {
+      return;
+    }
+
+    function activeItem() {
+      return element.querySelector('.switch__item[aria-current="page"], .switch__item[aria-selected="true"]');
+    }
+
+    function moveTo(item) {
+      if (!item || !item.offsetWidth || window.getComputedStyle(capsule).display === 'none') {
+        element.classList.remove('has-capsule');
+        return;
+      }
+      var box = element.getBoundingClientRect();
+      var rect = item.getBoundingClientRect();
+      element.style.setProperty('--cap-x', (rect.left - box.left) + 'px');
+      element.style.setProperty('--cap-w', rect.width + 'px');
+      element.classList.add('has-capsule');
+      items.forEach(function (other) {
+        other.classList.toggle('is-highlighted', other === item);
+      });
+    }
+
+    function rest() {
+      var focused = doc.activeElement;
+      if (focused && items.indexOf(focused) !== -1 && focused.matches(':focus-visible')) {
+        moveTo(focused);
+        return;
+      }
+      var active = activeItem();
+      if (active) {
+        moveTo(active);
+      } else {
+        element.classList.remove('has-capsule');
+        items.forEach(function (other) {
+          other.classList.remove('is-highlighted');
+        });
+      }
+    }
+
+    function restWithoutAnimation() {
+      element.classList.add('no-anim');
+      rest();
+      element.getBoundingClientRect();
+      element.classList.remove('no-anim');
+    }
+
+    items.forEach(function (item) {
+      item.addEventListener('pointerenter', function (event) {
+        if (event.pointerType === 'mouse') {
+          moveTo(item);
+        }
+      });
+      item.addEventListener('focus', function () {
+        if (item.matches(':focus-visible')) {
+          moveTo(item);
+        }
+      });
+      item.addEventListener('blur', function () {
+        window.requestAnimationFrame(rest);
+      });
+    });
+    element.addEventListener('pointerleave', rest);
+    element.addEventListener('tt:sync', rest);
+    window.addEventListener('resize', debounce(restWithoutAnimation, 120));
+    if (doc.fonts && doc.fonts.ready) {
+      doc.fonts.ready.then(restWithoutAnimation);
+    }
+    trackGlass(element);
+    restWithoutAnimation();
+  }
+
+  function init() {
+    initHeader();
+    Array.prototype.forEach.call(doc.querySelectorAll('[data-switch]'), initSwitch);
+    Array.prototype.forEach.call(doc.querySelectorAll('.stage__rotation, .stage__arrow, .round-button'), trackGlass);
+  }
+
+  if (doc.readyState === 'loading') {
+    doc.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

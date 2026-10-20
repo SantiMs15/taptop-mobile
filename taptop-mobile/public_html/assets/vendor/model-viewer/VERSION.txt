@@ -1,0 +1,3 @@
+@google/model-viewer 4.2.0 (dist/model-viewer.min.js), descargado de cdn.jsdelivr.net el 15-oct-2026.
+Se usa 4.2.0 porque 4.3.x deja mensajes de depuración en la consola.
+Necesita script-src con wasm-unsafe-eval (ver content_security_policy() en app/helpers.php).

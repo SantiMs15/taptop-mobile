@@ -1,0 +1,9 @@
+# app/ nunca debe ser accesible por URL. Si por alguna razón queda dentro de public_html,
+# esta regla niega todo el acceso (Apache 2.4 / LiteSpeed y Apache 2.2).
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>
