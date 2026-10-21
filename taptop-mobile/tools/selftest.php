@@ -199,5 +199,35 @@ expect(hero_slide_problem($heroSlide($heroSrc + ['fit' => 'cutout', 'mobile' => 
 expect(hero_slide_problem($heroSlide($heroSrc + ['fit' => 'stretch'])) !== null, 'hero: fit desconocido rechazado');
 expect(hero_slide_problem($heroSlide($heroSrc + ['mobile' => ['src' => 'https://otro.com/a.webp']])) !== null, 'hero: imagen móvil externa rechazada');
 
+// --- SPIKE Wompi ---------------------------------------------------------------------
+use Taptop\Payments\Wompi;
+
+expect(
+    Wompi::integritySignature('TT-A-1', 459000000, 'COP', 'secreto') === hash('sha256', 'TT-A-1459000000COPsecreto'),
+    'Wompi: firma = SHA-256 de referencia + centavos + moneda + secreto'
+);
+$wompiRef = Wompi::newReference('IP18PM-256-BUR');
+expect(Wompi::skuFromReference($wompiRef) === 'IP18PM-256-BUR' && $wompiRef !== Wompi::newReference('IP18PM-256-BUR'), 'Wompi: referencia única que conserva el SKU', $wompiRef);
+expect(Wompi::skuFromReference('otra-tienda-123') === null, 'Wompi: referencia ajena rechazada');
+$testWompi = new Wompi('pub_test_x', 'test_integrity_y');
+parse_str((string) parse_url($testWompi->checkoutUrl('TT-A-1', 100, 'http://localhost/pago/resultado'), PHP_URL_QUERY), $checkoutQuery);
+expect(
+    $testWompi->isSandbox() && $checkoutQuery['amount-in-cents'] === '100' && $checkoutQuery['signature:integrity'] === Wompi::integritySignature('TT-A-1', 100, 'COP', 'test_integrity_y'),
+    'Wompi: URL del checkout lleva monto y firma',
+    $checkoutQuery
+);
+expect(Wompi::fromConfig(['public_key' => 'pub_test_x', 'integrity_secret' => '']) === null, 'Wompi: sin secreto de integridad no se activa');
+$wompiEvent = [
+    'event' => 'transaction.updated',
+    'data' => ['transaction' => ['id' => '1-2-3', 'status' => 'APPROVED', 'amount_in_cents' => 459000000]],
+    'signature' => ['properties' => ['transaction.id', 'transaction.status', 'transaction.amount_in_cents'], 'checksum' => hash('sha256', '1-2-3APPROVED4590000001700000000secreto')],
+    'timestamp' => 1700000000,
+];
+expect(Wompi::eventIsAuthentic($wompiEvent, 'secreto'), 'Wompi webhook: evento con firma válida aceptado');
+$wompiTampered = $wompiEvent;
+$wompiTampered['data']['transaction']['amount_in_cents'] = 100;
+expect(!Wompi::eventIsAuthentic($wompiTampered, 'secreto'), 'Wompi webhook: monto alterado rechazado');
+expect(!Wompi::eventIsAuthentic($wompiEvent, 'otro') && !Wompi::eventIsAuthentic($wompiEvent, ''), 'Wompi webhook: secreto distinto o vacío rechazado');
+
 echo "\n{$passed} pasaron, {$failed} fallaron\n";
 exit($failed === 0 ? 0 : 1);

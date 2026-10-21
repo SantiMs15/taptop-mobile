@@ -2,7 +2,8 @@
 /**
  * Enrutador: resuelve la ruta y prepara los datos de cada vista.
  * Rutas: /, /productos, /productos/{slug}, /contacto, /garantia, /terminos, /privacidad,
- * /robots.txt y /sitemap.xml. Todo lo demás responde 404 real.
+ * /robots.txt y /sitemap.xml.
+ * SPIKE Wompi: /pago/wompi, /pago/resultado y /webhooks/wompi (ver helpers/payments.php). Todo lo demás responde 404 real.
  */
 
 declare(strict_types=1);
@@ -24,6 +25,11 @@ function dispatch(string $method, string $uri): void
         redirect(rtrim($path, '/') . (is_string($query) && $query !== '' ? '?' . $query : ''), 301);
     }
     $method = strtoupper($method);
+    // SPIKE Wompi: único endpoint que recibe POST (eventos firmados de la pasarela).
+    if ($path === '/webhooks/wompi') {
+        webhook_wompi($method);
+        return;
+    }
     if ($method !== 'GET' && $method !== 'HEAD') {
         http_response_code(405);
         header('Allow: GET, HEAD');
@@ -42,6 +48,10 @@ function dispatch(string $method, string $uri): void
         page_contact();
     } elseif (in_array(ltrim($path, '/'), POLICY_PAGES, true)) {
         page_policy(ltrim($path, '/'));
+    } elseif ($path === '/pago/wompi') {
+        page_pay_wompi();
+    } elseif ($path === '/pago/resultado') {
+        page_pay_result();
     } elseif ($path === '/robots.txt') {
         page_robots();
     } elseif ($path === '/sitemap.xml') {
@@ -196,7 +206,7 @@ function page_not_found(): void
 function page_robots(): void
 {
     header('Content-Type: text/plain; charset=UTF-8');
-    $lines = ['User-agent: *', 'Disallow: /admin'];
+    $lines = ['User-agent: *', 'Disallow: /admin', 'Disallow: /pago/', 'Disallow: /webhooks/'];
     if (!is_noindex()) {
         $lines[] = '';
         $lines[] = 'Sitemap: ' . absolute_url('/sitemap.xml');

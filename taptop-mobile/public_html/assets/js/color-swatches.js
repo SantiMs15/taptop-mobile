@@ -61,6 +61,8 @@
       live: card.querySelector('[data-price-live]'),
       cta: card.querySelector('[data-cta]'),
       ctaLabel: card.querySelector('[data-cta-label]'),
+      buy: card.querySelector('[data-buy]'),
+      buyNote: card.querySelector('[data-buy-note]'),
       media: card.querySelector('[data-media]')
     };
     // Los slides viven fuera de la tarjeta, pero solo hay un detalle por página.
@@ -186,6 +188,16 @@
       }
       if (el.ctaLabel) {
         el.ctaLabel.textContent = current.cta;
+      }
+      // SPIKE Wompi: "Comprar ahora" solo con la variante disponible; la ruta la arma el servidor.
+      if (el.buy) {
+        el.buy.hidden = !current.buy;
+        if (current.buy) {
+          el.buy.setAttribute('href', current.buy);
+        }
+        if (el.buyNote) {
+          el.buyNote.hidden = !current.buy;
+        }
       }
       if (el.colorName && hasColors) {
         el.colorName.textContent = data.colors[state.color].name;

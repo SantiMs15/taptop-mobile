@@ -47,6 +47,12 @@ $ctaTrack = $product['track'] + [
         <a class="btn btn--wa btn--lg btn--block" href="<?= e($current['wa']) ?>" target="_blank" rel="noopener noreferrer" data-cta<?= track_attrs('whatsapp_click', $ctaTrack) ?>>
           <?= icon('whatsapp', 'icon') ?><span data-cta-label><?= e($current['cta']) ?></span>
         </a>
+        <?php if (wompi() !== null): // SPIKE Wompi: pago con pasarela al precio con tarjeta. ?>
+        <a class="btn btn--primary btn--lg btn--block" href="<?= e((string) $current['buy']) ?>" data-buy<?= $current['buy'] === null ? ' hidden' : '' ?>>
+          <span>Comprar ahora</span>
+        </a>
+        <p class="pdp__note" data-buy-note<?= $current['buy'] === null ? ' hidden' : '' ?>>Pago con tarjeta, PSE o Nequi en Wompi, al precio con pasarela.<?= wompi()->isSandbox() ? ' <strong>Modo de pruebas: no se cobra dinero real.</strong>' : '' ?></p>
+        <?php endif; ?>
       </div>
 
       <p class="pdp__note">El precio con pasarela incluye el costo de la plataforma de pago. Tiempo y costo de envío: se confirman por WhatsApp según tu ciudad.</p>

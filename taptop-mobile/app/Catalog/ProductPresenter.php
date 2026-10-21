@@ -138,6 +138,7 @@ final class ProductPresenter
                         ? wa_message_confirm($product, $colorName, $variant)
                         : wa_message_sold_out($product, $colorName, $variant)),
                     'cta' => $available ? self::CTA_CONFIRM : self::CTA_ASK,
+                    'buy' => $available ? buy_path($product['slug'], $variant['sku'], $colorName) : null,
                     'color' => $colorName,
                     'storage' => $variant['storage'] ?? $variant['note'],
                 ];

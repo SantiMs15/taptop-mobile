@@ -63,6 +63,9 @@ return [
     // --- Pagos (Nivel 1: enlace de pago enviado por WhatsApp; sin código de pagos) ---
     // Parámetros de la comisión, solo para el botón "sugerir" del panel (Paso 2).
     'gateway_fee' => ['percent' => 2.65, 'fixed' => 700, 'vat' => 0.19, 'round_to' => 1000],
+    // SPIKE: Wompi Web Checkout. Las llaves van SOLO en config.local.php (no va a Git).
+    // Vacías = sin botón "Comprar ahora".
+    'wompi' => ['public_key' => '', 'integrity_secret' => '', 'events_secret' => ''],
 
     // --- Catálogo ------------------------------------------------------------------
     'catalog_source' => 'json', // 'json' en la Etapa 0; 'mysql' cuando exista el panel
