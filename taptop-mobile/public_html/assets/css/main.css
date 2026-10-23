@@ -3171,6 +3171,114 @@ ul.info-list {
   }
 }
 
+/* 12c. Datos de envío ----------------------------------------------------------- */
+.checkout {
+  padding-block: clamp(28px, 5vw, 64px);
+  max-width: 720px;
+}
+
+.checkout__summary {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: var(--radius-field);
+  background: var(--c-mist);
+}
+
+.checkout__h {
+  font-size: var(--fs-base, 1rem);
+  font-weight: 600;
+}
+
+.checkout__lines {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.checkout__lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.checkout__item small {
+  display: block;
+  color: var(--c-muted);
+  font-size: var(--fs-sm);
+}
+
+.checkout__form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.field__input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-field);
+  background: var(--c-white);
+  color: var(--c-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+textarea.field__input {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.field__input:focus-visible {
+  outline: 2px solid var(--c-ink);
+  outline-offset: 2px;
+}
+
+.field.has-error .field__input {
+  border-color: #B3261E;
+}
+
+.field__error {
+  color: #B3261E;
+  font-size: var(--fs-sm);
+}
+
+.field__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--fs-sm);
+}
+
+.field__check input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--c-ink);
+}
+
+.field__check a {
+  text-decoration: underline;
+}
+
+.checkout__note {
+  color: var(--c-muted);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
 /* 13. Footer -------------------------------------------------------------------- */
 .site-footer {
   padding: clamp(56px, 7vw, 96px) 0 calc(28px + env(safe-area-inset-bottom));

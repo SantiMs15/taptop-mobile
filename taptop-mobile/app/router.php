@@ -3,7 +3,7 @@
  * Enrutador: resuelve la ruta y prepara los datos de cada vista.
  * Rutas: /, /productos, /productos/{slug}, /contacto, /garantia, /terminos, /privacidad,
  * /robots.txt y /sitemap.xml.
- * SPIKE Wompi: /pago/wompi, /pago/resultado y /webhooks/wompi (ver helpers/payments.php). Todo lo demás responde 404 real.
+ * SPIKE Wompi: /pago/envio, /pago/resultado y /webhooks/wompi (ver helpers/payments.php). Todo lo demás responde 404 real.
  */
 
 declare(strict_types=1);
@@ -46,6 +46,8 @@ function dispatch(string $method, string $uri): void
             cart_post_update();
             return;
         }
+        checkout_post();
+        return;
     }
     if ($method !== 'GET' && $method !== 'HEAD') {
         http_response_code(405);
@@ -67,8 +69,8 @@ function dispatch(string $method, string $uri): void
         page_contact();
     } elseif (in_array(ltrim($path, '/'), POLICY_PAGES, true)) {
         page_policy(ltrim($path, '/'));
-    } elseif ($path === '/pago/wompi') {
-        page_pay_wompi();
+    } elseif ($path === '/pago/envio') {
+        page_checkout();
     } elseif ($path === '/pago/resultado') {
         page_pay_result();
     } elseif ($path === '/robots.txt') {

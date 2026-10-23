@@ -278,5 +278,20 @@ expect(!request_is_same_origin(['HTTP_ORIGIN' => rtrim($site, '/') . '.evil.com'
 $noColorLine = cart_priced([['sku' => 'APP3', 'color' => null, 'qty' => 1]])['lines'][0];
 expect(array_key_exists('image', $noColorLine) && is_string($noColorLine['kind'] ?? null) && preg_match('/^#[0-9A-Fa-f]{6}$/', (string) ($noColorLine['hex'] ?? '')) === 1, 'carrito: línea trae kind y hex para la silueta si no hay foto', $noColorLine);
 
+// --- Datos de envío ----------------------------------------------------------
+$okForm = ['nombre' => 'Ana Pérez', 'cedula' => '1020304050', 'celular' => '+57 300 123 4567', 'correo' => 'ana@example.com', 'departamento' => 'Antioquia', 'ciudad' => 'Medellín', 'direccion' => 'Cra 43A # 1-50', 'barrio' => 'El Poblado', 'notas' => '', 'acepta' => '1'];
+$v = shipping_form_validate($okForm);
+expect($v['errors'] === [] && $v['data']['celular'] === '3001234567' && !isset($v['data']['acepta']), 'envío: formulario válido y celular normalizado', $v);
+expect(isset(shipping_form_validate(['celular' => '12345'] + $okForm)['errors']['celular']), 'envío: celular inválido');
+expect(isset(shipping_form_validate(['cedula' => '12a'] + $okForm)['errors']['cedula']), 'envío: cédula inválida');
+expect(isset(shipping_form_validate(['correo' => 'ana@'] + $okForm)['errors']['correo']), 'envío: correo inválido');
+expect(isset(shipping_form_validate(array_diff_key($okForm, ['acepta' => 1]))['errors']['acepta']), 'envío: sin aceptar la política no continúa');
+expect(isset(shipping_form_validate(['nombre' => ['x']] + $okForm)['errors']['nombre']), 'envío: campo con arreglo en vez de texto rechazado sin error PHP');
+$single = checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'APP3', 'color' => '']);
+expect($single !== null && $single['source'] === 'producto' && $single['priced']['gateway'] === 817000, 'envío: Comprar ahora arma un pedido de un producto', $single);
+expect(checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'NO']) === null, 'envío: sku que no es del producto = sin pedido');
+expect(checkout_items(['producto' => ['x'], 'sku' => 'APP3']) === null, 'envío: producto con arreglo = sin pedido');
+expect(str_starts_with((string) buy_path('airpods-pro-3', 'APP3', null), '/pago/envio?') || wompi() === null, 'Comprar ahora lleva a la página de envío');
+
 echo "\n{$passed} pasaron, {$failed} fallaron\n";
 exit($failed === 0 ? 0 : 1);
