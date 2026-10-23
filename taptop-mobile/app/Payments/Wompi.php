@@ -41,14 +41,19 @@ final class Wompi
         return hash('sha256', $reference . $amountInCents . $currency . $secret);
     }
 
-    /** Referencia única: TT-{sku}-{aleatorio}. Solo letras, números y guiones. */
-    public static function newReference(string $sku): string
+    /** Referencia única: TT- + 12 hex en mayúscula. Solo letras y números, sin datos del producto. */
+    public static function newReference(): string
     {
-        $sku = strtoupper((string) preg_replace('/[^A-Za-z0-9-]/', '', $sku));
-        return 'TT-' . $sku . '-' . strtoupper(bin2hex(random_bytes(5)));
+        return 'TT-' . strtoupper(bin2hex(random_bytes(6)));
     }
 
-    /** SKU guardado en la referencia, o null si no tiene el formato propio. */
+    /** True si la referencia es de esta tienda: forma nueva (TT-XXXXXXXXXXXX) o vieja con SKU. */
+    public static function isOwnReference(string $reference): bool
+    {
+        return preg_match('/^TT-[0-9A-F]{12}$/', $reference) === 1 || self::skuFromReference($reference) !== null;
+    }
+
+    /** SKU guardado en una referencia vieja, o null si no tiene el formato propio. */
     public static function skuFromReference(string $reference): ?string
     {
         return preg_match('/^TT-([A-Z0-9-]+)-[0-9A-F]{10}$/', $reference, $match) === 1 ? $match[1] : null;

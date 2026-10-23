@@ -206,9 +206,21 @@ expect(
     Wompi::integritySignature('TT-A-1', 459000000, 'COP', 'secreto') === hash('sha256', 'TT-A-1459000000COPsecreto'),
     'Wompi: firma = SHA-256 de referencia + centavos + moneda + secreto'
 );
-$wompiRef = Wompi::newReference('IP18PM-256-BUR');
-expect(Wompi::skuFromReference($wompiRef) === 'IP18PM-256-BUR' && $wompiRef !== Wompi::newReference('IP18PM-256-BUR'), 'Wompi: referencia única que conserva el SKU', $wompiRef);
+$wompiRef = 'TT-IP18PM-256-BUR-0123456789';
+expect(Wompi::skuFromReference($wompiRef) === 'IP18PM-256-BUR', 'Wompi: referencia vieja conserva el SKU', $wompiRef);
 expect(Wompi::skuFromReference('otra-tienda-123') === null, 'Wompi: referencia ajena rechazada');
+$ref = Wompi::newReference();
+expect(preg_match('/^TT-[0-9A-F]{12}$/', $ref) === 1 && Wompi::isOwnReference($ref) && Wompi::isOwnReference('TT-APP3-0123456789'), 'Wompi: referencia nueva y vieja reconocidas', $ref);
+expect(!Wompi::isOwnReference('otra-tienda-123'), 'Wompi: referencia ajena rechazada (nueva forma)');
+$tmpOrders = tempnam(sys_get_temp_dir(), 'tt-orders');
+order_save($ref, ['source' => 'carrito', 'lines' => [], 'gateway' => 817000, 'cash' => 790000, 'shipping' => [], 'created_at' => 'x', 'mail' => null], $tmpOrders);
+expect(order_find($ref, $tmpOrders)['gateway'] === 817000 && order_find('TT-000000000000', $tmpOrders) === null, 'pedido: se guarda y se encuentra por referencia');
+expect(order_claim_mail($ref, $tmpOrders) === true && order_claim_mail($ref, $tmpOrders) === false, 'pedido: el correo solo se reclama una vez');
+order_finish_mail($ref, false, $tmpOrders);
+expect(order_claim_mail($ref, $tmpOrders) === true, 'pedido: si el envío falla, se puede reintentar');
+order_finish_mail($ref, true, $tmpOrders);
+expect(order_claim_mail($ref, $tmpOrders) === false && order_find($ref, $tmpOrders)['mail']['status'] === 'sent', 'pedido: enviado no se reenvía');
+unlink($tmpOrders);
 $testWompi = new Wompi('pub_test_x', 'test_integrity_y');
 parse_str((string) parse_url($testWompi->checkoutUrl('TT-A-1', 100, 'http://localhost/pago/resultado'), PHP_URL_QUERY), $checkoutQuery);
 expect(

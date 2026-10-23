@@ -67,11 +67,41 @@ function page_pay_wompi(): void
         redirect(url('/productos/' . $slug));
     }
 
-    $reference = Wompi::newReference($sku);
+    $reference = Wompi::newReference();
     $amountInCents = $entry['gw'] * 100;
     app_log('info', 'Wompi: inicio de pago', ['reference' => $reference, 'sku' => $sku, 'color' => $color, 'amount_in_cents' => $amountInCents]);
     header('Cache-Control: no-store');
     redirect($wompi->checkoutUrl($reference, $amountInCents, absolute_url('/pago/resultado')));
+}
+
+const ORDERS_FILE = APP_PATH . '/logs/wompi-orders.json';
+
+/**
+ * Lee, modifica y escribe un archivo JSON bajo bloqueo exclusivo. $fn recibe el arreglo
+ * actual por referencia; lo que retorne es lo que devuelve esta función.
+ */
+function json_store_update(string $file, callable $fn): mixed
+{
+    $handle = fopen($file, 'c+');
+    if ($handle === false) {
+        throw new RuntimeException('No se pudo abrir ' . $file);
+    }
+    try {
+        flock($handle, LOCK_EX);
+        $state = json_decode((string) stream_get_contents($handle), true);
+        if (!is_array($state)) {
+            $state = [];
+        }
+        $result = $fn($state);
+        ftruncate($handle, 0);
+        rewind($handle);
+        fwrite($handle, (string) json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        fflush($handle);
+        return $result;
+    } finally {
+        flock($handle, LOCK_UN);
+        fclose($handle);
+    }
 }
 
 /**
@@ -86,24 +116,66 @@ function wompi_webhook_state(?string $id = null, ?array $update = null): mixed
         $state = is_file($file) ? json_decode((string) file_get_contents($file), true) : [];
         return $id === null ? (array) $state : ($state[$id] ?? null);
     }
-    $handle = fopen($file, 'c+');
-    if ($handle === false) {
-        throw new RuntimeException('No se pudo abrir ' . $file);
-    }
-    try {
-        flock($handle, LOCK_EX);
-        $state = json_decode((string) stream_get_contents($handle), true) ?: [];
+    return json_store_update($file, function (array &$state) use ($id, $update) {
         $previous = $state[$id] ?? null;
         $state[$id] = $update;
-        ftruncate($handle, 0);
-        rewind($handle);
-        fwrite($handle, (string) json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        fflush($handle);
         return $previous;
-    } finally {
-        flock($handle, LOCK_UN);
-        fclose($handle);
+    });
+}
+
+/** Guarda el pedido bajo su referencia. Ojo: contiene datos personales; no pasarlo a app_log(). */
+function order_save(string $reference, array $order, ?string $file = null): void
+{
+    json_store_update($file ?? ORDERS_FILE, function (array &$state) use ($reference, $order) {
+        $state[$reference] = $order;
+    });
+}
+
+function order_find(string $reference, ?string $file = null): ?array
+{
+    $file ??= ORDERS_FILE;
+    if (!is_file($file)) {
+        return null;
     }
+    $state = json_decode((string) file_get_contents($file), true);
+    $order = is_array($state) ? ($state[$reference] ?? null) : null;
+    return is_array($order) ? $order : null;
+}
+
+/** Reclama el envío del correo: true solo para quien lo gana (sin reclamo previo, o uno de más de 10 min). */
+function order_claim_mail(string $reference, ?string $file = null): bool
+{
+    $file ??= ORDERS_FILE;
+    if (!is_file($file)) {
+        return false;
+    }
+    return (bool) json_store_update($file, function (array &$state) use ($reference) {
+        if (!isset($state[$reference]) || !is_array($state[$reference])) {
+            return false;
+        }
+        $mail = $state[$reference]['mail'] ?? null;
+        $free = $mail === null
+            || (($mail['status'] ?? null) === 'sending' && strtotime((string) ($mail['at'] ?? '')) < time() - 600);
+        if (!$free) {
+            return false;
+        }
+        $state[$reference]['mail'] = ['status' => 'sending', 'at' => date('c')];
+        return true;
+    });
+}
+
+/** Cierra el envío: enviado queda marcado; si falló, se libera para reintentar. */
+function order_finish_mail(string $reference, bool $sent, ?string $file = null): void
+{
+    $file ??= ORDERS_FILE;
+    if (!is_file($file)) {
+        return;
+    }
+    json_store_update($file, function (array &$state) use ($reference, $sent) {
+        if (isset($state[$reference]) && is_array($state[$reference])) {
+            $state[$reference]['mail'] = $sent ? ['status' => 'sent', 'at' => date('c')] : null;
+        }
+    });
 }
 
 function webhook_respond(int $status, array $body): void
