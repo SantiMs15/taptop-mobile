@@ -220,6 +220,17 @@ order_finish_mail($ref, false, $tmpOrders);
 expect(order_claim_mail($ref, $tmpOrders) === true, 'pedido: si el envío falla, se puede reintentar');
 order_finish_mail($ref, true, $tmpOrders);
 expect(order_claim_mail($ref, $tmpOrders) === false && order_find($ref, $tmpOrders)['mail']['status'] === 'sent', 'pedido: enviado no se reenvía');
+expect(!Wompi::isOwnReference("TT-0123456789AB
+"), 'Wompi: referencia con salto de línea final rechazada');
+$keep = Wompi::newReference();
+order_save($keep, ['source' => 'carrito', 'gateway' => 1], $tmpOrders);
+$threw = false;
+try {
+    order_save(Wompi::newReference(), ['shipping' => ['name' => "\xB1\x31"]], $tmpOrders);
+} catch (Throwable $e) {
+    $threw = true;
+}
+expect($threw && order_find($keep, $tmpOrders)['gateway'] === 1, 'pedido: si falla la codificación, el almacén no se borra');
 unlink($tmpOrders);
 $testWompi = new Wompi('pub_test_x', 'test_integrity_y');
 parse_str((string) parse_url($testWompi->checkoutUrl('TT-A-1', 100, 'http://localhost/pago/resultado'), PHP_URL_QUERY), $checkoutQuery);

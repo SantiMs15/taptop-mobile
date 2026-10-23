@@ -93,9 +93,13 @@ function json_store_update(string $file, callable $fn): mixed
             $state = [];
         }
         $result = $fn($state);
+        // Codifica ANTES de truncar: si falla, el archivo queda intacto.
+        $json = json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
         ftruncate($handle, 0);
         rewind($handle);
-        fwrite($handle, (string) json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        if (fwrite($handle, $json) !== strlen($json)) {
+            throw new RuntimeException('No se pudo escribir ' . $file);
+        }
         fflush($handle);
         return $result;
     } finally {
