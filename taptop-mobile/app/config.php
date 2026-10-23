@@ -67,6 +67,20 @@ return [
     // Vacías = sin botón "Comprar ahora".
     'wompi' => ['public_key' => '', 'integrity_secret' => '', 'events_secret' => ''],
 
+    // --- Correo de pedidos -------------------------------------------------------
+    // Aviso interno cuando un pago queda aprobado. 'username' y 'password' van SOLO en
+    // config.local.php (no va a Git). 'transport' => 'file' guarda los .eml en app/logs/mail/.
+    'orders_email' => 'servicioalcliente@taptopmobile.com',
+    'mail' => [
+        'transport' => 'smtp',
+        'host' => 'smtp.hostinger.com',
+        'port' => 465,
+        'username' => '',
+        'password' => '',
+        'from' => 'servicioalcliente@taptopmobile.com',
+        'from_name' => 'Taptop Mobile',
+    ],
+
     // --- Catálogo ------------------------------------------------------------------
     'catalog_source' => 'json', // 'json' en la Etapa 0; 'mysql' cuando exista el panel
     // Qué hacer con colores y capacidades agotados: 'mark' (tachado y no seleccionable),

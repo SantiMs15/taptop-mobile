@@ -21,6 +21,19 @@ use Taptop\Repositories\ProductRepository;
  */
 function config(string $key, mixed $default = null): mixed
 {
+    $value = config_store();
+    foreach (explode('.', $key) as $segment) {
+        if (!is_array($value) || !array_key_exists($segment, $value)) {
+            return $default;
+        }
+        $value = $value[$segment];
+    }
+    return $value;
+}
+
+/** Arreglo de configuración compartido (se carga una vez). Por referencia, para config_override(). */
+function &config_store(): array
+{
     static $config = null;
     if ($config === null) {
         $config = require APP_PATH . '/config.php';
@@ -29,14 +42,20 @@ function config(string $key, mixed $default = null): mixed
             $config = array_replace_recursive($config, (array) require $local);
         }
     }
-    $value = $config;
+    return $config;
+}
+
+/** Cambia un valor en memoria (clave con puntos: 'mail.transport'). Solo lo usa selftest. */
+function config_override(string $key, mixed $value): void
+{
+    $node = &config_store();
     foreach (explode('.', $key) as $segment) {
-        if (!is_array($value) || !array_key_exists($segment, $value)) {
-            return $default;
+        if (!isset($node[$segment]) || !is_array($node[$segment])) {
+            $node[$segment] = [];
         }
-        $value = $value[$segment];
+        $node = &$node[$segment];
     }
-    return $value;
+    $node = $value;
 }
 
 /** Vacío o marcado "[por completar]". */

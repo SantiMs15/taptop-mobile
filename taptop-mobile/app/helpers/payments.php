@@ -388,6 +388,7 @@ function webhook_wompi(string $method): void
     app_log($amountMatches ? 'info' : 'warning', 'Wompi webhook: ' . ($status === 'APPROVED' ? 'PAGO CONFIRMADO' : 'estado ' . $status), [
         'id' => $id, 'reference' => $reference, 'amount_in_cents' => $amount, 'amount_matches' => $amountMatches,
     ]);
+    order_notify_if_approved($reference, $transaction);
     webhook_respond(200, ['ok' => true]);
 }
 
@@ -426,6 +427,7 @@ function page_pay_result(): void
             'id' => $id, 'reference' => $reference, 'status' => $transaction['status'] ?? null,
             'amount_in_cents' => $amount, 'amount_matches' => $amountMatches,
         ]);
+        order_notify_if_approved($reference, $transaction);
         $view += [
             'status' => (string) ($transaction['status'] ?? 'UNKNOWN'),
             'reference' => $reference,

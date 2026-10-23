@@ -293,5 +293,44 @@ expect(checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'NO']) === null, 
 expect(checkout_items(['producto' => ['x'], 'sku' => 'APP3']) === null, 'envío: producto con arreglo = sin pedido');
 expect(str_starts_with((string) buy_path('airpods-pro-3', 'APP3', null), '/pago/envio?') || wompi() === null, 'Comprar ahora lleva a la página de envío');
 
+// --- Correo del pedido -------------------------------------------------------
+use Taptop\Mail\SmtpMailer;
+
+$msg = SmtpMailer::buildMessage('servicioalcliente@taptopmobile.com', 'Taptop Mobile', 'servicioalcliente@taptopmobile.com', 'Pedido pagado TT-1 · $817.000', "Línea 1\n.línea con punto", 'ana@example.com');
+expect(str_contains($msg, "Subject: =?UTF-8?B?") && str_contains($msg, "Reply-To: ana@example.com\r\n") && str_contains($msg, "Content-Transfer-Encoding: base64\r\n"), 'correo: cabeceras y asunto UTF-8', $msg);
+$threw = false;
+try { SmtpMailer::buildMessage('a@b.co', 'X', "a@b.co\r\nBcc: x@y.co", 'Hola', 'x'); } catch (InvalidArgumentException) { $threw = true; }
+expect($threw, 'correo: saltos de línea en cabeceras rechazados (sin inyección)');
+$mailOrder = ['source' => 'carrito', 'lines' => cart_priced(cart_add([], 'APP3', null))['lines'], 'gateway' => 817000, 'cash' => 790000, 'shipping' => $v['data'], 'created_at' => 'x', 'mail' => null];
+$mail = order_email('TT-ABCDEF123456', $mailOrder, ['id' => '1-2-3', 'payment_method_type' => 'CARD', 'amount_in_cents' => 81700000]);
+expect(str_contains($mail['subject'], 'TT-ABCDEF123456') && str_contains($mail['body'], 'El Poblado') && str_contains($mail['body'], '1 × AirPods Pro 3'), 'correo: pedido con datos de envío y productos', $mail);
+expect(str_starts_with(order_email('TT-ABCDEF123456', $mailOrder, ['id' => '1', 'amount_in_cents' => 100])['subject'], '⚠'), 'correo: monto distinto avisa en el asunto');
+
+$mailDir = sys_get_temp_dir() . '/taptop-mail-' . bin2hex(random_bytes(4));
+$ordersTmp = $mailDir . '-orders.json';
+config_override('mail.transport', 'file');
+config_override('mail.dir', $mailDir);
+order_save('TT-ABCDEF123456', $mailOrder, $ordersTmp);
+$approved = ['id' => '1-2-3', 'status' => 'APPROVED', 'payment_method_type' => 'CARD', 'amount_in_cents' => 81700000];
+order_notify_if_approved('TT-ABCDEF123456', $approved, $ordersTmp);
+order_notify_if_approved('TT-ABCDEF123456', $approved, $ordersTmp);
+expect(count(glob($mailDir . '/*.eml') ?: []) === 1 && (order_find('TT-ABCDEF123456', $ordersTmp)['mail']['status'] ?? null) === 'sent', 'correo: dos avisos, un solo correo', glob($mailDir . '/*'));
+$eml = (string) file_get_contents((glob($mailDir . '/*.eml') ?: [''])[0]);
+expect(str_contains($eml, "\r\nReply-To: ana@example.com\r\n") && str_contains($eml, 'To: servicioalcliente@taptopmobile.com'), 'correo: archivo con destino y Reply-To al cliente');
+order_save('TT-DECLINED00001', $mailOrder, $ordersTmp);
+order_notify_if_approved('TT-DECLINED00001', ['status' => 'DECLINED'] + $approved, $ordersTmp);
+order_notify_if_approved('TT-NOEXISTE0001', $approved, $ordersTmp);
+expect(count(glob($mailDir . '/*.eml') ?: []) === 1, 'correo: no aprobado o sin pedido no envía');
+config_override('mail.transport', 'smtp');
+config_override('mail.username', '');
+order_save('TT-NOCREDS000001', $mailOrder, $ordersTmp);
+expect(send_mail('x@example.com', 'Hola', 'x') === false, 'correo: SMTP sin credenciales devuelve false');
+order_notify_if_approved('TT-NOCREDS000001', $approved, $ordersTmp);
+expect(order_find('TT-NOCREDS000001', $ordersTmp)['mail'] === null, 'correo: sin credenciales el pedido queda para reintentar');
+config_override('mail.transport', 'file');
+foreach (glob($mailDir . '/*') ?: [] as $f) { @unlink($f); }
+@rmdir($mailDir);
+@unlink($ordersTmp);
+
 echo "\n{$passed} pasaron, {$failed} fallaron\n";
 exit($failed === 0 ? 0 : 1);
