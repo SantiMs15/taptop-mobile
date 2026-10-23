@@ -306,6 +306,9 @@ $mail = order_email('TT-ABCDEF123456', $mailOrder, ['id' => '1-2-3', 'payment_me
 expect(str_contains($mail['subject'], 'TT-ABCDEF123456') && str_contains($mail['body'], 'El Poblado') && str_contains($mail['body'], '1 × AirPods Pro 3'), 'correo: pedido con datos de envío y productos', $mail);
 expect(str_starts_with(order_email('TT-ABCDEF123456', $mailOrder, ['id' => '1', 'amount_in_cents' => 100])['subject'], '⚠'), 'correo: monto distinto avisa en el asunto');
 
+expect(str_starts_with(order_email('TT-ABCDEF123456', ['gateway' => 1000] + $mailOrder, ['id' => '1', 'amount_in_cents' => 100099])['subject'], '⚠'), 'correo: centavos sobrantes cuentan como monto distinto');
+expect(str_contains(order_email('TT-ABCDEF123456', ['acepto_datos_at' => '2026-10-22T10:00:00-05:00'] + $mailOrder, ['id' => '1', 'amount_in_cents' => 81700000])['body'], 'Aceptó tratamiento de datos: 2026-10-22'), 'correo: fecha de autorización del nivel superior del pedido');
+
 $mailDir = sys_get_temp_dir() . '/taptop-mail-' . bin2hex(random_bytes(4));
 $ordersTmp = $mailDir . '-orders.json';
 config_override('mail.transport', 'file');

@@ -374,6 +374,8 @@ function webhook_wompi(string $method): void
     $previous = wompi_webhook_state($id);
     if (($previous['status'] ?? null) === $status) {
         app_log('info', 'Wompi webhook: evento repetido, sin cambios', ['id' => $id, 'status' => $status]);
+        // Idempotente (order_claim_mail): si el envío anterior falló, el reintento de Wompi lo repite.
+        order_notify_if_approved($reference, $transaction);
         webhook_respond(200, ['ok' => true, 'duplicate' => true]);
         return;
     }

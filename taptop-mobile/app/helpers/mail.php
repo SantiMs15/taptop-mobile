@@ -52,9 +52,10 @@ function send_mail(string $to, string $subject, string $body, ?string $replyTo =
  */
 function order_email(string $reference, array $order, array $transaction): array
 {
-    $charged = intdiv((int) ($transaction['amount_in_cents'] ?? 0), 100);
+    $cents = (int) ($transaction['amount_in_cents'] ?? 0);
+    $charged = intdiv($cents, 100);
     $expected = (int) ($order['gateway'] ?? 0);
-    $matches = $charged === $expected;
+    $matches = $cents === $expected * 100;
 
     $subject = $matches
         ? 'Pedido pagado ' . $reference . ' · ' . format_price($charged)
@@ -80,8 +81,9 @@ function order_email(string $reference, array $order, array $transaction): array
         }
         $out[] = (string) $field['label'] . ': ' . (string) ($shipping[$name] ?? '');
     }
-    if (!empty($shipping['acepto_datos_at'])) {
-        $out[] = 'Aceptó tratamiento de datos: ' . (string) $shipping['acepto_datos_at'];
+    $consent = (string) ($order['acepto_datos_at'] ?? $shipping['acepto_datos_at'] ?? '');
+    if ($consent !== '') {
+        $out[] = 'Aceptó tratamiento de datos: ' . $consent;
     }
     $out[] = '';
     $out[] = 'PRODUCTOS';
