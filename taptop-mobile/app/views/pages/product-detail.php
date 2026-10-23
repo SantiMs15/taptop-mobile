@@ -4,6 +4,7 @@
  * "Confirmar disponibilidad" y "Resolver una duda", bloque de confianza, slides y acordeón.
  * @var array $product vista de ProductPresenter::detail()
  * @var string $nav_category
+ * @var bool $changed viene de "Comprar ahora" con precio o disponibilidad distintos (?cambio=1)
  */
 $uid = ui_id('pdp');
 $current = $product['current'];
@@ -42,6 +43,10 @@ $ctaTrack = $product['track'] + [
 
       <?php partial('color-swatches', ['card' => $product, 'uid' => $uid, 'size' => 'lg']); ?>
       <?php partial('price-block', ['card' => $product, 'size' => 'lg']); ?>
+
+      <?php if (!empty($changed)): ?>
+      <p class="cart__notice" role="status">El precio o la disponibilidad cambió: revisa antes de pagar.</p>
+      <?php endif; ?>
 
       <div class="pdp__actions">
         <a class="btn btn--wa btn--lg btn--block" href="<?= e($current['wa']) ?>" target="_blank" rel="noopener noreferrer" data-cta<?= track_attrs('whatsapp_click', $ctaTrack) ?>>

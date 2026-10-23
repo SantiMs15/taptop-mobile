@@ -84,6 +84,11 @@ item($heroPlaceholders === [], 'Fotos del hero', count($heroPlaceholders) . ' sl
 $brand = PUBLIC_PATH . '/assets/images/brand/';
 item(is_file($brand . 'logo-mark-512.png') && !is_file($brand . 'favicon.svg'), 'Logo oficial (el 3D) en favicon, ícono de iPhone y datos estructurados', 'assets/images/brand/logo-mark-512.png');
 
+if (wompi() !== null) {
+    section('Pagos en línea (Wompi)');
+    item(orders_smtp_ready(), 'Correo SMTP de pedidos con usuario y contraseña (sin él el sitio no arranca en producción)', 'mail.transport = smtp, mail.username, mail.password');
+}
+
 section('Panel y respaldos (Paso 2)');
 item(config('catalog_source') === 'mysql', "Catálogo en MySQL con panel de administración (catalog_source = 'mysql')");
 item(is_file(APP_PATH . '/db/schema.sql'), 'schema.sql y exportación diaria cifrada a Google Drive probadas');

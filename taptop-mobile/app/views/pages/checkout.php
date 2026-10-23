@@ -18,6 +18,10 @@ $isCart = $items['source'] === 'carrito';
   <p class="cart__notice" role="alert">Revisa los datos marcados para continuar.</p>
   <?php endif; ?>
 
+  <?php if ($priced['has_unavailable']): ?>
+  <p class="cart__notice" role="status">Algunos productos se agotaron y no se incluyen en este pedido.</p>
+  <?php endif; ?>
+
   <div class="checkout__summary">
     <h2 class="checkout__h">Tu pedido</h2>
     <ul class="checkout__lines">

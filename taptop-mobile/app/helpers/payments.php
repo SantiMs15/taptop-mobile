@@ -53,34 +53,81 @@ function find_product_by_sku(string $sku): ?array
 const ORDERS_FILE = APP_PATH . '/logs/wompi-orders.json';
 
 /**
+ * Bloqueo de un almacén JSON: vive en {archivo}.lock (el archivo de datos se reemplaza con
+ * rename, así que no sirve para bloquear). Lanza si no se puede abrir o bloquear.
+ * @return resource
+ */
+function json_store_lock(string $file, int $mode)
+{
+    $handle = fopen($file . '.lock', 'c');
+    if ($handle === false) {
+        throw new RuntimeException('No se pudo abrir el bloqueo de ' . basename($file));
+    }
+    if (!flock($handle, $mode)) {
+        fclose($handle);
+        throw new RuntimeException('No se pudo bloquear ' . basename($file));
+    }
+    return $handle;
+}
+
+/** @param resource $handle */
+function json_store_unlock($handle): void
+{
+    flock($handle, LOCK_UN);
+    fclose($handle);
+}
+
+/** Contenido decodificado (sin bloqueo propio: quien llama ya lo tiene). */
+function json_store_decode(string $file): array
+{
+    $raw = is_file($file) ? file_get_contents($file) : '';
+    $state = json_decode((string) $raw, true);
+    return is_array($state) ? $state : [];
+}
+
+/** Lee un almacén JSON con bloqueo compartido. Si el archivo no existe, está vacío. */
+function json_store_read(string $file): array
+{
+    if (!is_file($file)) {
+        return [];
+    }
+    $lock = json_store_lock($file, LOCK_SH);
+    try {
+        return json_store_decode($file);
+    } finally {
+        json_store_unlock($lock);
+    }
+}
+
+/**
  * Lee, modifica y escribe un archivo JSON bajo bloqueo exclusivo. $fn recibe el arreglo
  * actual por referencia; lo que retorne es lo que devuelve esta función.
+ * Escritura atómica: el JSON nuevo va a {archivo}.tmp y luego reemplaza al original con
+ * rename(); si el disco se llena a mitad de camino, el original queda intacto.
  */
 function json_store_update(string $file, callable $fn): mixed
 {
-    $handle = fopen($file, 'c+');
-    if ($handle === false) {
-        throw new RuntimeException('No se pudo abrir ' . $file);
-    }
+    $lock = json_store_lock($file, LOCK_EX);
     try {
-        flock($handle, LOCK_EX);
-        $state = json_decode((string) stream_get_contents($handle), true);
-        if (!is_array($state)) {
-            $state = [];
-        }
+        $state = json_store_decode($file);
         $result = $fn($state);
-        // Codifica ANTES de truncar: si falla, el archivo queda intacto.
+        // Codifica ANTES de escribir: si falla, el archivo queda intacto.
         $json = json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-        ftruncate($handle, 0);
-        rewind($handle);
-        if (fwrite($handle, $json) !== strlen($json)) {
-            throw new RuntimeException('No se pudo escribir ' . $file);
+        $tmp = $file . '.tmp';
+        $handle = fopen($tmp, 'w');
+        if ($handle === false) {
+            throw new RuntimeException('No se pudo abrir el temporal de ' . basename($file));
         }
-        fflush($handle);
+        $written = fwrite($handle, $json);
+        $flushed = fflush($handle);
+        fclose($handle);
+        if ($written !== strlen($json) || !$flushed || !rename($tmp, $file)) {
+            @unlink($tmp);
+            throw new RuntimeException('No se pudo escribir ' . basename($file));
+        }
         return $result;
     } finally {
-        flock($handle, LOCK_UN);
-        fclose($handle);
+        json_store_unlock($lock);
     }
 }
 
@@ -93,8 +140,8 @@ function wompi_webhook_state(?string $id = null, ?array $update = null): mixed
 {
     $file = APP_PATH . '/logs/wompi-transactions.json';
     if ($update === null) {
-        $state = is_file($file) ? json_decode((string) file_get_contents($file), true) : [];
-        return $id === null ? (array) $state : ($state[$id] ?? null);
+        $state = json_store_read($file);
+        return $id === null ? $state : ($state[$id] ?? null);
     }
     return json_store_update($file, function (array &$state) use ($id, $update) {
         $previous = $state[$id] ?? null;
@@ -113,13 +160,27 @@ function order_save(string $reference, array $order, ?string $file = null): void
 
 function order_find(string $reference, ?string $file = null): ?array
 {
+    $order = json_store_read($file ?? ORDERS_FILE)[$reference] ?? null;
+    return is_array($order) ? $order : null;
+}
+
+/**
+ * Marca que el carrito de este pedido ya se vació: true solo la primera vez, para que recargar
+ * (o abrir de un favorito) la página de resultado no borre un carrito nuevo.
+ */
+function order_mark_cart_cleared(string $reference, ?string $file = null): bool
+{
     $file ??= ORDERS_FILE;
     if (!is_file($file)) {
-        return null;
+        return false;
     }
-    $state = json_decode((string) file_get_contents($file), true);
-    $order = is_array($state) ? ($state[$reference] ?? null) : null;
-    return is_array($order) ? $order : null;
+    return (bool) json_store_update($file, function (array &$state) use ($reference) {
+        if (!isset($state[$reference]) || !is_array($state[$reference]) || !empty($state[$reference]['cart_cleared_at'])) {
+            return false;
+        }
+        $state[$reference]['cart_cleared_at'] = date('c');
+        return true;
+    });
 }
 
 /** Reclama el envío del correo: true solo para quien lo gana (sin reclamo previo, o uno de más de 10 min). */
@@ -223,7 +284,7 @@ function shipping_form_validate(array $post): array
             continue;
         }
         $raw = $post[$name] ?? '';
-        if (!is_string($raw)) {
+        if (!is_string($raw) || !mb_check_encoding($raw, 'UTF-8')) {
             $errors[$name] = 'Revisa este campo.';
             $data[$name] = '';
             continue;
@@ -277,13 +338,39 @@ function checkout_render(array $items, array $values, array $errors, int $status
     ], $status);
 }
 
+/**
+ * A dónde volver cuando ya no hay nada que cobrar: el carrito, o el producto si el slug es válido
+ * y existe. Null si la entrada no sirve. Con $changed, la página avisa que algo cambió (?cambio=1).
+ */
+function checkout_fallback_url(array $input, bool $changed): ?string
+{
+    $query = $changed ? ['cambio' => 1] : [];
+    if (($input['origen'] ?? null) === 'carrito') {
+        return url('/carrito', $query);
+    }
+    $slug = $input['producto'] ?? null;
+    if (is_string($slug) && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D', $slug) === 1 && product_repository()->findBySlug($slug) !== null) {
+        return url('/productos/' . $slug, $query);
+    }
+    return null;
+}
+
 /** GET /pago/envio?origen=carrito | ?producto=&sku=&color= → resumen del pedido y formulario de envío. */
 function page_checkout(): void
 {
-    $items = wompi() !== null ? checkout_items($_GET) : null;
-    if ($items === null) {
+    if (wompi() === null) {
         page_not_found();
         return;
+    }
+    $items = checkout_items($_GET);
+    if ($items === null) {
+        $back = checkout_fallback_url($_GET, false);
+        if ($back === null) {
+            page_not_found();
+            return;
+        }
+        header('Cache-Control: no-store');
+        redirect($back);
     }
     checkout_render($items, [], [], 200);
 }
@@ -299,15 +386,13 @@ function checkout_post(): void
     $items = checkout_items($_POST);
     $seen = is_string($_POST['total_visto'] ?? null) ? $_POST['total_visto'] : '';
     if ($items === null || $items['priced']['gateway'] !== (int) $seen) {
-        $slug = is_string($_POST['producto'] ?? null) && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $_POST['producto']) === 1 ? $_POST['producto'] : null;
-        $toProduct = ($_POST['origen'] ?? null) !== 'carrito' && $slug !== null;
         header('Cache-Control: no-store');
-        redirect($toProduct ? url('/productos/' . $slug) : url('/carrito', ['cambio' => 1]));
+        redirect(checkout_fallback_url($_POST, true) ?? url('/carrito', ['cambio' => 1]));
     }
     $result = shipping_form_validate($_POST);
     if ($result['errors'] !== []) {
-        // Lo escrito se conserva tal cual (solo textos); la casilla se marca si venía marcada.
-        $typed = array_filter($_POST, 'is_string');
+        // Lo escrito se conserva tal cual (solo textos UTF-8 válidos); la casilla se marca si venía marcada.
+        $typed = array_filter($_POST, static fn (mixed $v): bool => is_string($v) && mb_check_encoding($v, 'UTF-8'));
         checkout_render($items, array_intersect_key($typed, shipping_form_fields()), $result['errors'], 422);
         return;
     }
@@ -351,13 +436,17 @@ function expected_amount_in_cents(string $reference): ?int
     return expected_amount_for($reference, $order);
 }
 
-/** Avisa del pedido pagado sin dejar que un fallo del almacén rompa el webhook ni la página del cliente. */
-function order_notify_safely(string $reference, array $transaction): void
+/**
+ * Avisa del pedido pagado sin dejar que un fallo del almacén rompa el webhook ni la página del cliente.
+ * False si el aviso quedó pendiente (correo fallido o error del almacén): el webhook pide reintento.
+ */
+function order_notify_safely(string $reference, array $transaction): bool
 {
     try {
-        order_notify_if_approved($reference, $transaction);
+        return order_notify_if_approved($reference, $transaction);
     } catch (Throwable) {
         app_log('error', 'Aviso de pedido falló', ['reference' => $reference]);
+        return false;
     }
 }
 
@@ -455,7 +544,10 @@ function webhook_wompi(string $method): void
     if (($previous['status'] ?? null) === $status) {
         app_log('info', 'Wompi webhook: evento repetido, sin cambios', ['id' => $id, 'status' => $status]);
         // Idempotente (order_claim_mail): si el envío anterior falló, el reintento de Wompi lo repite.
-        order_notify_safely($reference, $transaction);
+        if (!order_notify_safely($reference, $transaction)) {
+            webhook_respond(503, ['error' => 'mail_failed']);
+            return;
+        }
         webhook_respond(200, ['ok' => true, 'duplicate' => true]);
         return;
     }
@@ -470,7 +562,11 @@ function webhook_wompi(string $method): void
     app_log($amountMatches ? 'info' : 'warning', 'Wompi webhook: ' . ($status === 'APPROVED' ? 'PAGO CONFIRMADO' : 'estado ' . $status), [
         'id' => $id, 'reference' => $reference, 'amount_in_cents' => $amount, 'amount_matches' => $amountMatches,
     ]);
-    order_notify_safely($reference, $transaction);
+    // Si el correo falla, 503: Wompi reintenta y el reintento entra por la rama de evento repetido.
+    if (!order_notify_safely($reference, $transaction)) {
+        webhook_respond(503, ['error' => 'mail_failed']);
+        return;
+    }
     webhook_respond(200, ['ok' => true]);
 }
 
@@ -512,9 +608,18 @@ function page_pay_result(): void
             'id' => $id, 'reference' => $reference, 'status' => $result['status'],
             'amount_in_cents' => (int) ($transaction['amount_in_cents'] ?? 0), 'amount_matches' => $result['amount_matches'],
         ]);
-        order_notify_safely($reference, $transaction);
+        order_notify_safely($reference, $transaction); // aquí el resultado no importa: el webhook reintenta
         if ($result['clear_cart']) {
-            cart_write([]);
+            // Una sola vez por pedido: recargar la página no borra un carrito nuevo.
+            try {
+                $clear = order_mark_cart_cleared($reference);
+            } catch (Throwable) {
+                $clear = false;
+                app_log('error', 'Pedido: no se pudo marcar el carrito vaciado', ['reference' => $reference]);
+            }
+            if ($clear) {
+                cart_write([]);
+            }
         }
         $view += $result + [
             'reference' => $reference,

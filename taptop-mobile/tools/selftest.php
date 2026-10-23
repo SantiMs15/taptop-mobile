@@ -210,8 +210,7 @@ $wompiRef = 'TT-IP18PM-256-BUR-0123456789';
 expect(Wompi::skuFromReference($wompiRef) === 'IP18PM-256-BUR', 'Wompi: referencia vieja conserva el SKU', $wompiRef);
 expect(Wompi::skuFromReference('otra-tienda-123') === null, 'Wompi: referencia ajena rechazada');
 $ref = Wompi::newReference();
-expect(preg_match('/^TT-[0-9A-F]{12}$/', $ref) === 1 && Wompi::isOwnReference($ref) && Wompi::isOwnReference('TT-APP3-0123456789'), 'Wompi: referencia nueva y vieja reconocidas', $ref);
-expect(!Wompi::isOwnReference('otra-tienda-123'), 'Wompi: referencia ajena rechazada (nueva forma)');
+expect(preg_match('/^TT-[0-9A-F]{12}$/D', $ref) === 1 && Wompi::skuFromReference($ref) === null, 'Wompi: referencia nueva sin datos del producto', $ref);
 $tmpOrders = tempnam(sys_get_temp_dir(), 'tt-orders');
 order_save($ref, ['source' => 'carrito', 'lines' => [], 'gateway' => 817000, 'cash' => 790000, 'shipping' => [], 'created_at' => 'x', 'mail' => null], $tmpOrders);
 expect(order_find($ref, $tmpOrders)['gateway'] === 817000 && order_find('TT-000000000000', $tmpOrders) === null, 'pedido: se guarda y se encuentra por referencia');
@@ -220,8 +219,10 @@ order_finish_mail($ref, false, $tmpOrders);
 expect(order_claim_mail($ref, $tmpOrders) === true, 'pedido: si el envío falla, se puede reintentar');
 order_finish_mail($ref, true, $tmpOrders);
 expect(order_claim_mail($ref, $tmpOrders) === false && order_find($ref, $tmpOrders)['mail']['status'] === 'sent', 'pedido: enviado no se reenvía');
-expect(!Wompi::isOwnReference("TT-0123456789AB
-"), 'Wompi: referencia con salto de línea final rechazada');
+expect(Wompi::skuFromReference("TT-APP3-0123456789\n") === null, 'Wompi: referencia con salto de línea final rechazada');
+expect(order_mark_cart_cleared($ref, $tmpOrders) === true && order_mark_cart_cleared($ref, $tmpOrders) === false && is_string(order_find($ref, $tmpOrders)['cart_cleared_at'] ?? null), 'pedido: el carrito se vacía una sola vez por pedido');
+expect(order_mark_cart_cleared('TT-000000000000', $tmpOrders) === false, 'pedido: sin pedido no se vacía el carrito');
+expect(!is_file($tmpOrders . '.tmp') && is_file($tmpOrders . '.lock'), 'almacén: escritura atómica sin temporal sobrante, bloqueo en archivo aparte');
 $keep = Wompi::newReference();
 order_save($keep, ['source' => 'carrito', 'gateway' => 1], $tmpOrders);
 $threw = false;
@@ -231,7 +232,17 @@ try {
     $threw = true;
 }
 expect($threw && order_find($keep, $tmpOrders)['gateway'] === 1, 'pedido: si falla la codificación, el almacén no se borra');
+$threw = false;
+try {
+    json_store_update($tmpOrders, static function (array &$state): void { throw new RuntimeException('a mitad'); });
+} catch (RuntimeException) {
+    $threw = true;
+}
+expect($threw && order_find($keep, $tmpOrders)['gateway'] === 1 && order_save($keep, ['gateway' => 2], $tmpOrders) === null && order_find($keep, $tmpOrders)['gateway'] === 2, 'almacén: un error libera el bloqueo y se puede volver a escribir (rename sobre el archivo existente)');
+$missingStore = sys_get_temp_dir() . '/tt-no-existe-' . bin2hex(random_bytes(4)) . '.json';
+expect(order_find($ref, $missingStore) === null && !is_file($missingStore . '.lock'), 'almacén: leer un archivo que no existe = vacío, sin crear nada');
 unlink($tmpOrders);
+@unlink($tmpOrders . '.lock');
 $testWompi = new Wompi('pub_test_x', 'test_integrity_y');
 parse_str((string) parse_url($testWompi->checkoutUrl('TT-A-1', 100, 'http://localhost/pago/resultado'), PHP_URL_QUERY), $checkoutQuery);
 expect(
@@ -287,6 +298,35 @@ expect(isset(shipping_form_validate(['cedula' => '12a'] + $okForm)['errors']['ce
 expect(isset(shipping_form_validate(['correo' => 'ana@'] + $okForm)['errors']['correo']), 'envío: correo inválido');
 expect(isset(shipping_form_validate(array_diff_key($okForm, ['acepta' => 1]))['errors']['acepta']), 'envío: sin aceptar la política no continúa');
 expect(isset(shipping_form_validate(['nombre' => ['x']] + $okForm)['errors']['nombre']), 'envío: campo con arreglo en vez de texto rechazado sin error PHP');
+$badUtf8 = shipping_form_validate(['barrio' => "El Pobl\xB1do"] + $okForm);
+expect(isset($badUtf8['errors']['barrio']) && $badUtf8['data']['barrio'] === '', 'envío: texto con UTF-8 inválido rechazado (no llega al pedido)', $badUtf8['errors']);
+expect(checkout_fallback_url(['origen' => 'carrito'], false) === '/carrito' && checkout_fallback_url(['origen' => 'carrito'], true) === '/carrito?cambio=1', 'envío: sin nada que cobrar, el carrito vuelve a /carrito');
+expect(checkout_fallback_url(['producto' => 'airpods-pro-3', 'sku' => 'NO'], false) === '/productos/airpods-pro-3' && checkout_fallback_url(['producto' => 'airpods-pro-3'], true) === '/productos/airpods-pro-3?cambio=1', 'envío: Comprar ahora sin nada que cobrar vuelve al producto (con ?cambio=1 si cambió)');
+expect(checkout_fallback_url(['producto' => '../x'], false) === null && checkout_fallback_url(['producto' => 'no-existe-zz'], false) === null && checkout_fallback_url(['producto' => ['x']], false) === null && checkout_fallback_url([], false) === null, 'envío: entrada basura = 404');
+expect(str_contains(content_security_policy(true), "form-action 'self' https://checkout.wompi.co;") && str_contains(content_security_policy(false), "form-action 'self';"), 'CSP: form-action permite el checkout de Wompi solo con Wompi activo');
+expect(wompi() === null || str_contains(content_security_policy(), 'form-action \'self\' https://checkout.wompi.co'), 'CSP: con la configuración actual de Wompi, form-action lo incluye');
+$cfgEnv = config('environment');
+$cfgWompi = config('wompi');
+$cfgMail = config('mail');
+config_override('environment', 'production');
+config_override('wompi', ['public_key' => 'pub_prod_x', 'integrity_secret' => 'prod_integrity_x']);
+config_override('mail', ['transport' => 'file', 'username' => 'u', 'password' => 'p']);
+$mailBlocker = static fn (): bool => (bool) array_filter(deploy_blockers(), static fn (string $b): bool => str_contains($b, 'correo SMTP de pedidos'));
+$blockFile = $mailBlocker();
+config_override('mail', ['transport' => 'smtp', 'username' => 'u', 'password' => '']);
+$blockNoPass = $mailBlocker();
+config_override('mail', ['transport' => 'smtp', 'username' => 'u', 'password' => 'p']);
+$blockOk = $mailBlocker();
+config_override('environment', 'staging');
+config_override('mail', ['transport' => 'file', 'username' => '', 'password' => '']);
+$blockStaging = $mailBlocker();
+config_override('environment', 'production');
+config_override('wompi', []);
+$blockNoWompi = $mailBlocker();
+config_override('environment', $cfgEnv);
+config_override('wompi', $cfgWompi);
+config_override('mail', $cfgMail);
+expect($blockFile && $blockNoPass && !$blockOk && !$blockStaging && !$blockNoWompi, 'despliegue: con Wompi en producción exige SMTP con usuario y contraseña', compact('blockFile', 'blockNoPass', 'blockOk', 'blockStaging', 'blockNoWompi'));
 $single = checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'APP3', 'color' => '']);
 expect($single !== null && $single['source'] === 'producto' && $single['priced']['gateway'] === 817000, 'envío: Comprar ahora arma un pedido de un producto', $single);
 expect(checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'NO']) === null, 'envío: sku que no es del producto = sin pedido');
@@ -315,25 +355,29 @@ config_override('mail.transport', 'file');
 config_override('mail.dir', $mailDir);
 order_save('TT-ABCDEF123456', $mailOrder, $ordersTmp);
 $approved = ['id' => '1-2-3', 'status' => 'APPROVED', 'payment_method_type' => 'CARD', 'amount_in_cents' => 81700000];
-order_notify_if_approved('TT-ABCDEF123456', $approved, $ordersTmp);
-order_notify_if_approved('TT-ABCDEF123456', $approved, $ordersTmp);
-expect(count(glob($mailDir . '/*.eml') ?: []) === 1 && (order_find('TT-ABCDEF123456', $ordersTmp)['mail']['status'] ?? null) === 'sent', 'correo: dos avisos, un solo correo', glob($mailDir . '/*'));
+$notify1 = order_notify_if_approved('TT-ABCDEF123456', $approved, $ordersTmp);
+$notify2 = order_notify_if_approved('TT-ABCDEF123456', $approved, $ordersTmp);
+expect($notify1 && $notify2 && count(glob($mailDir . '/*.eml') ?: []) === 1 && (order_find('TT-ABCDEF123456', $ordersTmp)['mail']['status'] ?? null) === 'sent', 'correo: dos avisos, un solo correo (ambos sin pendientes)', glob($mailDir . '/*'));
+order_save('TT-SENDING000001', $mailOrder, $ordersTmp);
+order_claim_mail('TT-SENDING000001', $ordersTmp);
+expect(order_notify_if_approved('TT-SENDING000001', $approved, $ordersTmp) === false, 'correo: con otro envío en curso queda pendiente (el webhook pide reintento)');
 $eml = (string) file_get_contents((glob($mailDir . '/*.eml') ?: [''])[0]);
 expect(str_contains($eml, "\r\nReply-To: ana@example.com\r\n") && str_contains($eml, 'To: servicioalcliente@taptopmobile.com'), 'correo: archivo con destino y Reply-To al cliente');
 order_save('TT-DECLINED00001', $mailOrder, $ordersTmp);
-order_notify_if_approved('TT-DECLINED00001', ['status' => 'DECLINED'] + $approved, $ordersTmp);
-order_notify_if_approved('TT-NOEXISTE0001', $approved, $ordersTmp);
-expect(count(glob($mailDir . '/*.eml') ?: []) === 1, 'correo: no aprobado o sin pedido no envía');
+$notifyDeclined = order_notify_if_approved('TT-DECLINED00001', ['status' => 'DECLINED'] + $approved, $ordersTmp);
+$notifyMissing = order_notify_if_approved('TT-NOEXISTE0001', $approved, $ordersTmp);
+expect($notifyDeclined && $notifyMissing && count(glob($mailDir . '/*.eml') ?: []) === 1, 'correo: no aprobado o sin pedido no envía (y no queda pendiente)');
 config_override('mail.transport', 'smtp');
 config_override('mail.username', '');
 order_save('TT-NOCREDS000001', $mailOrder, $ordersTmp);
 expect(send_mail('x@example.com', 'Hola', 'x') === false, 'correo: SMTP sin credenciales devuelve false');
-order_notify_if_approved('TT-NOCREDS000001', $approved, $ordersTmp);
-expect(order_find('TT-NOCREDS000001', $ordersTmp)['mail'] === null, 'correo: sin credenciales el pedido queda para reintentar');
+$notifyNoCreds = order_notify_if_approved('TT-NOCREDS000001', $approved, $ordersTmp);
+expect($notifyNoCreds === false && order_find('TT-NOCREDS000001', $ordersTmp)['mail'] === null, 'correo: sin credenciales devuelve false y el pedido queda para reintentar');
 config_override('mail.transport', 'file');
 foreach (glob($mailDir . '/*') ?: [] as $f) { @unlink($f); }
 @rmdir($mailDir);
 @unlink($ordersTmp);
+@unlink($ordersTmp . '.lock');
 
 // --- Resultado del pago --------------------------------------------------------
 $resOrder = ['source' => 'carrito', 'lines' => cart_priced(cart_add([], 'APP3', null))['lines'], 'gateway' => 817000, 'cash' => 790000, 'shipping' => $v['data'], 'created_at' => 'x', 'mail' => null];

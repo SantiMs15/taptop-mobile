@@ -508,8 +508,15 @@ function csp_nonce(): string
     return $nonce ??= base64_encode(random_bytes(16));
 }
 
-function content_security_policy(): string
+/** $payments: si Wompi está activo (por defecto, según la configuración). */
+function content_security_policy(?bool $payments = null): string
 {
+    $payments ??= wompi() !== null;
+    // form-action también se aplica al destino de las redirecciones: POST /pago/envio → 302 a Wompi.
+    $formAction = ["'self'"];
+    if ($payments) {
+        $formAction[] = 'https://checkout.wompi.co';
+    }
     // 'wasm-unsafe-eval' solo permite compilar WebAssembly (lo usa model-viewer); no habilita eval() de JS.
     $script = ["'self'", "'nonce-" . csp_nonce() . "'", "'wasm-unsafe-eval'"];
     $connect = ["'self'"];
@@ -535,7 +542,7 @@ function content_security_policy(): string
         "worker-src 'self' blob:",
         "object-src 'none'",
         "base-uri 'self'",
-        "form-action 'self'",
+        'form-action ' . implode(' ', $formAction),
         "frame-ancestors 'self'",
     ];
     if (is_https_request()) {
@@ -614,6 +621,11 @@ function deploy_blockers(): array
         if (is_placeholder(config($key))) {
             $missing[] = sprintf('%s (%s)', $label, $key);
         }
+    }
+    // Con pagos en línea en producción, el aviso de cada pedido pagado debe salir por SMTP real.
+    $payments = \Taptop\Payments\Wompi::fromConfig((array) config('wompi', [])) !== null;
+    if ($payments && config('environment') === 'production' && !orders_smtp_ready()) {
+        $missing[] = 'correo SMTP de pedidos con usuario y contraseña (mail.transport, mail.username, mail.password)';
     }
     return $missing;
 }

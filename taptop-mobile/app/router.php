@@ -196,6 +196,7 @@ function page_product(string $slug): void
         ])),
         'product' => $detail,
         'nav_category' => $navCategory,
+        'changed' => isset($_GET['cambio']),
     ]);
 }
 
@@ -209,9 +210,17 @@ function page_contact(): void
 function page_cart(): void
 {
     header('Cache-Control: no-store');
+    $lines = cart_read();
+    $cart = cart_priced($lines);
+    if (count($cart['lines']) < count($lines)) {
+        // Hay SKU que salieron del catálogo: la cookie se reescribe sin ellos (antes de pintar nada).
+        $kept = array_map(static fn (array $l): array => ['sku' => $l['sku'], 'color' => $l['color'], 'qty' => $l['qty']], $cart['lines']);
+        cart_write($kept);
+        $cart = cart_priced($kept);
+    }
     render_page('cart', [
         'meta' => page_meta('cart', 'Carrito', '/carrito', ['cart.js'], ['noindex' => true]),
-        'cart' => cart_priced(cart_read()),
+        'cart' => $cart,
         'changed' => isset($_GET['cambio']),
     ]);
 }

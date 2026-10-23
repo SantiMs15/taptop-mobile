@@ -46,6 +46,14 @@ function send_mail(string $to, string $subject, string $body, ?string $replyTo =
     }
 }
 
+/** ¿El correo sale por SMTP con usuario y contraseña? (transport=file solo sirve en local). */
+function orders_smtp_ready(): bool
+{
+    return config('mail.transport', 'smtp') === 'smtp'
+        && trim((string) config('mail.username', '')) !== ''
+        && (string) config('mail.password', '') !== '';
+}
+
 /**
  * Asunto y cuerpo del aviso interno de un pedido pagado.
  * @return array{subject: string, body: string}
@@ -98,22 +106,31 @@ function order_email(string $reference, array $order, array $transaction): array
  * Si el pago quedó APROBADO y hay pedido guardado, manda el aviso una sola vez
  * (order_claim_mail evita duplicados entre el webhook y la página de resultado).
  * Si el envío falla, el pedido se libera para reintentar.
+ *
+ * True si no queda nada pendiente (no aprobado, sin pedido, ya enviado o enviado ahora).
+ * False si el pedido aprobado sigue sin aviso: el correo falló o hay otro envío en curso.
+ * Los errores del almacén se propagan (order_notify_safely los atrapa).
  */
-function order_notify_if_approved(string $reference, array $transaction, ?string $file = null): void
+function order_notify_if_approved(string $reference, array $transaction, ?string $file = null): bool
 {
     if (($transaction['status'] ?? null) !== 'APPROVED') {
-        return;
+        return true;
     }
     $order = order_find($reference, $file);
-    if ($order === null || !order_claim_mail($reference, $file)) {
-        return;
+    if ($order === null) {
+        return true;
     }
-    $mail = order_email($reference, $order, $transaction);
-    $customer = (string) ($order['shipping']['correo'] ?? '');
+    if (!order_claim_mail($reference, $file)) {
+        // Ya enviado, o lo está enviando otra petición (si esa falla, el reintento lo retoma).
+        return ((order_find($reference, $file)['mail']['status'] ?? null) === 'sent');
+    }
     $ok = false;
     try {
+        $mail = order_email($reference, $order, $transaction);
+        $customer = (string) ($order['shipping']['correo'] ?? '');
         $ok = send_mail((string) config('orders_email'), $mail['subject'], $mail['body'], $customer !== '' ? $customer : null);
     } finally {
         order_finish_mail($reference, $ok, $file);
     }
+    return $ok;
 }

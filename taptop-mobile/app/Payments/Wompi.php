@@ -47,12 +47,6 @@ final class Wompi
         return 'TT-' . strtoupper(bin2hex(random_bytes(6)));
     }
 
-    /** True si la referencia es de esta tienda: forma nueva (TT-XXXXXXXXXXXX) o vieja con SKU. */
-    public static function isOwnReference(string $reference): bool
-    {
-        return preg_match('/^TT-[0-9A-F]{12}$/D', $reference) === 1 || self::skuFromReference($reference) !== null;
-    }
-
     /** SKU guardado en una referencia vieja, o null si no tiene el formato propio. */
     public static function skuFromReference(string $reference): ?string
     {
