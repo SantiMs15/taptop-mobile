@@ -330,6 +330,87 @@ function checkout_post(): void
     redirect($wompi->checkoutUrl($reference, $amountInCents, absolute_url('/pago/resultado')));
 }
 
+/** Monto esperado en centavos: del pedido guardado, o (referencia vieja) del SKU en el catálogo. */
+function expected_amount_for(string $reference, ?array $order): ?int
+{
+    if ($order !== null) {
+        return (int) $order['gateway'] * 100;
+    }
+    $sku = Wompi::skuFromReference($reference);
+    $found = $sku !== null ? find_product_by_sku($sku) : null;
+    return $found !== null ? $found['variant']['price_gateway'] * 100 : null;
+}
+
+function expected_amount_in_cents(string $reference): ?int
+{
+    try {
+        $order = order_find($reference);
+    } catch (Throwable) {
+        $order = null;
+    }
+    return expected_amount_for($reference, $order);
+}
+
+/** Avisa del pedido pagado sin dejar que un fallo del almacén rompa el webhook ni la página del cliente. */
+function order_notify_safely(string $reference, array $transaction): void
+{
+    try {
+        order_notify_if_approved($reference, $transaction);
+    } catch (Throwable) {
+        app_log('error', 'Aviso de pedido falló', ['reference' => $reference]);
+    }
+}
+
+/**
+ * Lo que muestra la página de resultado (sin efectos secundarios, sin datos de envío).
+ * $order es la foto del pedido, o null si la referencia es vieja.
+ */
+function payment_result_view(string $reference, array $transaction, ?array $order): array
+{
+    $status = (string) ($transaction['status'] ?? 'UNKNOWN');
+    $amount = (int) ($transaction['amount_in_cents'] ?? 0);
+    $expected = expected_amount_for($reference, $order);
+    $lines = [];
+    $source = null;
+    $backUrl = null;
+    $waLink = null;
+    if ($order !== null) {
+        $source = (string) ($order['source'] ?? '');
+        foreach ($order['lines'] as $line) {
+            if (!empty($line['available'])) {
+                $lines[] = ['qty' => (int) $line['qty'], 'label' => (string) $line['label'], 'line_gw_f' => format_price($line['line_gw'])];
+            }
+        }
+        if ($source === 'carrito') {
+            $backUrl = url('/carrito');
+        } else {
+            $first = $order['lines'][0] ?? null;
+            $backUrl = is_array($first) && !empty($first['url']) ? (string) $first['url'] : (!empty($first['slug']) ? url('/productos/' . $first['slug']) : null);
+        }
+        if (in_array($status, ['DECLINED', 'ERROR', 'VOIDED'], true)) {
+            $waLink = whatsapp_link(wa_message_cart(['lines' => $order['lines'], 'cash' => $order['cash']]));
+        }
+    } else {
+        $sku = Wompi::skuFromReference($reference);
+        $found = $sku !== null ? find_product_by_sku($sku) : null;
+        if ($found !== null) {
+            $lines[] = ['qty' => 1, 'label' => product_variant_label($found['product'], $found['variant']['color'], $found['variant']), 'line_gw_f' => format_price($found['variant']['price_gateway'])];
+            $backUrl = url('/productos/' . $found['product']['slug']);
+        }
+    }
+    return [
+        'status' => $status,
+        'amount_f' => format_price(intdiv($amount, 100)),
+        'amount_matches' => $expected !== null && $amount === $expected,
+        'method' => (string) ($transaction['payment_method_type'] ?? ''),
+        'lines' => $lines,
+        'source' => $source,
+        'wa_link' => $waLink,
+        'back_url' => $backUrl,
+        'clear_cart' => $status === 'APPROVED' && $source === 'carrito',
+    ];
+}
+
 function webhook_respond(int $status, array $body): void
 {
     http_response_code($status);
@@ -367,15 +448,14 @@ function webhook_wompi(string $method): void
     $status = (string) ($transaction['status'] ?? '');
     $reference = (string) ($transaction['reference'] ?? '');
     $amount = (int) ($transaction['amount_in_cents'] ?? 0);
-    $sku = Wompi::skuFromReference($reference);
-    $found = $sku !== null ? find_product_by_sku($sku) : null;
-    $amountMatches = $found !== null && $amount === $found['variant']['price_gateway'] * 100;
+    $expected = expected_amount_in_cents($reference);
+    $amountMatches = $expected !== null && $amount === $expected;
 
     $previous = wompi_webhook_state($id);
     if (($previous['status'] ?? null) === $status) {
         app_log('info', 'Wompi webhook: evento repetido, sin cambios', ['id' => $id, 'status' => $status]);
         // Idempotente (order_claim_mail): si el envío anterior falló, el reintento de Wompi lo repite.
-        order_notify_if_approved($reference, $transaction);
+        order_notify_safely($reference, $transaction);
         webhook_respond(200, ['ok' => true, 'duplicate' => true]);
         return;
     }
@@ -390,7 +470,7 @@ function webhook_wompi(string $method): void
     app_log($amountMatches ? 'info' : 'warning', 'Wompi webhook: ' . ($status === 'APPROVED' ? 'PAGO CONFIRMADO' : 'estado ' . $status), [
         'id' => $id, 'reference' => $reference, 'amount_in_cents' => $amount, 'amount_matches' => $amountMatches,
     ]);
-    order_notify_if_approved($reference, $transaction);
+    order_notify_safely($reference, $transaction);
     webhook_respond(200, ['ok' => true]);
 }
 
@@ -420,24 +500,24 @@ function page_pay_result(): void
     $view = ['error' => $error, 'sandbox' => $wompi->isSandbox()];
     if ($transaction !== null) {
         $reference = (string) ($transaction['reference'] ?? '');
-        $amount = (int) ($transaction['amount_in_cents'] ?? 0);
-        $sku = Wompi::skuFromReference($reference);
-        $found = $sku !== null ? find_product_by_sku($sku) : null;
-        // El monto cobrado debe coincidir con el precio con pasarela del catálogo.
-        $amountMatches = $found !== null && $amount === $found['variant']['price_gateway'] * 100;
+        try {
+            $order = order_find($reference);
+        } catch (Throwable) {
+            $order = null;
+            app_log('error', 'Pedido no se pudo leer', ['reference' => $reference]);
+        }
+        // El monto cobrado debe coincidir con el pedido guardado (o con el catálogo si la referencia es vieja).
+        $result = payment_result_view($reference, $transaction, $order);
         app_log('info', 'Wompi: resultado', [
-            'id' => $id, 'reference' => $reference, 'status' => $transaction['status'] ?? null,
-            'amount_in_cents' => $amount, 'amount_matches' => $amountMatches,
+            'id' => $id, 'reference' => $reference, 'status' => $result['status'],
+            'amount_in_cents' => (int) ($transaction['amount_in_cents'] ?? 0), 'amount_matches' => $result['amount_matches'],
         ]);
-        order_notify_if_approved($reference, $transaction);
-        $view += [
-            'status' => (string) ($transaction['status'] ?? 'UNKNOWN'),
+        order_notify_safely($reference, $transaction);
+        if ($result['clear_cart']) {
+            cart_write([]);
+        }
+        $view += $result + [
             'reference' => $reference,
-            'amount_f' => format_price(intdiv($amount, 100)),
-            'method' => (string) ($transaction['payment_method_type'] ?? ''),
-            'product_name' => $found !== null ? product_variant_label($found['product'], $found['variant']['color'], $found['variant']) : null,
-            'product_url' => $found !== null ? url('/productos/' . $found['product']['slug']) : null,
-            'amount_matches' => $amountMatches,
             'transaction_id' => $id,
             'webhook' => wompi_webhook_state($id),
         ];

@@ -335,5 +335,20 @@ foreach (glob($mailDir . '/*') ?: [] as $f) { @unlink($f); }
 @rmdir($mailDir);
 @unlink($ordersTmp);
 
+// --- Resultado del pago --------------------------------------------------------
+$resOrder = ['source' => 'carrito', 'lines' => cart_priced(cart_add([], 'APP3', null))['lines'], 'gateway' => 817000, 'cash' => 790000, 'shipping' => $v['data'], 'created_at' => 'x', 'mail' => null];
+$resTx = ['status' => 'APPROVED', 'amount_in_cents' => 81700000, 'payment_method_type' => 'CARD'];
+$rv = payment_result_view('TT-ABCDEF123456', $resTx, $resOrder);
+expect($rv['amount_matches'] === true && $rv['clear_cart'] === true && count($rv['lines']) === 1 && $rv['wa_link'] === null && !str_contains(json_encode($rv), 'El Poblado'), 'resultado: carrito aprobado coincide, vacía carrito y no muestra datos de envío', $rv);
+$rv = payment_result_view('TT-ABCDEF123456', ['status' => 'DECLINED'] + $resTx, $resOrder);
+expect($rv['clear_cart'] === false && $rv['wa_link'] !== null && str_contains($rv['wa_link'], rawurlencode('Total por transferencia')) && str_contains($rv['back_url'], '/carrito'), 'resultado: rechazado conserva carrito y ofrece WhatsApp', $rv);
+$rv = payment_result_view('TT-ABCDEF123456', $resTx, ['source' => 'producto'] + $resOrder);
+expect($rv['clear_cart'] === false && $rv['amount_matches'] === true, 'resultado: compra directa no vacía el carrito');
+$rv = payment_result_view('TT-APP3-0123456789', $resTx, null);
+expect($rv['amount_matches'] === true && count($rv['lines']) === 1 && str_contains($rv['lines'][0]['label'], 'AirPods Pro 3') && $rv['clear_cart'] === false, 'resultado: referencia vieja usa el SKU', $rv);
+$rv = payment_result_view('TT-ABCDEF123456', ['amount_in_cents' => 81700099] + $resTx, $resOrder);
+expect($rv['amount_matches'] === false, 'resultado: centavos distintos no coinciden');
+expect(expected_amount_for('TT-ABCDEF123456', $resOrder) === 81700000 && expected_amount_for('TT-APP3-0123456789', null) === 81700000 && expected_amount_for('TT-ABCDEF123456', null) === null, 'monto esperado: pedido, SKU viejo y desconocido');
+
 echo "\n{$passed} pasaron, {$failed} fallaron\n";
 exit($failed === 0 ? 0 : 1);

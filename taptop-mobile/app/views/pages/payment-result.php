@@ -6,7 +6,7 @@
  * @var string $status APPROVED | DECLINED | VOIDED | ERROR | PENDING
  */
 $titles = [
-    'APPROVED' => ['¡Pago aprobado!', 'Recibimos tu pago. Te escribiremos por WhatsApp para coordinar el envío.'],
+    'APPROVED' => ['¡Pago aprobado!', 'Recibimos tu pago. Te escribiremos para coordinar la entrega.'],
     'PENDING' => ['Pago en proceso', 'Wompi todavía está confirmando el pago. Recarga esta página en unos minutos.'],
     'DECLINED' => ['Pago rechazado', 'El pago no fue aprobado. Puedes intentar de nuevo con otro medio o escribirnos por WhatsApp.'],
     'VOIDED' => ['Pago anulado', 'Este pago fue anulado. Si tienes dudas, escríbenos por WhatsApp.'],
@@ -25,8 +25,9 @@ $titles = [
 
   <?php if ($error === null): ?>
   <dl class="page-lede">
-    <?php if ($product_name !== null): ?>
-    <dt><strong>Producto</strong></dt><dd><?= e($product_name) ?></dd>
+    <?php if ($lines !== []): ?>
+    <dt><strong><?= count($lines) > 1 ? 'Productos' : 'Producto' ?></strong></dt>
+    <dd><?php foreach ($lines as $line): ?><?= e($line['qty'] . ' × ' . $line['label'] . ' — ' . $line['line_gw_f']) ?><br><?php endforeach; ?></dd>
     <?php endif; ?>
     <dt><strong>Valor</strong></dt><dd><?= e($amount_f) ?></dd>
     <?php if ($method !== ''): ?>
@@ -34,16 +35,21 @@ $titles = [
     <?php endif; ?>
     <dt><strong>Referencia</strong></dt><dd><?= e($reference) ?></dd>
     <dt><strong>Transacción Wompi</strong></dt><dd><?= e($transaction_id) ?></dd>
+    <?php if ($sandbox): ?>
     <dt><strong>Confirmación por webhook</strong></dt><dd><?= $webhook !== null ? e($webhook['status'] . ' (recibida ' . $webhook['received_at'] . ')') : 'aún no llega' ?></dd>
+    <?php endif; ?>
   </dl>
   <?php if (!$amount_matches): ?>
-  <p class="page-lede"><mark class="todo">El valor no coincide con el precio con pasarela del catálogo o la referencia no es de este sitio.</mark></p>
+  <p class="page-lede"><mark class="todo">El valor no coincide con el del pedido o la referencia no es de este sitio.</mark></p>
   <?php endif; ?>
   <?php endif; ?>
 
   <div class="not-found__actions">
-    <?php if (($product_url ?? null) !== null): ?>
-    <a class="btn btn--primary" href="<?= e($product_url) ?>">Volver al producto</a>
+    <?php if (($wa_link ?? null) !== null): ?>
+    <a class="btn btn--wa" href="<?= e($wa_link) ?>" target="_blank" rel="noopener noreferrer"><?= icon('whatsapp', 'icon') ?><span>Pagar por transferencia (WhatsApp)</span></a>
+    <?php endif; ?>
+    <?php if (($back_url ?? null) !== null): ?>
+    <a class="btn btn--primary" href="<?= e($back_url) ?>"><?= ($source ?? '') === 'carrito' ? 'Volver al carrito' : 'Volver al producto' ?></a>
     <?php endif; ?>
     <a class="btn btn--outline" href="<?= e(whatsapp_link(wa_message_general())) ?>" target="_blank" rel="noopener noreferrer"><?= icon('whatsapp', 'icon') ?><span>Escribir por WhatsApp</span></a>
   </div>
