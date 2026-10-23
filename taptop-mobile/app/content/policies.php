@@ -41,6 +41,7 @@ function policy_pages(): array
                 ['id' => 'datos', 'heading' => 'Qué datos recogemos', 'blocks' => [
                     ['ul' => [
                         'Cuando nos escribes por WhatsApp: tu nombre, tu número de teléfono y lo que nos cuentas en la conversación.',
+                        'Si pagas en línea en este sitio: nombre, cédula, celular, correo, departamento, ciudad, dirección y barrio de entrega, que escribes en el formulario de envío. Los usamos solo para despachar y facturar tu pedido.',
                         'Si compras: documento de identidad o NIT, correo, ciudad y dirección de entrega, y los datos que se necesiten para la factura y el envío.',
                         'En este sitio, solo si aceptas las cookies de analítica: datos de navegación, como páginas y productos vistos y clics en los botones de WhatsApp. Nunca tu nombre, teléfono ni correo.',
                         'No pedimos ni guardamos datos de tarjetas: los pagos con tarjeta se hacen en la plataforma de la pasarela de pago.',
@@ -56,6 +57,7 @@ function policy_pages(): array
                 ]],
                 ['id' => 'autorizacion', 'heading' => 'Tu autorización', 'blocks' => [
                     ['p' => 'Antes de pedirte datos personales por WhatsApp, el asesor te pedirá tu autorización para tratarlos según esta política. Puedes revocarla cuando quieras, salvo que la ley o un contrato vigente nos obliguen a conservarlos.'],
+                    ['p' => 'Si compras en línea, nos das tu autorización al marcar la casilla del formulario de envío.'],
                 ]],
                 ['id' => 'terceros', 'heading' => 'Con quién los compartimos', 'blocks' => [
                     ['p' => 'Solo con quienes nos ayudan a completar tu compra: la empresa transportadora y la pasarela de pago, cuando apliquen. WhatsApp (de Meta) es nuestro canal de atención. Si aceptas las cookies de analítica, Google y Meta reciben datos de navegación. No vendemos tus datos.'],

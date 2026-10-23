@@ -6,7 +6,7 @@
  *
  * Cubre: validador (costos prohibidos, SKU duplicado, colores, pasarela < efectivo), presentador
  * (agotado en modos mark/hide/show, precio por color, "Desde"), envío gratis, mensajes de
- * WhatsApp, escape y rutas. Sale con código 1 si algo falla.
+ * WhatsApp, escape y rutas, carrito, envío y correo de pedidos. Sale con código 1 si algo falla.
  */
 
 declare(strict_types=1);
