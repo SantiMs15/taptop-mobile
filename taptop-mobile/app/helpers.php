@@ -551,6 +551,32 @@ function redirect(string $location, int $status = 302): never
     exit;
 }
 
+/**
+ * ¿La petición POST viene de este mismo sitio? Compara esquema+host+puerto de Origin (o, sin él,
+ * de Referer) con site_url. Sin ninguno de los dos, no.
+ */
+function request_is_same_origin(array $server): bool
+{
+    $source = $server['HTTP_ORIGIN'] ?? '';
+    if (!is_string($source) || $source === '' || $source === 'null') {
+        $source = $server['HTTP_REFERER'] ?? '';
+    }
+    if (!is_string($source) || $source === '') {
+        return false;
+    }
+    $origin = static function (string $value): ?string {
+        $parts = parse_url($value);
+        if (!is_array($parts) || !isset($parts['scheme'], $parts['host'])) {
+            return null;
+        }
+        $scheme = strtolower($parts['scheme']);
+        $port = $parts['port'] ?? ($scheme === 'https' ? 443 : 80);
+        return $scheme . '://' . strtolower($parts['host']) . ':' . $port;
+    };
+    $expected = $origin((string) config('site_url'));
+    return $expected !== null && $origin($source) === $expected;
+}
+
 // ---------------------------------------------------------------------------
 // Despliegue y registro
 // ---------------------------------------------------------------------------

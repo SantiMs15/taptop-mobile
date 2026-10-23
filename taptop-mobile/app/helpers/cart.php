@@ -143,10 +143,19 @@ function cart_priced(array $lines, ?callable $find = null): array
         }
         $available = (bool) $entry['available'];
         $image = null;
+        $hex = null;
         foreach ($product['colors'] ?? [] as $productColor) {
             if (($productColor['name'] ?? null) === $line['color']) {
                 $image = $productColor['image'] ?? null;
+                $hex = $productColor['hex'] ?? null;
             }
+        }
+        $kind = placeholder_kind($product);
+        if ($line['color'] === null) {
+            // Producto sin colores: la foto por defecto de la tarjeta (o la silueta si no hay).
+            $card = product_presenter()->card($product, 'carrito');
+            $image = $card['media']['image'] ?? null;
+            $hex = $card['media']['hex'] ?? null;
         }
         $lineCash = $available ? $entry['cash'] * $line['qty'] : 0;
         $lineGateway = $available ? $entry['gw'] * $line['qty'] : 0;
@@ -167,6 +176,8 @@ function cart_priced(array $lines, ?callable $find = null): array
             'name' => $product['name'],
             'label' => product_variant_label($product, $line['color'], $variant),
             'image' => $image,
+            'kind' => $kind,
+            'hex' => $hex ?? placeholder_default_hex($kind),
             'url' => url('/productos/' . $product['slug'], ['color' => $line['color'] !== null ? color_slug($line['color']) : null]),
             'cash' => $entry['cash'],
             'gw' => $entry['gw'],
@@ -189,4 +200,65 @@ function cart_count(): int
 {
     $lines = cart_read();
     return $lines === [] ? 0 : cart_priced($lines)['count'];
+}
+
+/** ¿El cliente pidió JSON (fetch) en vez de una redirección? */
+function cart_wants_json(): bool
+{
+    return str_contains(strtolower((string) ($_SERVER['HTTP_ACCEPT'] ?? '')), 'application/json');
+}
+
+function cart_json(int $status, array $body): void
+{
+    http_response_code($status);
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Cache-Control: no-store');
+    echo json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+}
+
+/** POST /carrito/agregar (sku, color, slug): suma una unidad si la variante existe y hay stock. */
+function cart_post_add(): void
+{
+    $field = static fn (string $key): string => is_string($_POST[$key] ?? null) ? trim($_POST[$key]) : '';
+    $sku = $field('sku');
+    $slug = $field('slug');
+    $color = $field('color') !== '' ? $field('color') : null;
+    $product = $slug !== '' ? product_repository()->findBySlug($slug) : null;
+    $entry = $product !== null && $sku !== '' ? find_catalog_entry($product, $sku, $color) : null;
+    $error = null;
+    if ($entry === null || !$entry['available']) {
+        $error = 'no_disponible';
+    } else {
+        $before = cart_read();
+        $after = cart_add($before, $sku, $color);
+        if ($after === $before && count($before) >= CART_MAX_LINES && !in_array([$sku, $color], array_map(static fn (array $l): array => [$l['sku'], $l['color']], $before), true)) {
+            $error = 'lleno';
+        } else {
+            cart_write($after);
+        }
+    }
+    if (cart_wants_json()) {
+        if ($error !== null) {
+            cart_json(422, ['ok' => false, 'error' => $error]);
+            return;
+        }
+        cart_json(200, ['ok' => true, 'count' => cart_count()]);
+        return;
+    }
+    redirect(url($error === null ? '/carrito' : ($error === 'lleno' ? '/carrito' : '/productos')));
+}
+
+/** POST /carrito/actualizar (index, qty): cambia la cantidad de una línea; qty 0 la quita. */
+function cart_post_update(): void
+{
+    $index = filter_var($_POST['index'] ?? null, FILTER_VALIDATE_INT);
+    $qty = filter_var($_POST['qty'] ?? null, FILTER_VALIDATE_INT);
+    if ($index !== false && $qty !== false) {
+        cart_write(cart_set_qty(cart_read(), $index, $qty));
+    }
+    if (cart_wants_json()) {
+        cart_json(200, ['ok' => true, 'count' => cart_count()]);
+        return;
+    }
+    redirect(url('/carrito'));
 }

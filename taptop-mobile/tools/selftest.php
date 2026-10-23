@@ -246,5 +246,14 @@ $fakeFind = static fn (string $sku): ?array => ['TP-128' => ['product' => $norma
 $soldOut = cart_priced([['sku' => 'TP-128', 'color' => 'Azul', 'qty' => 1], ['sku' => 'TP-256', 'color' => 'Azul', 'qty' => 2]], $fakeFind);
 expect($soldOut['lines'][1]['available'] === false && $soldOut['gateway'] === 1033000 && $soldOut['count'] === 1 && $soldOut['has_unavailable'], 'carrito: agotado se muestra pero no suma', $soldOut);
 
+$site = (string) config('site_url');
+expect(request_is_same_origin(['HTTP_ORIGIN' => rtrim($site, '/')]), 'POST: mismo origen aceptado');
+expect(!request_is_same_origin(['HTTP_ORIGIN' => 'https://otro-sitio.com']), 'POST: otro origen rechazado');
+expect(request_is_same_origin(['HTTP_REFERER' => rtrim($site, '/') . '/carrito']), 'POST: sin Origin, Referer propio aceptado');
+expect(!request_is_same_origin([]), 'POST: sin Origin ni Referer rechazado');
+expect(!request_is_same_origin(['HTTP_ORIGIN' => rtrim($site, '/') . '.evil.com']), 'POST: host que solo empieza igual rechazado');
+$noColorLine = cart_priced([['sku' => 'APP3', 'color' => null, 'qty' => 1]])['lines'][0];
+expect(array_key_exists('image', $noColorLine) && is_string($noColorLine['kind'] ?? null) && preg_match('/^#[0-9A-Fa-f]{6}$/', (string) ($noColorLine['hex'] ?? '')) === 1, 'carrito: línea trae kind y hex para la silueta si no hay foto', $noColorLine);
+
 echo "\n{$passed} pasaron, {$failed} fallaron\n";
 exit($failed === 0 ? 0 : 1);

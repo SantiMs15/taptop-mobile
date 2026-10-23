@@ -30,6 +30,23 @@ function dispatch(string $method, string $uri): void
         webhook_wompi($method);
         return;
     }
+    // Carrito y envío: POST solo desde este mismo sitio.
+    if (in_array($path, ['/carrito/agregar', '/carrito/actualizar', '/pago/envio'], true) && $method === 'POST') {
+        if (!request_is_same_origin($_SERVER)) {
+            http_response_code(403);
+            header('Content-Type: text/plain; charset=UTF-8');
+            echo 'Solicitud no permitida.';
+            return;
+        }
+        if ($path === '/carrito/agregar') {
+            cart_post_add();
+            return;
+        }
+        if ($path === '/carrito/actualizar') {
+            cart_post_update();
+            return;
+        }
+    }
     if ($method !== 'GET' && $method !== 'HEAD') {
         http_response_code(405);
         header('Allow: GET, HEAD');
@@ -44,6 +61,8 @@ function dispatch(string $method, string $uri): void
         page_products();
     } elseif (preg_match('#^/productos/([a-z0-9]+(?:-[a-z0-9]+)*)$#', $path, $match) === 1) {
         page_product($match[1]);
+    } elseif ($path === '/carrito') {
+        page_cart();
     } elseif ($path === '/contacto') {
         page_contact();
     } elseif (in_array(ltrim($path, '/'), POLICY_PAGES, true)) {
@@ -185,6 +204,17 @@ function page_contact(): void
     ]);
 }
 
+function page_cart(): void
+{
+    header('Cache-Control: no-store');
+    render_page('cart', [
+        // Task 3 agrega cart.js a la lista de scripts.
+        'meta' => page_meta('cart', 'Carrito', '/carrito', [], ['noindex' => true]),
+        'cart' => cart_priced(cart_read()),
+        'changed' => isset($_GET['cambio']),
+    ]);
+}
+
 function page_policy(string $key): void
 {
     require_once APP_PATH . '/content/policies.php';
@@ -206,7 +236,7 @@ function page_not_found(): void
 function page_robots(): void
 {
     header('Content-Type: text/plain; charset=UTF-8');
-    $lines = ['User-agent: *', 'Disallow: /admin', 'Disallow: /pago/', 'Disallow: /webhooks/'];
+    $lines = ['User-agent: *', 'Disallow: /admin', 'Disallow: /pago/', 'Disallow: /carrito', 'Disallow: /webhooks/'];
     if (!is_noindex()) {
         $lines[] = '';
         $lines[] = 'Sitemap: ' . absolute_url('/sitemap.xml');
