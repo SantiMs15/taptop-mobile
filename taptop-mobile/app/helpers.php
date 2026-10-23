@@ -216,6 +216,23 @@ function wa_message_sold_out(array $product, ?string $color, ?array $variant): s
     );
 }
 
+/** Pedido del carrito para pagar por transferencia; $priced = ['lines' => [...], 'cash' => int]. */
+function wa_message_cart(array $priced): string
+{
+    $rows = [];
+    foreach ($priced['lines'] as $line) {
+        if ($line['available']) {
+            $rows[] = sprintf('• %d × %s — %s', $line['qty'], $line['label'], format_price($line['line_cash']));
+        }
+    }
+    return sprintf(
+        "Hola %s, quiero pagar por transferencia este pedido:\n%s\nTotal por transferencia: %s",
+        config('business_name'),
+        implode("\n", $rows),
+        format_price($priced['cash'])
+    );
+}
+
 function wa_message_question(array $product): string
 {
     return sprintf('Hola %s, tengo una duda sobre %s %s.', config('business_name'), $product['article'] ?? 'el', $product['name']);

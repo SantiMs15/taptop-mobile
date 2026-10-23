@@ -15,6 +15,7 @@ require APP_PATH . '/helpers/analytics.php';
 require APP_PATH . '/helpers/icons.php';
 require APP_PATH . '/helpers/placeholders.php';
 require APP_PATH . '/helpers/payments.php';
+require APP_PATH . '/helpers/cart.php';
 require APP_PATH . '/router.php';
 
 spl_autoload_register(static function (string $class): void {
