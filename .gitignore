@@ -6,3 +6,6 @@ desktop.ini
 # Editores
 .vscode/
 .idea/
+
+# Bocetos de brainstorming
+.superpowers/
