@@ -21,6 +21,7 @@ function icon(string $name, string $class = 'icon'): string
         'truck' => '<g ' . $stroke . '><path d="M2.8 6.5h10.4v9.2H2.8z"/><path d="M13.2 9.5h4l3 3.3v2.9h-7"/><circle cx="7" cy="17.4" r="1.7"/><circle cx="17" cy="17.4" r="1.7"/></g>',
         'tag' => '<g ' . $stroke . '><path d="M3.5 12.6V4.2a.7.7 0 0 1 .7-.7h8.4l8 8a1 1 0 0 1 0 1.4l-7.4 7.4a1 1 0 0 1-1.4 0z"/><circle cx="8.2" cy="8.2" r="1.4"/></g>',
         'plus' => '<path ' . $stroke . ' d="M12 5.5v13M5.5 12h13"/>',
+        'cart' => '<g ' . $stroke . '><path d="M3 4h2.4l2 10.2h9.6l1.9-7.4H6.2"/><circle cx="9" cy="19" r="1.5"/><circle cx="16.6" cy="19" r="1.5"/></g>',
         'menu' => '<path ' . $stroke . ' d="M4 8h16M4 16h16"/>',
         'close' => '<path ' . $stroke . ' d="m6 6 12 12M18 6 6 18"/>',
         'chat' => '<path ' . $stroke . ' d="M20 11.6c0 4.2-3.6 7.4-8 7.4-1.2 0-2.3-.2-3.3-.6L4 19.6l1.2-3.7A7 7 0 0 1 4 11.6C4 7.4 7.6 4.2 12 4.2s8 3.2 8 7.4z"/>',

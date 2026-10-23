@@ -5,6 +5,8 @@
  * @var bool $overlay
  * @var string $page
  */
+$cartCount = cart_count();
+$cartLabel = 'Carrito, ' . $cartCount . ($cartCount === 1 ? ' producto' : ' productos');
 $links = [
     ['label' => 'Inicio', 'href' => '/', 'current' => $page === 'home'],
     ['label' => 'Productos', 'href' => '/productos', 'current' => in_array($page, ['products', 'product'], true)],
@@ -27,6 +29,9 @@ $links = [
         </ul>
       </div>
     </nav>
+    <a class="cart-link" href="<?= e(url('/carrito')) ?>" aria-label="<?= e($cartLabel) ?>" data-cart-link>
+      <?= icon('cart', 'icon') ?><span class="cart-link__count" data-cart-count<?= $cartCount === 0 ? ' hidden' : '' ?> aria-hidden="true"><?= $cartCount ?></span>
+    </a>
     <a class="btn btn--outline btn--header" href="<?= e(whatsapp_link(wa_message_general())) ?>" target="_blank" rel="noopener noreferrer" aria-label="Escríbenos por WhatsApp"<?= track_attrs('whatsapp_click', ['placement' => 'header', 'page' => $page]) ?>>
       <?= icon('whatsapp', 'icon icon--wa') ?><span>Escríbenos</span>
     </a>

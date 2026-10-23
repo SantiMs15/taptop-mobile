@@ -62,6 +62,7 @@
       cta: card.querySelector('[data-cta]'),
       ctaLabel: card.querySelector('[data-cta-label]'),
       buy: card.querySelector('[data-buy]'),
+      add: card.querySelector('[data-add-to-cart]'),
       buyNote: card.querySelector('[data-buy-note]'),
       media: card.querySelector('[data-media]')
     };
@@ -197,6 +198,24 @@
         }
         if (el.buyNote) {
           el.buyNote.hidden = !current.buy;
+        }
+      }
+      // Agregar al carrito: solo con la variante disponible; el servidor valida sku y color.
+      if (el.add) {
+        var addSku = el.add.querySelector('[data-add-sku]');
+        var addColor = el.add.querySelector('[data-add-color]');
+        el.add.hidden = !current.available;
+        if (addSku) {
+          addSku.value = current.sku || '';
+        }
+        if (addColor) {
+          addColor.value = current.color || '';
+        }
+        var addButton = el.add.querySelector('[data-track]');
+        if (addButton) {
+          addButton.setAttribute('data-track-color', current.color || '');
+          addButton.setAttribute('data-track-storage', current.storage || '');
+          addButton.setAttribute('data-track-price-shown', String(current.cash));
         }
       }
       if (el.colorName && hasColors) {

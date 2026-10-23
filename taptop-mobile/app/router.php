@@ -189,7 +189,7 @@ function page_product(string $slug): void
     $ogImage = $ogImage !== null ? absolute_url($ogImage) : null;
     $navCategory = nav_category_for($product['category']);
     render_page('product-detail', [
-        'meta' => page_meta('product', $product['name'], url('/productos/' . $slug), ['color-swatches.js', 'slider.js'], array_filter([
+        'meta' => page_meta('product', $product['name'], url('/productos/' . $slug), ['color-swatches.js', 'slider.js', 'cart.js'], array_filter([
             'og_image' => $ogImage,
         ])),
         'product' => $detail,
@@ -208,8 +208,7 @@ function page_cart(): void
 {
     header('Cache-Control: no-store');
     render_page('cart', [
-        // Task 3 agrega cart.js a la lista de scripts.
-        'meta' => page_meta('cart', 'Carrito', '/carrito', [], ['noindex' => true]),
+        'meta' => page_meta('cart', 'Carrito', '/carrito', ['cart.js'], ['noindex' => true]),
         'cart' => cart_priced(cart_read()),
         'changed' => isset($_GET['cambio']),
     ]);

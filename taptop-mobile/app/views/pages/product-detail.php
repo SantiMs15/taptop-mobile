@@ -47,6 +47,12 @@ $ctaTrack = $product['track'] + [
         <a class="btn btn--wa btn--lg btn--block" href="<?= e($current['wa']) ?>" target="_blank" rel="noopener noreferrer" data-cta<?= track_attrs('whatsapp_click', $ctaTrack) ?>>
           <?= icon('whatsapp', 'icon') ?><span data-cta-label><?= e($current['cta']) ?></span>
         </a>
+        <form method="post" action="<?= e(url('/carrito/agregar')) ?>" data-add-to-cart<?= $current['available'] ? '' : ' hidden' ?>>
+          <input type="hidden" name="slug" value="<?= e($product['slug']) ?>">
+          <input type="hidden" name="sku" value="<?= e((string) $current['sku']) ?>" data-add-sku>
+          <input type="hidden" name="color" value="<?= e((string) $current['color']) ?>" data-add-color>
+          <button class="btn btn--outline btn--lg btn--block" type="submit"<?= track_attrs('add_to_cart', $ctaTrack) ?>><?= icon('cart', 'icon') ?><span>Agregar al carrito</span></button>
+        </form>
         <?php if (wompi() !== null): // SPIKE Wompi: pago con pasarela al precio con tarjeta. ?>
         <a class="btn btn--primary btn--lg btn--block" href="<?= e((string) $current['buy']) ?>" data-buy<?= $current['buy'] === null ? ' hidden' : '' ?>>
           <span>Comprar ahora</span>
