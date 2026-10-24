@@ -296,6 +296,7 @@ expect($v['errors'] === [] && $v['data']['celular'] === '3001234567' && !isset($
 expect(isset(shipping_form_validate(['celular' => '12345'] + $okForm)['errors']['celular']), 'envío: celular inválido');
 expect(isset(shipping_form_validate(['cedula' => '12a'] + $okForm)['errors']['cedula']), 'envío: cédula inválida');
 expect(isset(shipping_form_validate(['correo' => 'ana@'] + $okForm)['errors']['correo']), 'envío: correo inválido');
+expect(isset(shipping_form_validate(['departamento' => 'Narnia'] + $okForm)['errors']['departamento']) && count(colombia_departments()) === 33, 'envío: departamento fuera de la lista rechazado (32 + Bogotá D.C.)');
 expect(isset(shipping_form_validate(array_diff_key($okForm, ['acepta' => 1]))['errors']['acepta']), 'envío: sin aceptar la política no continúa');
 expect(isset(shipping_form_validate(['nombre' => ['x']] + $okForm)['errors']['nombre']), 'envío: campo con arreglo en vez de texto rechazado sin error PHP');
 $badUtf8 = shipping_form_validate(['barrio' => "El Pobl\xB1do"] + $okForm);

@@ -251,6 +251,18 @@ function checkout_items(array $query): ?array
     return ['source' => $source, 'priced' => $priced, 'back' => $back];
 }
 
+/** Departamentos de Colombia (32 y Bogotá D.C.), en orden alfabético, para el selector de envío. */
+function colombia_departments(): array
+{
+    return [
+        'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bogotá D.C.', 'Bolívar', 'Boyacá', 'Caldas',
+        'Caquetá', 'Casanare', 'Cauca', 'Cesar', 'Chocó', 'Córdoba', 'Cundinamarca', 'Guainía',
+        'Guaviare', 'Huila', 'La Guajira', 'Magdalena', 'Meta', 'Nariño', 'Norte de Santander',
+        'Putumayo', 'Quindío', 'Risaralda', 'San Andrés y Providencia', 'Santander', 'Sucre',
+        'Tolima', 'Valle del Cauca', 'Vaupés', 'Vichada',
+    ];
+}
+
 /** Campos del formulario de envío: fuente única (etiqueta, mínimo/máximo, autocompletado). */
 function shipping_form_fields(): array
 {
@@ -259,7 +271,7 @@ function shipping_form_fields(): array
         'cedula' => ['label' => 'Cédula', 'required' => true, 'min' => 5, 'max' => 10, 'autocomplete' => 'off', 'inputmode' => 'numeric'],
         'celular' => ['label' => 'Celular', 'required' => true, 'min' => 10, 'max' => 18, 'autocomplete' => 'tel', 'inputmode' => 'numeric', 'type' => 'tel'],
         'correo' => ['label' => 'Correo electrónico', 'required' => true, 'min' => 5, 'max' => 120, 'autocomplete' => 'email', 'type' => 'email'],
-        'departamento' => ['label' => 'Departamento', 'required' => true, 'min' => 2, 'max' => 40, 'autocomplete' => 'address-level1'],
+        'departamento' => ['label' => 'Departamento', 'required' => true, 'min' => 2, 'max' => 40, 'autocomplete' => 'address-level1', 'options' => colombia_departments()],
         'ciudad' => ['label' => 'Ciudad', 'required' => true, 'min' => 2, 'max' => 60, 'autocomplete' => 'address-level2'],
         'direccion' => ['label' => 'Dirección', 'required' => true, 'min' => 5, 'max' => 120, 'autocomplete' => 'street-address'],
         'barrio' => ['label' => 'Barrio', 'required' => true, 'min' => 2, 'max' => 60, 'autocomplete' => 'off'],
@@ -298,7 +310,11 @@ function shipping_form_validate(array $post): array
             }
             continue;
         }
-        if ($name === 'cedula') {
+        if (isset($field['options'])) {
+            if (!in_array($value, $field['options'], true)) {
+                $errors[$name] = 'Elige una opción de la lista.';
+            }
+        } elseif ($name === 'cedula') {
             if (preg_match('/^\d{5,10}$/', $value) !== 1) {
                 $errors[$name] = 'Escribe solo números, entre 5 y 10 dígitos.';
             }

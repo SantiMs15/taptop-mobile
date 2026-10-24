@@ -57,7 +57,14 @@ $isCart = $items['source'] === 'carrito';
     ?>
     <div class="field<?= $error !== null ? ' has-error' : '' ?>">
       <label class="field__label" for="f-<?= e($name) ?>"><?= e($field['label']) ?></label>
-      <?php if ($name === 'notas'): ?>
+      <?php if (isset($field['options'])): ?>
+      <select class="field__input field__input--select" id="f-<?= e($name) ?>" name="<?= e($name) ?>" autocomplete="<?= e($field['autocomplete']) ?>"<?= $field['required'] ? ' required' : '' ?><?= $describedBy ?><?= $error !== null ? ' aria-invalid="true"' : '' ?>>
+        <option value=""<?= in_array($value, $field['options'], true) ? '' : ' selected' ?> disabled>Selecciona tu departamento</option>
+        <?php foreach ($field['options'] as $option): ?>
+        <option<?= $option === $value ? ' selected' : '' ?>><?= e($option) ?></option>
+        <?php endforeach; ?>
+      </select>
+      <?php elseif ($name === 'notas'): ?>
       <textarea class="field__input" id="f-<?= e($name) ?>" name="<?= e($name) ?>" rows="3" maxlength="<?= (int) $field['max'] ?>"<?= $describedBy ?><?= $error !== null ? ' aria-invalid="true"' : '' ?>><?= e($value) ?></textarea>
       <?php else: ?>
       <input class="field__input" id="f-<?= e($name) ?>" name="<?= e($name) ?>" type="<?= e($field['type'] ?? 'text') ?>" value="<?= e($value) ?>" maxlength="<?= (int) $field['max'] ?>" autocomplete="<?= e($field['autocomplete']) ?>"<?= isset($field['inputmode']) ? ' inputmode="' . e($field['inputmode']) . '"' : '' ?><?= $field['required'] ? ' required' : '' ?><?= $describedBy ?><?= $error !== null ? ' aria-invalid="true"' : '' ?>>
