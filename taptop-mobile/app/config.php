@@ -19,7 +19,7 @@ return [
 
     // --- Negocio -----------------------------------------------------------------
     'business_name' => 'Taptop Mobile',
-    'business_legal_name' => '[por completar]', // razón social
+    'business_legal_name' => 'Sara Garzón', // razón social
     'business_nit' => '[por completar]',
     'business_email' => 'servicioalcliente@taptopmobile.com',     // correo para reclamos y datos personales
 
@@ -40,7 +40,7 @@ return [
     'whatsapp_number' => '573208082188',
     'whatsapp_display' => '+57 320 808 2188',
     // Horario fijo, el mismo todos los días. Ejemplo: '8:00 a. m. a 8:00 p. m.'
-    'support_hours_label' => '[por completar]',
+    'support_hours_label' => '8:00 a. m. a 8:00 p. m.',
     'support_days_label' => 'Todos los días',
     'support_timezone_label' => 'hora de Colombia',
 
@@ -57,8 +57,8 @@ return [
 
     // --- Garantía ------------------------------------------------------------------
     'warranty_months' => 3,
-    'warranty_exchange_days' => '[por completar]', // plazo máximo del cambio, en días hábiles
-    'warranty_shipping_payer' => '[por completar]', // quién asume el envío del cambio
+    'warranty_exchange_days' => '30', // plazo máximo del cambio, en días hábiles
+    'warranty_shipping_payer' => 'el cliente', // quién asume el envío del cambio
 
     // --- Pagos (Nivel 1: enlace de pago enviado por WhatsApp; sin código de pagos) ---
     // Parámetros de la comisión, solo para el botón "sugerir" del panel (Paso 2).
