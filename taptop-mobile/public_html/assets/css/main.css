@@ -437,13 +437,22 @@ mark.todo {
   color: var(--c-white);
 }
 
+/* Tarjeta agotada: franja de lado a lado en la mitad de la foto. */
 .badge--overlay {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 50%;
+  right: 0;
+  left: 0;
   z-index: 2;
-  background: var(--c-ink);
+  justify-content: center;
+  min-height: 52px;
+  border-radius: 0;
+  background: rgb(13 38 85 / 0.88); /* --c-ink */
   color: var(--c-white);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  transform: translateY(-50%);
 }
 
 /* 5. Vidrio (adaptado del controlador LTX a fondo claro) --------------------- */
@@ -1945,7 +1954,14 @@ mark.todo {
 
 .card.is-sold-out .card__media .ph,
 .card.is-sold-out .card__media .media__img {
-  opacity: 0.55;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* Al pasar sobre la foto, el producto agotado se desvanece más y la franja queda al frente. */
+.card.is-sold-out .card__media:hover .ph,
+.card.is-sold-out .card__media:hover .media__img {
+  opacity: 0.3;
 }
 
 /* El botón baja al fondo: en una fila de la grilla todos quedan alineados. */
