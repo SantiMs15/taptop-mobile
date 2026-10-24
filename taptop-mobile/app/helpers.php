@@ -382,9 +382,13 @@ function organization_jsonld(): array
 // Catálogo
 // ---------------------------------------------------------------------------
 
-function product_repository(): ProductRepository
+/** Con $replace (solo selftest) usa otro catálogo, para no depender de lo que esté agotado hoy. */
+function product_repository(?ProductRepository $replace = null): ProductRepository
 {
     static $repository = null;
+    if ($replace !== null) {
+        $repository = $replace;
+    }
     if ($repository === null) {
         $validator = new ProductValidator((array) config('categories', []), (array) config('brands', []));
         $repository = match (config('catalog_source', 'json')) {

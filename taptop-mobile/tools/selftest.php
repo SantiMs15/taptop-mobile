@@ -98,6 +98,20 @@ expect($realErrors === [], 'catálogo real: sin errores', $realErrors);
 expect(count($report['products']) === 23, 'catálogo real: 23 productos', count($report['products']));
 $variantTotal = array_sum(array_map(static fn ($e) => count($e['product']['variants'] ?? []), $report['products']));
 expect($variantTotal === 32, 'catálogo real: 32 variantes (filas de la hoja + Borgoña del 18 Pro Max)', $variantTotal);
+
+// Desde aquí, el catálogo real con todo disponible: lo agotado hoy no debe romper las pruebas.
+$inStock = $real;
+foreach ($inStock['products'] as &$p) {
+    unset($p['available']);
+    foreach ($p['colors'] as &$c) { unset($c['available']); }
+    foreach ($p['variants'] as &$v) { unset($v['available']); }
+    unset($c, $v);
+}
+unset($p);
+$inStockPath = sys_get_temp_dir() . '/taptop-products-' . bin2hex(random_bytes(4)) . '.json';
+file_put_contents($inStockPath, json_encode($inStock, JSON_UNESCAPED_UNICODE));
+product_repository(new \Taptop\Repositories\JsonProductRepository($inStockPath, APP_PATH . '/data/specs.json', $validator));
+register_shutdown_function(static fn () => @unlink($inStockPath));
 $bySlug = [];
 foreach ($real['products'] as $item) {
     $bySlug[$item['slug']] = $item;
