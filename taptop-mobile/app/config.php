@@ -21,7 +21,7 @@ return [
     'business_name' => 'Taptop Mobile',
     'business_legal_name' => '[por completar]', // razón social
     'business_nit' => '[por completar]',
-    'business_email' => '[por completar]',      // correo para reclamos y datos personales
+    'business_email' => 'servicioalcliente@taptopmobile.com',     // correo para reclamos y datos personales
 
     // --- Sitio ---------------------------------------------------------------------
     // Sin barra final. Se usa para canonical, sitemap, Open Graph y JSON-LD.
@@ -70,7 +70,7 @@ return [
     // --- Correo de pedidos -------------------------------------------------------
     // Aviso interno cuando un pago queda aprobado. 'username' y 'password' van SOLO en
     // config.local.php (no va a Git). 'transport' => 'file' guarda los .eml en app/logs/mail/.
-    'orders_email' => 'servicioalcliente@taptopmobile.com',
+    'orders_email' => 'pedidos@taptopmobile.com',
     'mail' => [
         'transport' => 'smtp',
         'host' => 'smtp.hostinger.com',

@@ -685,24 +685,32 @@ mark.todo {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-pill);
-  color: var(--c-ink);
+  background: var(--c-ink);
+  color: var(--c-white);
+  transition: background-color 0.2s ease;
+}
+
+/* Siempre en estado activo: pastilla navy rellena; el hover solo la aclara. */
+.cart-link:hover {
+  background: var(--c-slate);
 }
 
 .cart-link .icon {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
 }
 
 .cart-link__count {
   position: absolute;
-  top: 3px;
-  right: 1px;
+  top: -2px;
+  right: -4px;
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
   border-radius: var(--radius-pill);
-  background: var(--c-ink);
-  color: var(--c-white);
+  background: var(--c-white);
+  box-shadow: 0 0 0 1.5px var(--c-ink);
+  color: var(--c-ink);
   font-size: 0.6875rem;
   font-weight: 600;
   line-height: 18px;

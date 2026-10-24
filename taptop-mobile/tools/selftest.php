@@ -362,7 +362,7 @@ order_save('TT-SENDING000001', $mailOrder, $ordersTmp);
 order_claim_mail('TT-SENDING000001', $ordersTmp);
 expect(order_notify_if_approved('TT-SENDING000001', $approved, $ordersTmp) === false, 'correo: con otro envío en curso queda pendiente (el webhook pide reintento)');
 $eml = (string) file_get_contents((glob($mailDir . '/*.eml') ?: [''])[0]);
-expect(str_contains($eml, "\r\nReply-To: ana@example.com\r\n") && str_contains($eml, 'To: servicioalcliente@taptopmobile.com'), 'correo: archivo con destino y Reply-To al cliente');
+expect(str_contains($eml, "\r\nReply-To: ana@example.com\r\n") && str_contains($eml, 'To: ' . config('orders_email')), 'correo: archivo con destino y Reply-To al cliente');
 order_save('TT-DECLINED00001', $mailOrder, $ordersTmp);
 $notifyDeclined = order_notify_if_approved('TT-DECLINED00001', ['status' => 'DECLINED'] + $approved, $ordersTmp);
 $notifyMissing = order_notify_if_approved('TT-NOEXISTE0001', $approved, $ordersTmp);
