@@ -77,7 +77,7 @@ return [
         'port' => 465,
         'username' => '',
         'password' => '',
-        'from' => 'servicioalcliente@taptopmobile.com',
+        'from' => 'pedidos@taptopmobile.com',
         'from_name' => 'Taptop Mobile',
     ],
 
