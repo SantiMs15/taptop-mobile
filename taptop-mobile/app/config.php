@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 return [
     // 'staging' = dominio temporal (Etapa 0), 'production' = lanzamiento (Etapa 1), 'local' = desarrollo.
-    'environment' => 'staging',
+    'environment' => 'production',
     // true solo en local: muestra el detalle de los errores en pantalla.
     'debug' => false,
 
     // --- Negocio -----------------------------------------------------------------
     'business_name' => 'Taptop Mobile',
     'business_legal_name' => 'Sara Garzón', // razón social
-    'business_nit' => '[por completar]',
+    'business_nit' => '1029661063-6',
     'business_email' => 'servicioalcliente@taptopmobile.com',     // correo para reclamos y datos personales
 
     // --- Sitio ---------------------------------------------------------------------
