@@ -640,7 +640,6 @@ function page_pay_result(): void
         $view += $result + [
             'reference' => $reference,
             'transaction_id' => $id,
-            'webhook' => wompi_webhook_state($id),
         ];
     }
 

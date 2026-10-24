@@ -35,9 +35,6 @@ $titles = [
     <?php endif; ?>
     <dt><strong>Referencia</strong></dt><dd><?= e($reference) ?></dd>
     <dt><strong>Transacción Wompi</strong></dt><dd><?= e($transaction_id) ?></dd>
-    <?php if ($sandbox): ?>
-    <dt><strong>Confirmación por webhook</strong></dt><dd><?= $webhook !== null ? e($webhook['status'] . ' (recibida ' . $webhook['received_at'] . ')') : 'aún no llega' ?></dd>
-    <?php endif; ?>
   </dl>
   <?php if (!$amount_matches): ?>
   <p class="page-lede"><mark class="todo">El valor no coincide con el del pedido o la referencia no es de este sitio.</mark></p>
