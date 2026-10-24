@@ -20,7 +20,6 @@
     var n = Number(count) || 0;
     counters().forEach(function (node) {
       node.textContent = String(n);
-      node.hidden = n === 0;
     });
     Array.prototype.forEach.call(doc.querySelectorAll('[data-cart-link]'), function (link) {
       link.setAttribute('aria-label', 'Carrito, ' + n + (n === 1 ? ' producto' : ' productos'));
