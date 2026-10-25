@@ -207,7 +207,7 @@
         { "name": "Plata", "hex": "#DFE0E2", "image": null },
         { "name": "Azul cielo", "hex": "#C3D4E3", "image": "/assets/images/products/macbook-air-m5-azul-cielo.webp" },
         { "name": "Medianoche", "hex": "#2D3440", "image": null },
-        { "name": "Blanco estrella", "hex": "#EFE8DC", "image": null }
+        { "name": "Blanco estrella", "hex": "#EFE8DC", "image": "/assets/images/products/macbook-air-m5-blanco-estrella.webp" }
       ],
       "variants": [
         { "sku": "MBA-M5-16-512", "storage": "16 GB / 512 GB", "color": null, "price_cash": 4450000, "price_gateway": 4596000 },

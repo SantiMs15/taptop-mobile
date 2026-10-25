@@ -268,9 +268,9 @@
     "macbook-air-m5": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip M5", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-detalle.webp" } },
-        { "title": "Hasta 18 h de video en streaming", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-trasera.webp" } },
-        { "title": "Wi-Fi 7 y Bluetooth 6", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-lateral.webp" } }
+        { "title": "Chip M5", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-detalle.webp", "Blanco estrella": "/assets/images/products/macbook-air-m5-blanco-estrella-detalle.webp" } },
+        { "title": "Hasta 18 h de video en streaming", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-trasera.webp", "Blanco estrella": "/assets/images/products/macbook-air-m5-blanco-estrella-trasera.webp" } },
+        { "title": "Wi-Fi 7 y Bluetooth 6", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-lateral.webp", "Blanco estrella": "/assets/images/products/macbook-air-m5-blanco-estrella-lateral.webp" } }
       ],
       "specs": [
         { "title": "Tamaños", "detail": "13\" y 15\"" },
