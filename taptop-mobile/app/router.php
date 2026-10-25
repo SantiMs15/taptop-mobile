@@ -132,7 +132,7 @@ function page_home(): void
     render_page('home', [
         'meta' => page_meta('home', null, '/', ['logo-animation.js', 'carousel.js', 'color-swatches.js']),
         'hero' => load_hero_slides(),
-        'featured' => $featured,
+        'featured' => array_slice($featured, 0, (int) config('home_featured_limit', 8)),
         'categories' => category_nav(null, null),
     ]);
 }

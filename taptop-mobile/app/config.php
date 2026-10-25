@@ -88,22 +88,24 @@ return [
     'sold_out_display' => 'mark',
     // true en la Etapa 0: dibuja siluetas de referencia donde aún no hay fotos propias.
     'show_placeholders' => true,
+    // Destacados del Inicio, en orden. Se muestran los primeros 'home_featured_limit' que no
+    // estén agotados: los de reserva al final solo entran si se agota uno de los de arriba.
     'home_featured' => [
         'iphone-18-pro',
         'iphone-18-pro-max',
         'samsung-galaxy-s26-ultra',
-        'samsung-galaxy-z-fold8-ultra',
         'macbook-air-m5',
+        'iphone-17-pro-max',
+        'apple-watch-series-12-46mm',
+        'airpods-4-cancelacion-activa-de-ruido',
+        'ipad-pro-11-m5',
+        // Reserva
+        'samsung-galaxy-z-fold8-ultra',
         'iphone-17',
         'apple-watch-ultra-4',
         'airpods-pro-3',
-        'iphone-17-pro-max',
-        'samsung-galaxy-z-flip8',
-        'macbook-neo',
-        'ipad-pro-11-m5',
-        'apple-watch-series-12-46mm',
-        'airpods-4-cancelacion-activa-de-ruido',
     ],
+    'home_featured_limit' => 8,
     // El orden es el orden en la web. 'includes': categorías de datos que agrupa el menú.
     'categories' => [
         'iphone' => ['label' => 'iPhone'],
