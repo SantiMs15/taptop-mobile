@@ -90,6 +90,11 @@ expect($report['products'][0]['product'] === null, 'validador: precio como texto
 $report = $validator->validateCatalog(['products' => [product(['name' => 'Teléfono 256 GB'])]]);
 expect($report['products'][0]['warnings'] !== [], 'validador: capacidad en el nombre = advertencia');
 
+$sized = $validator->validateCatalog(['products' => [product(['sizes' => [['label' => '13"'], ['label' => '15"', 'available' => false]]])]])['products'][0]['product'];
+expect($sized !== null && $sized['sizes'] === [['label' => '13"', 'available' => true], ['label' => '15"', 'available' => false]], 'validador: tamaños, disponible por defecto');
+$report = $validator->validateCatalog(['products' => [product(['sizes' => [['label' => '15"', 'available' => false]]])]]);
+expect($report['products'][0]['product'] === null, 'validador: tamaños sin ninguno disponible = error');
+
 // Catálogo real
 $real = load_json_file(APP_PATH . '/data/products.json');
 $report = $validator->validateCatalog($real);

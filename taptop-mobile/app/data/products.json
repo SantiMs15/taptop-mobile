@@ -203,6 +203,10 @@
       "brand": "apple",
       "category": "mac",
       "name": "MacBook Air M5",
+      "sizes": [
+        { "label": "13\"", "available": true },
+        { "label": "15\"", "available": false }
+      ],
       "colors": [
         { "name": "Plata", "hex": "#DFE0E2", "image": "/assets/images/products/macbook-air-m5-plata.webp" },
         { "name": "Azul cielo", "hex": "#C3D4E3", "image": "/assets/images/products/macbook-air-m5-azul-cielo.webp" },

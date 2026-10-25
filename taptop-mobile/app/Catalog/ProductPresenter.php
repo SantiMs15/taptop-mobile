@@ -41,6 +41,7 @@ final class ProductPresenter
             static fn (array $s): array => ['title' => $s['title'], 'byColor' => $s['byColor']],
             $view['slides']
         );
+        $view['sizes'] = $product['sizes'] ?? [];
         $view['specs'] = $product['specs'];
         $view['specs_status'] = $product['specs_status'];
         $view['question_wa'] = whatsapp_link(wa_message_question($product));

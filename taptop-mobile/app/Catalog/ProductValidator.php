@@ -212,6 +212,7 @@ final class ProductValidator
             }
         }
         $variants = $this->validateVariants($raw['variants'] ?? null, $colorIndex, $label, $errors, $warnings);
+        $sizes = $this->validateSizes($raw['sizes'] ?? [], $label, $errors);
 
         $product = $errors === [] ? [
             'slug' => $slug,
@@ -224,12 +225,40 @@ final class ProductValidator
             'visible' => $visible,
             'colors' => $colors,
             'variants' => $variants,
+            'sizes' => $sizes,
             'slides' => [],
             'specs' => [],
             'specs_status' => null,
         ] : null;
 
         return ['index' => $index, 'slug' => $slug, 'product' => $product, 'errors' => $errors, 'warnings' => $warnings];
+    }
+
+    /**
+     * Tamaños (p. ej. 13" y 15"): selector informativo en el detalle, sin precio propio.
+     * Los no disponibles se muestran tachados. Si un tamaño llega con otro precio, debe pasar a variante.
+     * @return list<array{label: string, available: bool}>
+     */
+    private function validateSizes(mixed $rawSizes, string $label, array &$errors): array
+    {
+        if (!is_array($rawSizes) || ($rawSizes !== [] && !array_is_list($rawSizes))) {
+            $errors[] = "{$label}: sizes debe ser una lista.";
+            return [];
+        }
+        $sizes = [];
+        foreach ($rawSizes as $i => $size) {
+            $sizeLabel = sprintf('%s, tamaño #%d', $label, $i + 1);
+            $text = is_array($size) ? ($size['label'] ?? null) : null;
+            if (!is_string($text) || trim($text) === '' || mb_strlen($text) > 20) {
+                $errors[] = "{$sizeLabel}: falta el label (máx. 20 caracteres).";
+                continue;
+            }
+            $sizes[] = ['label' => trim($text), 'available' => $this->boolField($size, 'available', $sizeLabel, $errors)];
+        }
+        if ($sizes !== [] && !in_array(true, array_column($sizes, 'available'), true)) {
+            $errors[] = "{$label}: al menos un tamaño debe estar disponible.";
+        }
+        return $sizes;
     }
 
     /** @return array{0: list<array>, 1: array<string, string>} colores y mapa nombre-en-minúsculas → nombre */
