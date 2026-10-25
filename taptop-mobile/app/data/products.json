@@ -46,7 +46,7 @@
       "category": "iphone",
       "name": "iPhone 17 Pro Max",
       "colors": [
-        { "name": "Silver", "hex": "#DCDDDF", "image": null },
+        { "name": "Silver", "hex": "#DCDDDF", "image": null, "available": false },
         { "name": "Cosmic Orange", "hex": "#E5793B", "image": "/assets/images/products/iphone-17-pro-max-naranja-cosmico.webp" },
         { "name": "Deep Blue", "hex": "#2E3B57", "image": null }
       ],
