@@ -49,7 +49,6 @@
     "iphone-17-pro-max": {
       "status": "borrador",
       "slides": [
-        { "title": "Pantalla de 6,9 pulgadas", "image": null },
         { "title": "Chip A19 Pro", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-frontal.webp" } },
         { "title": "Tres cámaras de 48 MP", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-camara.webp" } },
         { "title": "Hasta 39 h de video", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-trasera.webp" } }
