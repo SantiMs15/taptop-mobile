@@ -17,7 +17,9 @@
       ],
       "variants": [
         { "sku": "IP18PM-256", "storage": "256 GB", "color": null, "price_cash": 5400000, "price_gateway": 5577000 },
-        { "sku": "IP18PM-256-BUR", "storage": "256 GB", "color": "Borgoña", "price_cash": 5800000, "price_gateway": 5990000 },
+        { "sku": "IP18PM-256-BLK", "storage": "256 GB", "color": "Negro", "price_cash": 5050000, "price_gateway": 5216000 },
+        { "sku": "IP18PM-256-GLA", "storage": "256 GB", "color": "Glaciar", "price_cash": 5250000, "price_gateway": 5422000 },
+        { "sku": "IP18PM-256-BUR", "storage": "256 GB", "color": "Borgoña", "price_cash": 5250000, "price_gateway": 5422000 },
         { "sku": "IP18PM-512", "storage": "512 GB", "color": null, "price_cash": 5950000, "price_gateway": 6145000, "available": false },
         { "sku": "IP18PM-512-BUR", "storage": "512 GB", "color": "Borgoña", "price_cash": 6350000, "price_gateway": 6558000 }
       ]

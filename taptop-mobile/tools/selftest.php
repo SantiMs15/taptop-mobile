@@ -97,7 +97,7 @@ $realErrors = array_merge($report['errors'], ...array_map(static fn ($e) => $e['
 expect($realErrors === [], 'catálogo real: sin errores', $realErrors);
 expect(count($report['products']) === 23, 'catálogo real: 23 productos', count($report['products']));
 $variantTotal = array_sum(array_map(static fn ($e) => count($e['product']['variants'] ?? []), $report['products']));
-expect($variantTotal === 32, 'catálogo real: 32 variantes (filas de la hoja + Borgoña del 18 Pro Max)', $variantTotal);
+expect($variantTotal === 34, 'catálogo real: 34 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
 
 // Desde aquí, el catálogo real con todo disponible: lo agotado hoy no debe romper las pruebas.
 $inStock = $real;
@@ -284,12 +284,14 @@ expect(count(cart_parse(json_encode(array_map(static fn ($i) => ["SKU-$i", null,
 expect(cart_parse('[["<b>x</b>",null,1],["APP3",null,1],["APP3",null,2]]') === [['sku' => 'APP3', 'color' => null, 'qty' => 3]], 'carrito: sku inválido descartado y duplicados fusionados');
 $cartLines = cart_add(cart_add([], 'IP18PM-256-BUR', 'Borgoña'), 'APP3', null);
 $priced = cart_priced($cartLines);
-expect($priced['gateway'] === 6807000 && $priced['cash'] === 6590000 && $priced['count'] === 2, 'carrito: totales desde el catálogo', $priced);
+$bur = find_product_by_sku('IP18PM-256-BUR')['variant'];
+$app3 = find_product_by_sku('APP3')['variant'];
+expect($priced['gateway'] === $bur['price_gateway'] + $app3['price_gateway'] && $priced['cash'] === $bur['price_cash'] + $app3['price_cash'] && $priced['count'] === 2, 'carrito: totales desde el catálogo', $priced);
 expect(cart_priced([['sku' => 'NO-EXISTE', 'color' => null, 'qty' => 1]])['lines'] === [], 'carrito: sku fuera del catálogo omitido');
 expect(cart_set_qty($cartLines, 0, 0) === [['sku' => 'APP3', 'color' => null, 'qty' => 1]], 'carrito: qty 0 quita la línea');
 expect(cart_parse(cart_encode($cartLines)) === $cartLines, 'carrito: cookie ida y vuelta (con tildes)');
 $waCart = wa_message_cart($priced);
-expect(str_contains($waCart, '• 1 × AirPods Pro 3 — $790.000') && str_ends_with($waCart, 'Total por transferencia: $6.590.000'), 'carrito: mensaje de WhatsApp con detalle y total por transferencia', $waCart);
+expect(str_contains($waCart, '• 1 × AirPods Pro 3 — ' . format_price($app3['price_cash'])) && str_ends_with($waCart, 'Total por transferencia: ' . format_price($priced['cash'])), 'carrito: mensaje de WhatsApp con detalle y total por transferencia', $waCart);
 $fakeFind = static fn (string $sku): ?array => ['TP-128' => ['product' => $normalized, 'variant' => $normalized['variants'][0]], 'TP-256' => ['product' => $normalized, 'variant' => $normalized['variants'][1]]][$sku] ?? null;
 $soldOut = cart_priced([['sku' => 'TP-128', 'color' => 'Azul', 'qty' => 1], ['sku' => 'TP-256', 'color' => 'Azul', 'qty' => 2]], $fakeFind);
 expect($soldOut['lines'][1]['available'] === false && $soldOut['gateway'] === 1033000 && $soldOut['count'] === 1 && $soldOut['has_unavailable'], 'carrito: agotado se muestra pero no suma', $soldOut);
