@@ -50,9 +50,9 @@
       "status": "borrador",
       "slides": [
         { "title": "Pantalla de 6,9 pulgadas", "image": null },
-        { "title": "Chip A19 Pro", "image": null },
-        { "title": "Tres cámaras de 48 MP", "image": null },
-        { "title": "Hasta 39 h de video", "image": null }
+        { "title": "Chip A19 Pro", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-frontal.webp" } },
+        { "title": "Tres cámaras de 48 MP", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-camara.webp" } },
+        { "title": "Hasta 39 h de video", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-trasera.webp" } }
       ],
       "specs": [
         { "title": "Pantalla", "detail": "6,9\" OLED Super Retina XDR, 2868 × 1320, 460 ppi, 120 Hz, 1600 nits HDR, 3000 nits en exteriores" },
@@ -86,9 +86,9 @@
     "iphone-18-pro-max": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip A20 Pro", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-trasera.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-trasera.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-trasera.webp" } },
+        { "title": "Chip A20 Pro", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-frontal.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-frontal.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-frontal.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-frontal.webp" } },
         { "title": "Cámara Fusion de 48 MP con apertura variable", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-camara.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-camara.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-camara.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-camara.webp" } },
-        { "title": "Hasta 29 h de uso por carga", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-frontal.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-frontal.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-frontal.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-frontal.webp" } }
+        { "title": "Hasta 29 h de uso por carga", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-trasera.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-trasera.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-trasera.webp" } }
       ],
       "specs": [
         { "title": "Chip", "detail": "A20 Pro (2 nm), CPU de 6 núcleos, GPU de 7 núcleos, Neural Engine dual de 16 núcleos" },
