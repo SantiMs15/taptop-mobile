@@ -124,14 +124,15 @@ function page_home(): void
     $featured = [];
     foreach (product_repository()->findMany((array) config('home_featured', [])) as $product) {
         $card = $presenter->card($product, 'inicio');
-        if ($card !== null) {
+        // Destacados: solo lo que se puede comprar hoy.
+        if ($card !== null && !$card['all_sold_out']) {
             $featured[] = $card;
         }
     }
     render_page('home', [
         'meta' => page_meta('home', null, '/', ['logo-animation.js', 'carousel.js', 'color-swatches.js']),
         'hero' => load_hero_slides(),
-        'featured' => sold_out_last($featured),
+        'featured' => $featured,
         'categories' => category_nav(null, null),
     ]);
 }
