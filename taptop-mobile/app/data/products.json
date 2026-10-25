@@ -48,7 +48,7 @@
       "colors": [
         { "name": "Silver", "hex": "#DCDDDF", "image": null, "available": false },
         { "name": "Cosmic Orange", "hex": "#E5793B", "image": "/assets/images/products/iphone-17-pro-max-naranja-cosmico.webp" },
-        { "name": "Deep Blue", "hex": "#2E3B57", "image": null }
+        { "name": "Deep Blue", "hex": "#2E3B57", "image": "/assets/images/products/iphone-17-pro-max-azul-profundo.webp" }
       ],
       "variants": [
         { "sku": "IP17PM-256-ESIM", "storage": "256 GB", "note": "eSIM", "color": null, "price_cash": 4250000, "price_gateway": 4390000 },
