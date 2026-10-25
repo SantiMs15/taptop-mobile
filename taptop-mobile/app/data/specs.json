@@ -270,7 +270,7 @@
       "slides": [
         { "title": "Chip M5", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-detalle.webp" } },
         { "title": "Hasta 18 h de video en streaming", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-trasera.webp" } },
-        { "title": "Pantalla Liquid Retina", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo.webp" } },
+        { "title": "Pantalla Liquid Retina", "image": null },
         { "title": "Wi-Fi 7 y Bluetooth 6", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-lateral.webp" } }
       ],
       "specs": [
