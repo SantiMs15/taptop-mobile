@@ -45,8 +45,8 @@ return [
     'support_timezone_label' => 'hora de Colombia',
 
     // --- Redes -------------------------------------------------------------------
-    // Provisional hasta que exista el perfil. Formato final: https://www.instagram.com/usuario/
-    'instagram_url' => 'https://www.instagram.com/',
+    // Perfil real: @taptop.mobile. Formato: https://www.instagram.com/usuario/
+    'instagram_url' => 'https://www.instagram.com/taptop.mobile/',
     'instagram_placeholder_url' => 'https://www.instagram.com/',
 
     // --- Envíos ------------------------------------------------------------------
