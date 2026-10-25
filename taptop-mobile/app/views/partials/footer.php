@@ -63,7 +63,7 @@ $hours = config_text('support_hours_label');
   </div>
 
   <div class="container site-footer__legal">
-    <p>© <?= e(date('Y')) ?> <?= e($business) ?>. Razón social: <?= e_todo(config_text('business_legal_name')) ?>. NIT: <?= e_todo(config_text('business_nit')) ?>.</p>
+    <p>© <?= e(date('Y')) ?> <?= e($business) ?></p>
     <p>
       Usamos cookies de analítica solo si las aceptas. <a href="/privacidad#cookies">Política de datos</a>
       <?php if (analytics_enabled()): ?>

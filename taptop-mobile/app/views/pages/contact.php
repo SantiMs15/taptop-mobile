@@ -26,7 +26,7 @@ $zones = (array) config('shipping_zones', []);
     </div>
     <div class="contact__item">
       <dt><?= icon('instagram', 'icon') ?>Instagram</dt>
-      <dd><a href="<?= e(config('instagram_url')) ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram de <?= e($business) ?>">Síguenos en Instagram</a></dd>
+      <dd><a href="<?= e(config('instagram_url')) ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram de <?= e($business) ?>"><?= instagram_is_provisional() ? 'Síguenos en Instagram' : e('@' . basename((string) parse_url((string) config('instagram_url'), PHP_URL_PATH))) ?></a></dd>
     </div>
     <div class="contact__item">
       <dt><?= icon('pin', 'icon') ?>Tienda</dt>
