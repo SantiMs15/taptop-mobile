@@ -204,7 +204,7 @@
       "category": "mac",
       "name": "MacBook Air M5",
       "colors": [
-        { "name": "Plata", "hex": "#DFE0E2", "image": null },
+        { "name": "Plata", "hex": "#DFE0E2", "image": "/assets/images/products/macbook-air-m5-plata.webp" },
         { "name": "Azul cielo", "hex": "#C3D4E3", "image": "/assets/images/products/macbook-air-m5-azul-cielo.webp" },
         { "name": "Medianoche", "hex": "#2D3440", "image": "/assets/images/products/macbook-air-m5-medianoche.webp" },
         { "name": "Blanco estrella", "hex": "#EFE8DC", "image": "/assets/images/products/macbook-air-m5-blanco-estrella.webp" }
