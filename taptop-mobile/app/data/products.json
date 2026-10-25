@@ -131,7 +131,7 @@
         { "name": "Mint", "hex": "#BFE2CF", "image": null }
       ],
       "variants": [
-        { "sku": "SGZFLIP8-512", "storage": "512 GB", "color": null, "price_cash": 3850000, "price_gateway": 3977000 }
+        { "sku": "SGZFLIP8-512", "storage": "512 GB", "color": null, "price_cash": 3800000, "price_gateway": 3925000 }
       ]
     },
     {
@@ -148,8 +148,8 @@
         { "name": "Pink Gold", "hex": "#E6C2B4", "image": null }
       ],
       "variants": [
-        { "sku": "SGS26U-256", "storage": "256 GB", "color": null, "price_cash": 3330000, "price_gateway": 3440000 },
-        { "sku": "SGS26U-512", "storage": "512 GB", "color": null, "price_cash": 3800000, "price_gateway": 3925000 }
+        { "sku": "SGS26U-256", "storage": "256 GB", "color": null, "price_cash": 3340000, "price_gateway": 3450000 },
+        { "sku": "SGS26U-512", "storage": "512 GB", "color": null, "price_cash": 3830000, "price_gateway": 3956000 }
       ]
     },
     {
@@ -182,7 +182,7 @@
       ],
       "variants": [
         { "sku": "SGS25U-256", "storage": "256 GB", "color": null, "price_cash": 2900000, "price_gateway": 2996000 },
-        { "sku": "SGS25U-512", "storage": "512 GB", "color": null, "price_cash": 3270000, "price_gateway": 3378000 }
+        { "sku": "SGS25U-512", "storage": "512 GB", "color": null, "price_cash": 3150000, "price_gateway": 3254000 }
       ]
     },
     {
@@ -197,8 +197,8 @@
         { "name": "Blanco estrella", "hex": "#EFE8DC", "image": null }
       ],
       "variants": [
-        { "sku": "MBA-M5-16-1TB", "storage": "16 GB / 1 TB", "color": null, "price_cash": 5200000, "price_gateway": 5371000 },
-        { "sku": "MBA-M5-24-1TB", "storage": "24 GB / 1 TB", "color": null, "price_cash": 6100000, "price_gateway": 6300000 }
+        { "sku": "MBA-M5-16-1TB", "storage": "16 GB / 1 TB", "color": null, "price_cash": 5150000, "price_gateway": 5319000 },
+        { "sku": "MBA-M5-24-1TB", "storage": "24 GB / 1 TB", "color": null, "price_cash": 6050000, "price_gateway": 6248000 }
       ]
     },
     {
@@ -208,7 +208,7 @@
       "name": "Mac mini M4 Pro",
       "colors": [],
       "variants": [
-        { "sku": "MACMINI-M4PRO-24-512", "storage": "24 GB / 512 GB", "color": null, "price_cash": 5800000, "price_gateway": 5990000 }
+        { "sku": "MACMINI-M4PRO-24-512", "storage": "24 GB / 512 GB", "color": null, "price_cash": 5750000, "price_gateway": 5939000 }
       ]
     },
     {
@@ -218,8 +218,8 @@
       "name": "Mac mini M4",
       "colors": [],
       "variants": [
-        { "sku": "MACMINI-M4-16-256", "storage": "16 GB / 256 GB", "color": null, "price_cash": 3150000, "price_gateway": 3254000 },
-        { "sku": "MACMINI-M4-24-512", "storage": "24 GB / 512 GB", "color": null, "price_cash": 4500000, "price_gateway": 4648000 }
+        { "sku": "MACMINI-M4-16-256", "storage": "16 GB / 256 GB", "color": null, "price_cash": 3050000, "price_gateway": 3151000 },
+        { "sku": "MACMINI-M4-24-512", "storage": "24 GB / 512 GB", "color": null, "price_cash": 4450000, "price_gateway": 4596000 }
       ]
     },
     {
@@ -232,7 +232,7 @@
         { "name": "Plata", "hex": "#DFE0E2", "image": null }
       ],
       "variants": [
-        { "sku": "IPADP11-M5-256", "storage": "256 GB", "color": null, "price_cash": 3950000, "price_gateway": 4080000 }
+        { "sku": "IPADP11-M5-256", "storage": "256 GB", "color": null, "price_cash": 3720000, "price_gateway": 3842000 }
       ]
     },
     {
@@ -255,7 +255,7 @@
       "name": "Apple Watch Series 12 (46 mm)",
       "colors": [],
       "variants": [
-        { "sku": "AW-S12-46", "storage": null, "color": null, "price_cash": 1950000, "price_gateway": 2015000 }
+        { "sku": "AW-S12-46", "storage": null, "color": null, "price_cash": 1870000, "price_gateway": 1932000 }
       ]
     },
     {
@@ -278,7 +278,7 @@
       "article": "los",
       "colors": [],
       "variants": [
-        { "sku": "AP4-ANC", "storage": null, "color": null, "price_cash": 650000, "price_gateway": 673000 }
+        { "sku": "AP4-ANC", "storage": null, "color": null, "price_cash": 630000, "price_gateway": 652000 }
       ]
     },
     {
