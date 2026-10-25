@@ -63,7 +63,7 @@ $zones = (array) config('shipping_zones', []);
     <h2 class="info-block__title" id="trust-title">Compra con confianza</h2>
     <ul class="trust">
       <li><?= icon('seal', 'icon') ?><span>Productos Apple y Samsung 100 % originales.</span></li>
-      <li><?= icon('shield', 'icon') ?><span>Garantía del fabricante y <?= (int) config('warranty_months') ?> meses de garantía <?= e($business) ?>: si presenta un fallo, te lo cambiamos o te devolvemos tu dinero.</span></li>
+      <li><?= icon('shield', 'icon') ?><span>Garantía directa con <?= e($business) ?>: <?= e(warranty_summary()) ?>. Si presenta un fallo, te lo cambiamos o te devolvemos tu dinero.</span></li>
       <li><?= icon('chat', 'icon') ?><span>Atención directa por WhatsApp, todos los días.</span></li>
     </ul>
     <a class="text-link" href="/garantia">Garantía, cambios, reembolsos y envíos</a>

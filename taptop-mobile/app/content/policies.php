@@ -18,7 +18,9 @@ function policy_pages(): array
     $email = config_text('business_email');
     $whatsapp = (string) config('whatsapp_display');
     $freeShipping = format_price((int) config('free_shipping_min'));
-    $months = (int) config('warranty_months', 3);
+    $deviceTerm = warranty_label((int) config('warranty_months', 12));
+    $accessoryTerm = warranty_label((int) config('warranty_accessory_months', 3));
+    $warrantySummary = warranty_summary();
     $exchangeDays = config_text('warranty_exchange_days');
     $shippingPayer = config_text('warranty_shipping_payer');
 
@@ -120,7 +122,7 @@ function policy_pages(): array
                     ['p' => "Enviamos a toda Colombia. El envío es gratis en compras desde {$freeShipping}, según el precio que pagas con el medio elegido. Por debajo de ese valor, el costo se confirma por WhatsApp. El tiempo de entrega depende de la ciudad y también se confirma por WhatsApp."],
                 ]],
                 ['id' => 'garantia', 'heading' => 'Garantía', 'blocks' => [
-                    ['p' => "Todos los productos tienen la garantía del fabricante y, además, {$months} meses de garantía {$business}, con cambio o reembolso a tu elección. Las condiciones están en la página Garantía, cambios, reembolsos y envíos."],
+                    ['p' => "Todos los productos tienen garantía directa con {$business}: {$warrantySummary}. Si presenta un fallo, eliges cambio o reembolso. Las condiciones están en la página Garantía, cambios, reembolsos y envíos."],
                 ]],
                 ['id' => 'retracto', 'heading' => 'Derecho de retracto', 'blocks' => [
                     ['p' => 'Como la compra se hace a distancia, tienes derecho de retracto en los términos del artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor). Para ejercerlo, escríbenos por WhatsApp dentro del plazo que fija la ley.'],
@@ -133,15 +135,16 @@ function policy_pages(): array
 
         'garantia' => [
             'title' => 'Garantía, cambios, reembolsos y envíos',
-            'intro' => "Todos nuestros productos tienen la garantía del fabricante y, además, {$months} meses de garantía {$business}, que atendemos directamente nosotros.",
+            'intro' => "Todos nuestros productos tienen garantía directa con {$business}: la atendemos nosotros, sin intermediarios.",
             'sections' => [
-                ['id' => 'fabricante', 'heading' => 'Garantía del fabricante', 'blocks' => [
-                    ['p' => 'Es la garantía estándar de cada marca (Apple o Samsung) y corre aparte de la nuestra. Si necesitas usarla, escríbenos y te orientamos.'],
-                ]],
-                ['id' => 'taptop', 'heading' => "Garantía {$business}: {$months} meses", 'blocks' => [
+                ['id' => 'taptop', 'heading' => "Garantía {$business}", 'blocks' => [
+                    ['dl' => [
+                        'Celulares, computadores, iPad y relojes' => $deviceTerm,
+                        'Accesorios (AirPods, cargadores, adaptadores y Apple Pencil)' => $accessoryTerm,
+                    ]],
                     ['ul' => [
-                        "Dura {$months} meses desde la entrega del producto y aplica a todo nuestro catálogo: equipos y accesorios.",
-                        'La atiende directamente ' . $business . ': no tienes que acudir a la marca ni a un servicio técnico externo.',
+                        'El plazo cuenta desde la entrega del producto.',
+                        'La cubre y la atiende directamente ' . $business . ', no la marca: no tienes que acudir a Apple, a Samsung ni a un servicio técnico externo.',
                         'Cubre fallas de funcionamiento y defectos de fábrica del equipo o del accesorio, incluidas las fallas de la batería.',
                         'Si confirmamos la falla, tú eliges: cambio del producto o reembolso de tu dinero.',
                     ]],

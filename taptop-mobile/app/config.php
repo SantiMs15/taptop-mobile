@@ -56,7 +56,11 @@ return [
     'shipping_zones' => [],
 
     // --- Garantía ------------------------------------------------------------------
+    // La cubre directamente Taptop Mobile (no la marca). Equipos: celulares, computadores,
+    // iPad y relojes. Accesorios: las categorías de warranty_accessory_categories.
     'warranty_months' => 12,
+    'warranty_accessory_months' => 3,
+    'warranty_accessory_categories' => ['airpods', 'accesorios', 'adaptadores'],
     'warranty_exchange_days' => '30', // plazo máximo del cambio o del reembolso, en días hábiles
     'warranty_shipping_payer' => 'si confirmamos la falla, Taptop Mobile paga el envío de ida y vuelta; si no hay falla, lo paga el cliente', // quién asume el envío del cambio o la devolución
 

@@ -102,6 +102,32 @@ function format_price(int|float $amount): string
     return '$' . number_format((int) round($amount), 0, ',', '.');
 }
 
+/** Meses de garantía Taptop Mobile según la categoría del producto (equipos o accesorios). */
+function warranty_months_for(string $category): int
+{
+    $accessories = (array) config('warranty_accessory_categories', []);
+    return in_array($category, $accessories, true)
+        ? (int) config('warranty_accessory_months', 3)
+        : (int) config('warranty_months', 12);
+}
+
+/** Plazo legible: 12 → "1 año", 24 → "2 años", 3 → "3 meses". */
+function warranty_label(int $months): string
+{
+    if ($months % 12 === 0) {
+        $years = intdiv($months, 12);
+        return $years === 1 ? '1 año' : "{$years} años";
+    }
+    return $months === 1 ? '1 mes' : "{$months} meses";
+}
+
+/** Resumen para home, footer y contacto: "1 año en celulares, … y 3 meses en accesorios". */
+function warranty_summary(): string
+{
+    return warranty_label((int) config('warranty_months', 12)) . ' en celulares, computadores, iPad y relojes, y '
+        . warranty_label((int) config('warranty_accessory_months', 3)) . ' en accesorios como AirPods, cargadores y Apple Pencil';
+}
+
 /** JSON seguro para incrustar en <script type="application/json">. */
 function json_for_script(mixed $data): string
 {
