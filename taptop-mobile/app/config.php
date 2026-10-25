@@ -97,6 +97,12 @@ return [
         'iphone-17',
         'apple-watch-ultra-4',
         'airpods-pro-3',
+        'iphone-17-pro-max',
+        'samsung-galaxy-z-flip8',
+        'macbook-neo',
+        'ipad-pro-11-m5',
+        'apple-watch-series-12-46mm',
+        'airpods-4-cancelacion-activa-de-ruido',
     ],
     // El orden es el orden en la web. 'includes': categorías de datos que agrupa el menú.
     'categories' => [
