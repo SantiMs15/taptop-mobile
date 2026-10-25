@@ -131,7 +131,7 @@ function page_home(): void
     render_page('home', [
         'meta' => page_meta('home', null, '/', ['logo-animation.js', 'carousel.js', 'color-swatches.js']),
         'hero' => load_hero_slides(),
-        'featured' => $featured,
+        'featured' => sold_out_last($featured),
         'categories' => category_nav(null, null),
     ]);
 }
@@ -163,7 +163,7 @@ function page_products(): void
     render_page('products', [
         'meta' => page_meta('products', $heading, url('/productos', ['categoria' => $category, 'marca' => $brand]), ['color-swatches.js']),
         'heading' => $heading,
-        'cards' => $cards,
+        'cards' => sold_out_last($cards),
         'categories' => category_nav($category, $brand),
         'brands' => brand_nav($category, $brand),
         'active_category' => $category,

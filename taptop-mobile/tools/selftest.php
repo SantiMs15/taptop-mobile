@@ -295,6 +295,8 @@ expect(str_contains($waCart, '• 1 × AirPods Pro 3 — ' . format_price($app3[
 $fakeFind = static fn (string $sku): ?array => ['TP-128' => ['product' => $normalized, 'variant' => $normalized['variants'][0]], 'TP-256' => ['product' => $normalized, 'variant' => $normalized['variants'][1]]][$sku] ?? null;
 $soldOut = cart_priced([['sku' => 'TP-128', 'color' => 'Azul', 'qty' => 1], ['sku' => 'TP-256', 'color' => 'Azul', 'qty' => 2]], $fakeFind);
 expect($soldOut['lines'][1]['available'] === false && $soldOut['gateway'] === 1033000 && $soldOut['count'] === 1 && $soldOut['has_unavailable'], 'carrito: agotado se muestra pero no suma', $soldOut);
+$ordered = array_column(sold_out_last([['slug' => 'a', 'all_sold_out' => true], ['slug' => 'b', 'all_sold_out' => false], ['slug' => 'c', 'all_sold_out' => true], ['slug' => 'd', 'all_sold_out' => false]]), 'slug');
+expect($ordered === ['b', 'd', 'a', 'c'], 'listado: agotados al final sin cambiar el orden del resto', $ordered);
 
 $site = (string) config('site_url');
 expect(request_is_same_origin(['HTTP_ORIGIN' => rtrim($site, '/')]), 'POST: mismo origen aceptado');

@@ -412,6 +412,13 @@ function product_presenter(): ProductPresenter
     );
 }
 
+/** Tarjetas con los productos agotados del todo al final; el resto conserva su orden. */
+function sold_out_last(array $cards): array
+{
+    usort($cards, static fn (array $a, array $b): int => (int) $a['all_sold_out'] <=> (int) $b['all_sold_out']);
+    return $cards;
+}
+
 function category_label(string $key): string
 {
     return (string) (config('categories.' . $key . '.label') ?? $key);
