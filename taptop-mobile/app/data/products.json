@@ -2,7 +2,7 @@
   "version": 1,
   "updated_at": "2026-10-15",
   "currency": "COP",
-  "notes": "Catálogo semilla de la Etapa 0, desde la hoja 'Lista de precios' (pestaña Precios, 15-oct-2026). Solo nombre, categoría, marca, colores, variantes y precios (price_cash = consignación o transferencia; price_gateway = tarjeta o pasarela). Sin costos ni márgenes. Fuera por ahora: iPad A16 (x2), iPad 11 M4 y la segunda línea Borgoña. Los hex son provisionales: se reemplazan con el gotero sobre las fotos propias.",
+  "notes": "Catálogo semilla de la Etapa 0, desde la hoja 'Lista de precios' (pestaña Precios, 15-oct-2026). Solo nombre, categoría, marca, colores, variantes y precios (price_cash = consignación o transferencia; price_gateway = tarjeta o pasarela). Sin costos ni márgenes. Productos sin fila en la hoja quedan agotados (available false). Los hex son provisionales: se reemplazan con el gotero sobre las fotos propias.",
   "products": [
     {
       "slug": "iphone-18-pro-max",
@@ -92,6 +92,7 @@
     {
       "slug": "samsung-galaxy-z-fold8-ultra",
       "brand": "samsung",
+      "available": false,
       "category": "samsung",
       "name": "Samsung Galaxy Z Fold8 Ultra",
       "colors": [
@@ -107,6 +108,7 @@
     {
       "slug": "samsung-galaxy-z-fold8",
       "brand": "samsung",
+      "available": false,
       "category": "samsung",
       "name": "Samsung Galaxy Z Fold8",
       "colors": [
@@ -155,6 +157,7 @@
     {
       "slug": "samsung-galaxy-s26-plus",
       "brand": "samsung",
+      "available": false,
       "category": "samsung",
       "name": "Samsung Galaxy S26+",
       "colors": [
@@ -181,8 +184,18 @@
         { "name": "Titanium Whitesilver", "hex": "#E2E1DC", "image": null }
       ],
       "variants": [
-        { "sku": "SGS25U-256", "storage": "256 GB", "color": null, "price_cash": 2900000, "price_gateway": 2996000 },
+        { "sku": "SGS25U-256", "storage": "256 GB", "color": null, "price_cash": 2900000, "price_gateway": 2996000, "available": false },
         { "sku": "SGS25U-512", "storage": "512 GB", "color": null, "price_cash": 3150000, "price_gateway": 3254000 }
+      ]
+    },
+    {
+      "slug": "mac-neo",
+      "brand": "apple",
+      "category": "mac",
+      "name": "Mac Neo",
+      "colors": [],
+      "variants": [
+        { "sku": "MACNEO-512", "storage": "512 GB", "color": null, "price_cash": 3150000, "price_gateway": 3254000 }
       ]
     },
     {
@@ -197,6 +210,7 @@
         { "name": "Blanco estrella", "hex": "#EFE8DC", "image": null }
       ],
       "variants": [
+        { "sku": "MBA-M5-16-512", "storage": "16 GB / 512 GB", "color": null, "price_cash": 4450000, "price_gateway": 4596000 },
         { "sku": "MBA-M5-16-1TB", "storage": "16 GB / 1 TB", "color": null, "price_cash": 5150000, "price_gateway": 5319000 },
         { "sku": "MBA-M5-24-1TB", "storage": "24 GB / 1 TB", "color": null, "price_cash": 6050000, "price_gateway": 6248000 }
       ]
@@ -236,8 +250,31 @@
       ]
     },
     {
+      "slug": "ipad-air-11-m4",
+      "brand": "apple",
+      "category": "ipad",
+      "name": "iPad Air 11\" (M4)",
+      "colors": [],
+      "variants": [
+        { "sku": "IPADA11-M4-128", "storage": "128 GB", "color": null, "price_cash": 2500000, "price_gateway": 2583000 }
+      ]
+    },
+    {
+      "slug": "ipad-a16",
+      "brand": "apple",
+      "category": "ipad",
+      "name": "iPad (A16)",
+      "colors": [
+        { "name": "Rosado", "hex": "#EBC7C3", "image": null }
+      ],
+      "variants": [
+        { "sku": "IPADA16-128", "storage": "128 GB", "color": null, "price_cash": 1750000, "price_gateway": 1808000 }
+      ]
+    },
+    {
       "slug": "apple-watch-ultra-4",
       "brand": "apple",
+      "available": false,
       "category": "relojes",
       "name": "Apple Watch Ultra 4",
       "colors": [
@@ -256,6 +293,16 @@
       "colors": [],
       "variants": [
         { "sku": "AW-S12-46", "storage": null, "color": null, "price_cash": 1870000, "price_gateway": 1932000 }
+      ]
+    },
+    {
+      "slug": "apple-watch-series-12-42mm",
+      "brand": "apple",
+      "category": "relojes",
+      "name": "Apple Watch Series 12 (42 mm)",
+      "colors": [],
+      "variants": [
+        { "sku": "AW-S12-42", "storage": null, "color": null, "price_cash": 1640000, "price_gateway": 1695000 }
       ]
     },
     {

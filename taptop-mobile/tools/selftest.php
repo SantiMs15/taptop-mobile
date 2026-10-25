@@ -95,9 +95,9 @@ $real = load_json_file(APP_PATH . '/data/products.json');
 $report = $validator->validateCatalog($real);
 $realErrors = array_merge($report['errors'], ...array_map(static fn ($e) => $e['errors'], $report['products']));
 expect($realErrors === [], 'catálogo real: sin errores', $realErrors);
-expect(count($report['products']) === 23, 'catálogo real: 23 productos', count($report['products']));
+expect(count($report['products']) === 27, 'catálogo real: 27 productos', count($report['products']));
 $variantTotal = array_sum(array_map(static fn ($e) => count($e['product']['variants'] ?? []), $report['products']));
-expect($variantTotal === 34, 'catálogo real: 34 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
+expect($variantTotal === 39, 'catálogo real: 39 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
 
 // Desde aquí, el catálogo real con todo disponible: lo agotado hoy no debe romper las pruebas.
 $inStock = $real;
@@ -117,7 +117,7 @@ foreach ($real['products'] as $item) {
     $bySlug[$item['slug']] = $item;
 }
 $ipads = array_values(array_filter(array_keys($bySlug), static fn (string $slug): bool => str_contains($slug, 'ipad')));
-expect($ipads === ['ipad-pro-11-m5'], 'catálogo real: el único iPad es el iPad Pro M5 (sin A16 ni 11 M4)', $ipads);
+expect($ipads === ['ipad-pro-11-m5', 'ipad-air-11-m4', 'ipad-a16'], 'catálogo real: iPads Pro M5, Air M4 y A16', $ipads);
 $burgundy = array_filter($bySlug['iphone-18-pro']['variants'], static fn (array $v): bool => ($v['color'] ?? null) === 'Borgoña');
 expect(count($burgundy) === 1, 'catálogo real: una sola línea Borgoña en el iPhone 18 Pro');
 
