@@ -70,10 +70,10 @@ $ctaTrack = $product['track'] + [
 
       <ul class="trust" aria-label="Por qué comprar aquí">
         <li><?= icon('seal', 'icon') ?><span>Producto 100 % original.</span></li>
-        <li><?= icon('shield', 'icon') ?><span>Garantía del fabricante y <?= (int) config('warranty_months') ?> meses de garantía <?= e($business) ?>: si presenta un fallo, te lo cambiamos.</span></li>
+        <li><?= icon('shield', 'icon') ?><span>Garantía del fabricante y <?= (int) config('warranty_months') ?> meses de garantía <?= e($business) ?>: si presenta un fallo, te lo cambiamos o te devolvemos tu dinero.</span></li>
         <li><?= icon('truck', 'icon') ?><span>Envío a toda Colombia, gratis desde <?= e(format_price((int) config('free_shipping_min'))) ?>.</span></li>
       </ul>
-      <a class="text-link" href="/garantia">Garantía, cambios y envíos</a>
+      <a class="text-link" href="/garantia">Garantía, cambios, reembolsos y envíos</a>
     </div>
 
     <script type="application/json" data-variants><?= json_for_script($product['client']) ?></script>

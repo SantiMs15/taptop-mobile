@@ -29,7 +29,7 @@ $hours = config_text('support_hours_label');
     <nav class="site-footer__col" aria-label="Información">
       <h2 class="footer-title">Información</h2>
       <ul class="footer-links">
-        <li><a href="/garantia">Garantía, cambios y envíos</a></li>
+        <li><a href="/garantia">Garantía, cambios, reembolsos y envíos</a></li>
         <li><a href="/terminos">Términos y condiciones</a></li>
         <li><a href="/privacidad">Tratamiento de datos</a></li>
       </ul>
@@ -58,7 +58,7 @@ $hours = config_text('support_hours_label');
   <div class="container">
     <ul class="site-footer__promises">
       <li><?= icon('truck', 'icon') ?><span>Envío gratis desde <?= e(format_price((int) config('free_shipping_min'))) ?>. Tiempo y costo de envío: se confirman por WhatsApp según tu ciudad.</span></li>
-      <li><?= icon('shield', 'icon') ?><span><?= (int) config('warranty_months') ?> meses de garantía <?= e($business) ?>: si presenta un fallo, te lo cambiamos.</span></li>
+      <li><?= icon('shield', 'icon') ?><span><?= (int) config('warranty_months') ?> meses de garantía <?= e($business) ?>: si presenta un fallo, te lo cambiamos o te devolvemos tu dinero.</span></li>
     </ul>
   </div>
 

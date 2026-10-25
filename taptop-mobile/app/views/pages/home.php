@@ -55,7 +55,7 @@ $months = (int) config('warranty_months', 3);
       <article class="pillar">
         <?= icon('shield', 'icon pillar__icon') ?>
         <h3 class="pillar__title">Garantía</h3>
-        <p class="pillar__text">Garantía del fabricante y <?= $months ?> meses de garantía <?= e($business) ?>: si presenta un fallo, te lo cambiamos por uno igual o equivalente.</p>
+        <p class="pillar__text">Garantía del fabricante y <?= $months ?> meses de garantía <?= e($business) ?>: si presenta un fallo, te lo cambiamos o te devolvemos tu dinero.</p>
       </article>
       <article class="pillar">
         <?= icon('seal', 'icon pillar__icon') ?>

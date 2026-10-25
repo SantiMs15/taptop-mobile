@@ -56,9 +56,9 @@ return [
     'shipping_zones' => [],
 
     // --- Garantía ------------------------------------------------------------------
-    'warranty_months' => 3,
-    'warranty_exchange_days' => '30', // plazo máximo del cambio, en días hábiles
-    'warranty_shipping_payer' => 'el cliente', // quién asume el envío del cambio
+    'warranty_months' => 12,
+    'warranty_exchange_days' => '30', // plazo máximo del cambio o del reembolso, en días hábiles
+    'warranty_shipping_payer' => 'si confirmamos la falla, Taptop Mobile paga el envío de ida y vuelta; si no hay falla, lo paga el cliente', // quién asume el envío del cambio o la devolución
 
     // --- Pagos (Nivel 1: enlace de pago enviado por WhatsApp; sin código de pagos) ---
     // Parámetros de la comisión, solo para el botón "sugerir" del panel (Paso 2).

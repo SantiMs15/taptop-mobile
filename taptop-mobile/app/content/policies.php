@@ -120,7 +120,7 @@ function policy_pages(): array
                     ['p' => "Enviamos a toda Colombia. El envío es gratis en compras desde {$freeShipping}, según el precio que pagas con el medio elegido. Por debajo de ese valor, el costo se confirma por WhatsApp. El tiempo de entrega depende de la ciudad y también se confirma por WhatsApp."],
                 ]],
                 ['id' => 'garantia', 'heading' => 'Garantía', 'blocks' => [
-                    ['p' => "Todos los productos tienen la garantía del fabricante y, además, {$months} meses de garantía {$business}. Las condiciones están en la página Garantía, cambios y envíos."],
+                    ['p' => "Todos los productos tienen la garantía del fabricante y, además, {$months} meses de garantía {$business}, con cambio o reembolso a tu elección. Las condiciones están en la página Garantía, cambios, reembolsos y envíos."],
                 ]],
                 ['id' => 'retracto', 'heading' => 'Derecho de retracto', 'blocks' => [
                     ['p' => 'Como la compra se hace a distancia, tienes derecho de retracto en los términos del artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor). Para ejercerlo, escríbenos por WhatsApp dentro del plazo que fija la ley.'],
@@ -132,19 +132,32 @@ function policy_pages(): array
         ],
 
         'garantia' => [
-            'title' => 'Garantía, cambios y envíos',
-            'intro' => "Todos nuestros productos tienen la garantía del fabricante y, además, {$months} meses de garantía {$business}.",
+            'title' => 'Garantía, cambios, reembolsos y envíos',
+            'intro' => "Todos nuestros productos tienen la garantía del fabricante y, además, {$months} meses de garantía {$business}, que atendemos directamente nosotros.",
             'sections' => [
                 ['id' => 'fabricante', 'heading' => 'Garantía del fabricante', 'blocks' => [
                     ['p' => 'Es la garantía estándar de cada marca (Apple o Samsung) y corre aparte de la nuestra. Si necesitas usarla, escríbenos y te orientamos.'],
                 ]],
                 ['id' => 'taptop', 'heading' => "Garantía {$business}: {$months} meses", 'blocks' => [
                     ['ul' => [
-                        "Dura {$months} meses desde la entrega del producto.",
-                        'Cubre fallas de funcionamiento y defectos de fábrica del equipo o del accesorio.',
-                        'Si confirmamos la falla, te cambiamos el producto por uno igual. Si no tenemos una unidad igual, lo cambiamos por un equipo equivalente del mismo valor. No aplica reembolso.',
-                        'Por equivalente entendemos un producto de la misma categoría, del mismo valor y con características iguales o superiores. Te lo mostramos antes del cambio.',
+                        "Dura {$months} meses desde la entrega del producto y aplica a todo nuestro catálogo: equipos y accesorios.",
+                        'La atiende directamente ' . $business . ': no tienes que acudir a la marca ni a un servicio técnico externo.',
+                        'Cubre fallas de funcionamiento y defectos de fábrica del equipo o del accesorio, incluidas las fallas de la batería.',
+                        'Si confirmamos la falla, tú eliges: cambio del producto o reembolso de tu dinero.',
+                    ]],
+                ]],
+                ['id' => 'cambio', 'heading' => 'Si eliges cambio', 'blocks' => [
+                    ['ul' => [
+                        'Te cambiamos el producto por uno igual. Si no tenemos una unidad igual, lo cambiamos por un equipo equivalente del mismo valor.',
+                        'Por equivalente entendemos un producto de la misma categoría, del mismo valor y con las mismas características. Te lo mostramos antes del cambio.',
                         "Hacemos el cambio en un plazo máximo de {$exchangeDays} días hábiles después de confirmar la falla.",
+                    ]],
+                ]],
+                ['id' => 'reembolso', 'heading' => 'Si eliges reembolso', 'blocks' => [
+                    ['ul' => [
+                        'Te devolvemos el 100 % del valor que pagaste por el producto.',
+                        'El dinero vuelve por el mismo medio con el que pagaste: a tu cuenta si pagaste por consignación o transferencia, o a través de la pasarela si pagaste con tarjeta, PSE o Nequi.',
+                        "Hacemos el reembolso en un plazo máximo de {$exchangeDays} días hábiles después de confirmar la falla y recibir el producto. Si pagaste con tarjeta, tu banco puede tardar unos días más en reflejarlo.",
                     ]],
                 ]],
                 ['id' => 'exclusiones', 'heading' => 'Qué no cubre', 'blocks' => [
@@ -152,17 +165,17 @@ function policy_pages(): array
                         'Golpes, caídas, pantallas o vidrios rotos.',
                         'Humedad o contacto con líquidos.',
                         'Mal uso, reparaciones o manipulación por terceros.',
-                        'Desgaste normal por el uso.',
+                        'Desgaste normal por el uso, incluida la pérdida normal de capacidad de la batería con el tiempo.',
                     ]],
                 ]],
                 ['id' => 'reclamo', 'heading' => 'Cómo hacer un reclamo', 'blocks' => [
                     ['ol' => [
-                        "Escríbenos por WhatsApp al {$whatsapp} con tu nombre y el producto.",
+                        "Escríbenos por WhatsApp al {$whatsapp} con tu nombre, el producto y tu factura {$business} o el número de tu pedido.",
                         'Envíanos fotos o un video donde se vea la falla.',
-                        'Revisamos el caso y coordinamos la recogida del equipo.',
-                        'Si confirmamos la falla, hacemos el cambio en el plazo indicado.',
+                        'Revisamos el caso y coordinamos el envío del equipo.',
+                        'Si confirmamos la falla, eliges cambio o reembolso y lo hacemos en el plazo indicado.',
                     ]],
-                    ['p' => "El envío del cambio lo asume: {$shippingPayer}."],
+                    ['p' => "Para atender la garantía necesitamos la factura {$business} o el número de tu pedido. Envío del cambio o de la devolución: {$shippingPayer}."],
                 ]],
                 ['id' => 'envios', 'heading' => 'Envíos', 'blocks' => [
                     ['ul' => [
