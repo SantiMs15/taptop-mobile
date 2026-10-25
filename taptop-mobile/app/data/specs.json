@@ -273,18 +273,18 @@
         { "title": "Wi-Fi 7 y Bluetooth 6", "images": { "Azul cielo": "/assets/images/products/macbook-air-m5-azul-cielo-lateral.webp", "Blanco estrella": "/assets/images/products/macbook-air-m5-blanco-estrella-lateral.webp", "Medianoche": "/assets/images/products/macbook-air-m5-medianoche-lateral.webp", "Plata": "/assets/images/products/macbook-air-m5-plata-lateral.webp" } }
       ],
       "specs": [
-        { "title": "Tamaños", "detail": "13\" y 15\"" },
-        { "title": "Chip", "detail": "M5, CPU de 10 núcleos; GPU de 8 o 10 núcleos (13\") o de 10 núcleos (15\")" },
+        { "title": "Tamaño", "detail": "13\"" },
+        { "title": "Chip", "detail": "M5, CPU de 10 núcleos y GPU de 8 o 10 núcleos" },
         { "title": "Memoria unificada", "detail": "16 GB o 24 GB" },
-        { "title": "Almacenamiento", "detail": "1 TB" },
-        { "title": "Pantalla", "detail": "13,6\" o 15,3\" Liquid Retina" },
-        { "title": "Batería", "detail": "53,8 Wh (13\") o 66,5 Wh (15\"); hasta 18 h de video en streaming y 15 h de navegación web" },
+        { "title": "Almacenamiento", "detail": "512 GB o 1 TB" },
+        { "title": "Pantalla", "detail": "13,6\" Liquid Retina" },
+        { "title": "Batería", "detail": "53,8 Wh; hasta 18 h de video en streaming y 15 h de navegación web" },
         { "title": "Carga", "detail": "Adaptador de 40 W (hasta 60 W); carga rápida con adaptador USB-C de 70 W o más y cable MagSafe 3" },
         { "title": "Puertos", "detail": "MagSafe 3, 2 Thunderbolt 4 (USB-C, USB 4 hasta 40 Gb/s) y entrada de audífonos de 3,5 mm" },
         { "title": "Pantallas externas", "detail": "Hasta dos monitores" },
-        { "title": "Cámara y audio", "detail": "Center Stage de 12 MP; 4 bocinas (13\") o 6 bocinas (15\"), 3 micrófonos" },
+        { "title": "Cámara y audio", "detail": "Center Stage de 12 MP; 4 bocinas, 3 micrófonos" },
         { "title": "Conectividad", "detail": "Wi-Fi 7, Bluetooth 6, Thread" },
-        { "title": "Peso y grosor", "detail": "1,23 kg (13\") o 1,51 kg (15\"); 1,13 cm (13\") o 1,15 cm (15\")" }
+        { "title": "Peso y grosor", "detail": "1,23 kg; 1,13 cm" }
       ]
     },
     "ipad-pro-11-m5": {
