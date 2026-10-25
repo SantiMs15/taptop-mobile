@@ -19,9 +19,9 @@
         { "sku": "IP18PM-256", "storage": "256 GB", "color": null, "price_cash": 5400000, "price_gateway": 5577000 },
         { "sku": "IP18PM-256-BLK", "storage": "256 GB", "color": "Negro", "price_cash": 5050000, "price_gateway": 5216000 },
         { "sku": "IP18PM-256-GLA", "storage": "256 GB", "color": "Glaciar", "price_cash": 5250000, "price_gateway": 5422000 },
-        { "sku": "IP18PM-256-BUR", "storage": "256 GB", "color": "Borgoña", "price_cash": 5250000, "price_gateway": 5422000 },
+        { "sku": "IP18PM-256-BUR", "storage": "256 GB", "color": "Borgoña", "price_cash": 5300000, "price_gateway": 5474000 },
         { "sku": "IP18PM-512", "storage": "512 GB", "color": null, "price_cash": 5950000, "price_gateway": 6145000, "available": false },
-        { "sku": "IP18PM-512-BUR", "storage": "512 GB", "color": "Borgoña", "price_cash": 6350000, "price_gateway": 6558000 }
+        { "sku": "IP18PM-512-BUR", "storage": "512 GB", "color": "Borgoña", "price_cash": 5830000, "price_gateway": 6021000 }
       ]
     },
     {
@@ -36,8 +36,8 @@
         { "name": "Borgoña", "hex": "#6A2433", "image": null }
       ],
       "variants": [
-        { "sku": "IP18P-256", "storage": "256 GB", "color": null, "price_cash": 4550000, "price_gateway": 4700000 },
-        { "sku": "IP18P-256-BUR", "storage": "256 GB", "color": "Borgoña", "price_cash": 4650000, "price_gateway": 4803000 }
+        { "sku": "IP18P-256", "storage": "256 GB", "color": null, "price_cash": 4400000, "price_gateway": 4545000 },
+        { "sku": "IP18P-256-BUR", "storage": "256 GB", "color": "Borgoña", "price_cash": 4500000, "price_gateway": 4648000 }
       ]
     },
     {
@@ -52,12 +52,13 @@
       ],
       "variants": [
         { "sku": "IP17PM-256-ESIM", "storage": "256 GB", "note": "eSIM", "color": null, "price_cash": 4250000, "price_gateway": 4390000 },
-        { "sku": "IP17PM-256-SIM", "storage": "256 GB", "note": "SIM física", "color": null, "price_cash": 4330000, "price_gateway": 4472000 }
+        { "sku": "IP17PM-256-SIM", "storage": "256 GB", "note": "SIM física", "color": null, "price_cash": 4300000, "price_gateway": 4441000 }
       ]
     },
     {
       "slug": "iphone-17",
       "brand": "apple",
+      "available": false,
       "category": "iphone",
       "name": "iPhone 17",
       "colors": [
@@ -74,6 +75,7 @@
     {
       "slug": "iphone-16",
       "brand": "apple",
+      "available": false,
       "category": "iphone",
       "name": "iPhone 16",
       "colors": [

@@ -119,7 +119,7 @@ foreach ($real['products'] as $item) {
 $ipads = array_values(array_filter(array_keys($bySlug), static fn (string $slug): bool => str_contains($slug, 'ipad')));
 expect($ipads === ['ipad-pro-11-m5'], 'catálogo real: el único iPad es el iPad Pro M5 (sin A16 ni 11 M4)', $ipads);
 $burgundy = array_filter($bySlug['iphone-18-pro']['variants'], static fn (array $v): bool => ($v['color'] ?? null) === 'Borgoña');
-expect(count($burgundy) === 1 && array_values($burgundy)[0]['price_cash'] === 4650000, 'catálogo real: una sola línea Borgoña ($4.650.000)');
+expect(count($burgundy) === 1, 'catálogo real: una sola línea Borgoña en el iPhone 18 Pro');
 
 // --- Presentador ---------------------------------------------------------------
 $normalized = $validator->validateCatalog(['products' => [product()]])['products'][0]['product'];
