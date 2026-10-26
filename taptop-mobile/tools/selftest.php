@@ -352,7 +352,7 @@ config_override('wompi', $cfgWompi);
 config_override('mail', $cfgMail);
 expect($blockFile && $blockNoPass && !$blockOk && !$blockStaging && !$blockNoWompi, 'despliegue: con Wompi en producción exige SMTP con usuario y contraseña', compact('blockFile', 'blockNoPass', 'blockOk', 'blockStaging', 'blockNoWompi'));
 $single = checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'APP3', 'color' => 'Blanco']);
-expect($single !== null && $single['source'] === 'producto' && $single['priced']['gateway'] === 817000, 'envío: Comprar ahora arma un pedido de un producto', $single);
+expect($single !== null && $single['source'] === 'producto' && $single['priced']['gateway'] === 776000, 'envío: Comprar ahora arma un pedido de un producto', $single);
 expect(checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'NO']) === null, 'envío: sku que no es del producto = sin pedido');
 expect(checkout_items(['producto' => ['x'], 'sku' => 'APP3']) === null, 'envío: producto con arreglo = sin pedido');
 expect(str_starts_with((string) buy_path('airpods-pro-3', 'APP3', 'Blanco'), '/pago/envio?') || wompi() === null, 'Comprar ahora lleva a la página de envío');
@@ -412,11 +412,11 @@ $rv = payment_result_view('TT-ABCDEF123456', ['status' => 'DECLINED'] + $resTx, 
 expect($rv['clear_cart'] === false && $rv['wa_link'] !== null && str_contains($rv['wa_link'], rawurlencode('Total por transferencia')) && str_contains($rv['back_url'], '/carrito'), 'resultado: rechazado conserva carrito y ofrece WhatsApp', $rv);
 $rv = payment_result_view('TT-ABCDEF123456', $resTx, ['source' => 'producto'] + $resOrder);
 expect($rv['clear_cart'] === false && $rv['amount_matches'] === true, 'resultado: compra directa no vacía el carrito');
-$rv = payment_result_view('TT-APP3-0123456789', $resTx, null);
+$rv = payment_result_view('TT-APP3-0123456789', ['amount_in_cents' => 77600000] + $resTx, null);
 expect($rv['amount_matches'] === true && count($rv['lines']) === 1 && str_contains($rv['lines'][0]['label'], 'AirPods Pro 3') && $rv['clear_cart'] === false, 'resultado: referencia vieja usa el SKU', $rv);
 $rv = payment_result_view('TT-ABCDEF123456', ['amount_in_cents' => 81700099] + $resTx, $resOrder);
 expect($rv['amount_matches'] === false, 'resultado: centavos distintos no coinciden');
-expect(expected_amount_for('TT-ABCDEF123456', $resOrder) === 81700000 && expected_amount_for('TT-APP3-0123456789', null) === 81700000 && expected_amount_for('TT-ABCDEF123456', null) === null, 'monto esperado: pedido, SKU viejo y desconocido');
+expect(expected_amount_for('TT-ABCDEF123456', $resOrder) === 81700000 && expected_amount_for('TT-APP3-0123456789', null) === 77600000 && expected_amount_for('TT-ABCDEF123456', null) === null, 'monto esperado: pedido, SKU viejo y desconocido');
 
 echo "\n{$passed} pasaron, {$failed} fallaron\n";
 exit($failed === 0 ? 0 : 1);

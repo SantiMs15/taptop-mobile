@@ -296,7 +296,7 @@
       "name": "Apple Watch Series 12 (46 mm)",
       "colors": [],
       "variants": [
-        { "sku": "AW-S12-46", "storage": null, "color": null, "price_cash": 1870000, "price_gateway": 1932000 }
+        { "sku": "AW-S12-46", "storage": null, "color": null, "price_cash": 1720000, "price_gateway": 1777000 }
       ]
     },
     {
@@ -306,7 +306,7 @@
       "name": "Apple Watch Series 12 (42 mm)",
       "colors": [],
       "variants": [
-        { "sku": "AW-S12-42", "storage": null, "color": null, "price_cash": 1640000, "price_gateway": 1695000 }
+        { "sku": "AW-S12-42", "storage": null, "color": null, "price_cash": 1490000, "price_gateway": 1540000 }
       ]
     },
     {
@@ -320,7 +320,7 @@
         { "name": "Blanco", "hex": "#F5F5F7", "image": "/assets/images/products/airpods-pro-3-blanco.webp" }
       ],
       "variants": [
-        { "sku": "APP3", "storage": null, "color": null, "price_cash": 790000, "price_gateway": 817000 }
+        { "sku": "APP3", "storage": null, "color": null, "price_cash": 750000, "price_gateway": 776000 }
       ]
     },
     {
@@ -331,7 +331,7 @@
       "article": "los",
       "colors": [],
       "variants": [
-        { "sku": "AP4-ANC", "storage": null, "color": null, "price_cash": 630000, "price_gateway": 652000 }
+        { "sku": "AP4-ANC", "storage": null, "color": null, "price_cash": 610000, "price_gateway": 631000 }
       ]
     },
     {
