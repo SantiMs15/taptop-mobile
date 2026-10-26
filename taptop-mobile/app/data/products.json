@@ -315,7 +315,7 @@
       "category": "airpods",
       "name": "AirPods Pro 3",
       "article": "los",
-      "available": false,
+      "available": true,
       "colors": [
         { "name": "Blanco", "hex": "#F5F5F7", "image": "/assets/images/products/airpods-pro-3-blanco.webp" }
       ],
