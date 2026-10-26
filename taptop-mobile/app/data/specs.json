@@ -226,9 +226,20 @@
       ]
     },
     "airpods-4-cancelacion-activa-de-ruido": {
-      "status": "pendiente",
-      "slides": [],
-      "specs": []
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip H2", "images": { "Blanco": "/assets/images/products/airpods-4-cancelacion-activa-de-ruido-blanco-frontal.webp" } },
+        { "title": "Cancelación activa de ruido", "images": { "Blanco": "/assets/images/products/airpods-4-cancelacion-activa-de-ruido-blanco-detalle.webp" } },
+        { "title": "Hasta 30 h con el estuche", "images": { "Blanco": "/assets/images/products/airpods-4-cancelacion-activa-de-ruido-blanco-lateral.webp" } }
+      ],
+      "specs": [
+        { "title": "Chip", "detail": "H2" },
+        { "title": "Audio", "detail": "Cancelación activa de ruido, modo Transparencia, Audio adaptable, Aislamiento de voz, Audio espacial personalizado" },
+        { "title": "Batería", "detail": "Hasta 5 h por carga (hasta 4 h con cancelación de ruido); hasta 30 h con el estuche" },
+        { "title": "Resistencia", "detail": "IP54 (auriculares y estuche)" },
+        { "title": "Conectividad", "detail": "Bluetooth 5.3" },
+        { "title": "Estuche", "detail": "USB-C y carga inalámbrica (Qi y cargador del Apple Watch); altavoz para Encontrar" }
+      ]
     },
     "apple-watch-ultra-4": {
       "status": "borrador",

@@ -329,7 +329,9 @@
       "category": "airpods",
       "name": "AirPods 4 con cancelación activa de ruido",
       "article": "los",
-      "colors": [],
+      "colors": [
+        { "name": "Blanco", "hex": "#F5F5F7", "image": "/assets/images/products/airpods-4-cancelacion-activa-de-ruido-blanco.webp" }
+      ],
       "variants": [
         { "sku": "AP4-ANC", "storage": null, "color": null, "price_cash": 610000, "price_gateway": 631000 }
       ]

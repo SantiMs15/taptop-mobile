@@ -309,7 +309,7 @@ expect(!request_is_same_origin(['HTTP_ORIGIN' => 'https://otro-sitio.com']), 'PO
 expect(request_is_same_origin(['HTTP_REFERER' => rtrim($site, '/') . '/carrito']), 'POST: sin Origin, Referer propio aceptado');
 expect(!request_is_same_origin([]), 'POST: sin Origin ni Referer rechazado');
 expect(!request_is_same_origin(['HTTP_ORIGIN' => rtrim($site, '/') . '.evil.com']), 'POST: host que solo empieza igual rechazado');
-$noColorLine = cart_priced([['sku' => 'AP4-ANC', 'color' => null, 'qty' => 1]])['lines'][0];
+$noColorLine = cart_priced([['sku' => 'APL-PENCIL-PRO', 'color' => null, 'qty' => 1]])['lines'][0];
 expect(array_key_exists('image', $noColorLine) && is_string($noColorLine['kind'] ?? null) && preg_match('/^#[0-9A-Fa-f]{6}$/', (string) ($noColorLine['hex'] ?? '')) === 1, 'carrito: línea trae kind y hex para la silueta si no hay foto', $noColorLine);
 
 // --- Datos de envío ----------------------------------------------------------
