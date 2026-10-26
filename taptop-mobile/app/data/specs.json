@@ -211,9 +211,9 @@
     "airpods-pro-3": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip H2", "image": null },
-        { "title": "Cancelación activa de ruido", "image": null },
-        { "title": "Hasta 8 h por carga", "image": null }
+        { "title": "Chip H2", "images": { "Blanco": "/assets/images/products/airpods-pro-3-blanco-frontal.webp" } },
+        { "title": "Cancelación activa de ruido", "images": { "Blanco": "/assets/images/products/airpods-pro-3-blanco-detalle.webp" } },
+        { "title": "Hasta 8 h por carga", "images": { "Blanco": "/assets/images/products/airpods-pro-3-blanco-lateral.webp" } }
       ],
       "specs": [
         { "title": "Chip", "detail": "H2; estuche con Ultra Wideband" },

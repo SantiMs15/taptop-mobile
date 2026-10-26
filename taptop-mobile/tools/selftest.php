@@ -287,16 +287,16 @@ expect(cart_parse('') === [] && cart_parse('{roto') === [] && cart_parse('"x"') 
 expect(cart_parse('[["IP18PM-256-BUR","Borgoña",99]]') === [['sku' => 'IP18PM-256-BUR', 'color' => 'Borgoña', 'qty' => 5]], 'carrito: qty recortada a 5');
 expect(count(cart_parse(json_encode(array_map(static fn ($i) => ["SKU-$i", null, 1], range(1, 50))))) === 10, 'carrito: máximo 10 líneas');
 expect(cart_parse('[["<b>x</b>",null,1],["APP3",null,1],["APP3",null,2]]') === [['sku' => 'APP3', 'color' => null, 'qty' => 3]], 'carrito: sku inválido descartado y duplicados fusionados');
-$cartLines = cart_add(cart_add([], 'IP18PM-256-BUR', 'Borgoña'), 'APP3', null);
+$cartLines = cart_add(cart_add([], 'IP18PM-256-BUR', 'Borgoña'), 'APP3', 'Blanco');
 $priced = cart_priced($cartLines);
 $bur = find_product_by_sku('IP18PM-256-BUR')['variant'];
 $app3 = find_product_by_sku('APP3')['variant'];
 expect($priced['gateway'] === $bur['price_gateway'] + $app3['price_gateway'] && $priced['cash'] === $bur['price_cash'] + $app3['price_cash'] && $priced['count'] === 2, 'carrito: totales desde el catálogo', $priced);
 expect(cart_priced([['sku' => 'NO-EXISTE', 'color' => null, 'qty' => 1]])['lines'] === [], 'carrito: sku fuera del catálogo omitido');
-expect(cart_set_qty($cartLines, 0, 0) === [['sku' => 'APP3', 'color' => null, 'qty' => 1]], 'carrito: qty 0 quita la línea');
+expect(cart_set_qty($cartLines, 0, 0) === [['sku' => 'APP3', 'color' => 'Blanco', 'qty' => 1]], 'carrito: qty 0 quita la línea');
 expect(cart_parse(cart_encode($cartLines)) === $cartLines, 'carrito: cookie ida y vuelta (con tildes)');
 $waCart = wa_message_cart($priced);
-expect(str_contains($waCart, '• 1 × AirPods Pro 3 — ' . format_price($app3['price_cash'])) && str_ends_with($waCart, 'Total por transferencia: ' . format_price($priced['cash'])), 'carrito: mensaje de WhatsApp con detalle y total por transferencia', $waCart);
+expect(str_contains($waCart, '• 1 × AirPods Pro 3 Blanco — ' . format_price($app3['price_cash'])) && str_ends_with($waCart, 'Total por transferencia: ' . format_price($priced['cash'])), 'carrito: mensaje de WhatsApp con detalle y total por transferencia', $waCart);
 $fakeFind = static fn (string $sku): ?array => ['TP-128' => ['product' => $normalized, 'variant' => $normalized['variants'][0]], 'TP-256' => ['product' => $normalized, 'variant' => $normalized['variants'][1]]][$sku] ?? null;
 $soldOut = cart_priced([['sku' => 'TP-128', 'color' => 'Azul', 'qty' => 1], ['sku' => 'TP-256', 'color' => 'Azul', 'qty' => 2]], $fakeFind);
 expect($soldOut['lines'][1]['available'] === false && $soldOut['gateway'] === 1033000 && $soldOut['count'] === 1 && $soldOut['has_unavailable'], 'carrito: agotado se muestra pero no suma', $soldOut);
@@ -309,7 +309,7 @@ expect(!request_is_same_origin(['HTTP_ORIGIN' => 'https://otro-sitio.com']), 'PO
 expect(request_is_same_origin(['HTTP_REFERER' => rtrim($site, '/') . '/carrito']), 'POST: sin Origin, Referer propio aceptado');
 expect(!request_is_same_origin([]), 'POST: sin Origin ni Referer rechazado');
 expect(!request_is_same_origin(['HTTP_ORIGIN' => rtrim($site, '/') . '.evil.com']), 'POST: host que solo empieza igual rechazado');
-$noColorLine = cart_priced([['sku' => 'APP3', 'color' => null, 'qty' => 1]])['lines'][0];
+$noColorLine = cart_priced([['sku' => 'AP4-ANC', 'color' => null, 'qty' => 1]])['lines'][0];
 expect(array_key_exists('image', $noColorLine) && is_string($noColorLine['kind'] ?? null) && preg_match('/^#[0-9A-Fa-f]{6}$/', (string) ($noColorLine['hex'] ?? '')) === 1, 'carrito: línea trae kind y hex para la silueta si no hay foto', $noColorLine);
 
 // --- Datos de envío ----------------------------------------------------------
@@ -351,11 +351,11 @@ config_override('environment', $cfgEnv);
 config_override('wompi', $cfgWompi);
 config_override('mail', $cfgMail);
 expect($blockFile && $blockNoPass && !$blockOk && !$blockStaging && !$blockNoWompi, 'despliegue: con Wompi en producción exige SMTP con usuario y contraseña', compact('blockFile', 'blockNoPass', 'blockOk', 'blockStaging', 'blockNoWompi'));
-$single = checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'APP3', 'color' => '']);
+$single = checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'APP3', 'color' => 'Blanco']);
 expect($single !== null && $single['source'] === 'producto' && $single['priced']['gateway'] === 817000, 'envío: Comprar ahora arma un pedido de un producto', $single);
 expect(checkout_items(['producto' => 'airpods-pro-3', 'sku' => 'NO']) === null, 'envío: sku que no es del producto = sin pedido');
 expect(checkout_items(['producto' => ['x'], 'sku' => 'APP3']) === null, 'envío: producto con arreglo = sin pedido');
-expect(str_starts_with((string) buy_path('airpods-pro-3', 'APP3', null), '/pago/envio?') || wompi() === null, 'Comprar ahora lleva a la página de envío');
+expect(str_starts_with((string) buy_path('airpods-pro-3', 'APP3', 'Blanco'), '/pago/envio?') || wompi() === null, 'Comprar ahora lleva a la página de envío');
 
 // --- Correo del pedido -------------------------------------------------------
 use Taptop\Mail\SmtpMailer;
@@ -365,7 +365,7 @@ expect(str_contains($msg, "Subject: =?UTF-8?B?") && str_contains($msg, "Reply-To
 $threw = false;
 try { SmtpMailer::buildMessage('a@b.co', 'X', "a@b.co\r\nBcc: x@y.co", 'Hola', 'x'); } catch (InvalidArgumentException) { $threw = true; }
 expect($threw, 'correo: saltos de línea en cabeceras rechazados (sin inyección)');
-$mailOrder = ['source' => 'carrito', 'lines' => cart_priced(cart_add([], 'APP3', null))['lines'], 'gateway' => 817000, 'cash' => 790000, 'shipping' => $v['data'], 'created_at' => 'x', 'mail' => null];
+$mailOrder = ['source' => 'carrito', 'lines' => cart_priced(cart_add([], 'APP3', 'Blanco'))['lines'], 'gateway' => 817000, 'cash' => 790000, 'shipping' => $v['data'], 'created_at' => 'x', 'mail' => null];
 $mail = order_email('TT-ABCDEF123456', $mailOrder, ['id' => '1-2-3', 'payment_method_type' => 'CARD', 'amount_in_cents' => 81700000]);
 expect(str_contains($mail['subject'], 'TT-ABCDEF123456') && str_contains($mail['body'], 'El Poblado') && str_contains($mail['body'], '1 × AirPods Pro 3'), 'correo: pedido con datos de envío y productos', $mail);
 expect(str_starts_with(order_email('TT-ABCDEF123456', $mailOrder, ['id' => '1', 'amount_in_cents' => 100])['subject'], '⚠'), 'correo: monto distinto avisa en el asunto');
@@ -404,7 +404,7 @@ foreach (glob($mailDir . '/*') ?: [] as $f) { @unlink($f); }
 @unlink($ordersTmp . '.lock');
 
 // --- Resultado del pago --------------------------------------------------------
-$resOrder = ['source' => 'carrito', 'lines' => cart_priced(cart_add([], 'APP3', null))['lines'], 'gateway' => 817000, 'cash' => 790000, 'shipping' => $v['data'], 'created_at' => 'x', 'mail' => null];
+$resOrder = ['source' => 'carrito', 'lines' => cart_priced(cart_add([], 'APP3', 'Blanco'))['lines'], 'gateway' => 817000, 'cash' => 790000, 'shipping' => $v['data'], 'created_at' => 'x', 'mail' => null];
 $resTx = ['status' => 'APPROVED', 'amount_in_cents' => 81700000, 'payment_method_type' => 'CARD'];
 $rv = payment_result_view('TT-ABCDEF123456', $resTx, $resOrder);
 expect($rv['amount_matches'] === true && $rv['clear_cart'] === true && count($rv['lines']) === 1 && $rv['wa_link'] === null && !str_contains(json_encode($rv), 'El Poblado'), 'resultado: carrito aprobado coincide, vacía carrito y no muestra datos de envío', $rv);
