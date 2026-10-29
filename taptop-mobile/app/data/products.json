@@ -272,11 +272,11 @@
       "slug": "ipad-a16",
       "brand": "apple",
       "category": "ipad",
-      "name": "iPad (A16)",
+      "name": "iPad 11 Chip A16",
       "colors": [
-        { "name": "Azul", "hex": "#A9C2DC", "image": null },
-        { "name": "Rosa", "hex": "#EBC7C3", "image": null },
-        { "name": "Amarillo", "hex": "#F1E29C", "image": null },
+        { "name": "Azul", "hex": "#88A9CC", "image": "/assets/images/products/ipad-a16-azul.webp" },
+        { "name": "Rosa", "hex": "#FA7B8F", "image": "/assets/images/products/ipad-a16-rosa.webp" },
+        { "name": "Amarillo", "hex": "#F4DE6A", "image": "/assets/images/products/ipad-a16-amarillo.webp" },
         { "name": "Plata", "hex": "#E2E3E5", "image": null, "available": false }
       ],
       "variants": [

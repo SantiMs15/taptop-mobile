@@ -295,6 +295,24 @@
         { "title": "Peso y grosor", "detail": "1,23 kg; 1,13 cm" }
       ]
     },
+    "ipad-a16": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip A16", "images": { "Azul": "/assets/images/products/ipad-a16-azul-trasera.webp", "Rosa": "/assets/images/products/ipad-a16-rosa-trasera.webp", "Amarillo": "/assets/images/products/ipad-a16-amarillo-trasera.webp" } },
+        { "title": "Pantalla Liquid Retina de 11 pulgadas", "images": { "Azul": "/assets/images/products/ipad-a16-azul-frontal.webp", "Rosa": "/assets/images/products/ipad-a16-rosa-frontal.webp", "Amarillo": "/assets/images/products/ipad-a16-amarillo-frontal.webp" } }
+      ],
+      "specs": [
+        { "title": "Pantalla", "detail": "Liquid Retina de 11\", 2360 × 1640 (264 ppi), 500 nits, True Tone" },
+        { "title": "Chip", "detail": "A16; CPU de 5 núcleos, GPU de 4 núcleos, Neural Engine de 16 núcleos" },
+        { "title": "Cámaras", "detail": "Trasera gran angular de 12 MP; frontal horizontal de 12 MP con Encuadre Centrado" },
+        { "title": "Seguridad", "detail": "Touch ID en el botón superior" },
+        { "title": "Batería", "detail": "Hasta 10 h" },
+        { "title": "Puerto", "detail": "USB-C" },
+        { "title": "Conectividad", "detail": "Wi-Fi 6, Bluetooth 5.3; versión Wi-Fi o Wi-Fi + celular (5G)" },
+        { "title": "Compatibilidad", "detail": "Apple Pencil (USB-C), Apple Pencil (1.ª generación) y Magic Keyboard Folio" },
+        { "title": "Medidas y peso", "detail": "248,6 × 179,5 × 7 mm; 477 g (Wi-Fi) o 481 g (celular)" }
+      ]
+    },
     "ipad-pro-11-m5": {
       "status": "borrador",
       "slides": [

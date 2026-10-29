@@ -314,6 +314,7 @@ final class ProductPresenter
      * Slides de descripción (6.2): foto propia + titular de la ficha. Cada slide puede tener una
      * foto por color ("images"); el color sin foto usa "image" y, si tampoco hay, la silueta teñida.
      * Sin ninguna foto propia el slider se omite, salvo en la Etapa 0 con placeholders activos.
+     * Con menos de 2 slides no hay sección (el iPad A16 usa 2: solo tiene tres fotos).
      * 'byColor' (una ruta o null por color, en el orden de 'colors') lo usa color-swatches.js.
      */
     private function slides(array $product, array $view): array
@@ -343,7 +344,7 @@ final class ProductPresenter
                     : 'Imagen de referencia de ' . $subject,
             ];
         }
-        return count($slides) >= 3 ? $slides : [];
+        return count($slides) >= 2 ? $slides : [];
     }
 
     /**

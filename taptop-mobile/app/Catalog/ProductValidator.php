@@ -149,8 +149,8 @@ final class ProductValidator
                 }
                 $specs[] = ['title' => trim($title), 'detail' => trim($detail)];
             }
-            if ($slides !== [] && (count($slides) < 3 || count($slides) > 5)) {
-                $result['warnings'][] = "{$label}: el brief pide de 3 a 5 slides por producto.";
+            if ($slides !== [] && (count($slides) < 2 || count($slides) > 5)) {
+                $result['warnings'][] = "{$label}: se esperan de 2 a 5 slides por producto.";
             }
             $result['specs'][$slug] = ['status' => $status, 'slides' => $slides, 'specs' => $specs];
         }
