@@ -13,8 +13,9 @@ namespace Taptop\Repositories;
  *   'slug' => string, 'brand' => string, 'category' => string, 'name' => string,
  *   'article' => 'el'|'la'|'los'|'las', 'currency' => 'COP', 'available' => bool, 'visible' => bool,
  *   'colors' => list<array{name: string, hex: string, image: ?string, available: bool}>,
+ *   'options' => list<array{name: string, values: list<string>}>, // ejes de configuración; [] si no tiene
  *   'variants' => list<array{sku: string, storage: ?string, note: ?string, color: ?string,
- *                            price_cash: int, price_gateway: int, available: bool}>,
+ *                            attrs: ?array<string, string>, price_cash: int, price_gateway: int, available: bool}>,
  *   'slides' => list<array{title: string, image: ?string, images: array<string, string>}>,
  *   'specs' => list<array{title: string, detail: string}>,
  * ]

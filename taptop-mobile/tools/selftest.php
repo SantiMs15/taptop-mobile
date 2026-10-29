@@ -56,7 +56,67 @@ function product(array $overrides = []): array
     ];
 }
 
+/** Reloj con configuraciones: los 6 ejes de la spec y una variante (42 mm, aluminio Oro claro). */
+function watch(array $overrides = []): array
+{
+    return $overrides + [
+        'slug' => 'reloj-prueba',
+        'brand' => 'apple',
+        'category' => 'relojes',
+        'name' => 'Apple Watch Series 12',
+        'colors' => [],
+        'options' => [
+            ['name' => 'Acabado de la caja', 'values' => ['Bronce oscuro', 'Oro claro', 'Negro', 'Gris espacial', 'Blanco perla', 'Azul noche', 'Natural', 'Oro radiante']],
+            ['name' => 'Color de la correa', 'values' => ['Borgoña', 'Oliva', 'Azul marino', 'Negro', 'Arena']],
+            ['name' => 'Material de la caja', 'values' => ['Aluminio', 'Titanio', 'Cerámica']],
+            ['name' => 'Tamaño de la caja', 'values' => ['42 mm', '46 mm']],
+            ['name' => 'Conectividad', 'values' => ['GPS', 'GPS + celular']],
+            ['name' => 'Tamaño de la banda', 'values' => ['S/M', 'M/L']],
+        ],
+        'variants' => [watch_variant('AW-S12-42-AL-OROCL-ARENA-SM-GPS', [], 1490000, 1540000)],
+    ];
+}
+
+function watch_variant(string $sku, array $attrs, int $cash, int $gateway): array
+{
+    return ['sku' => $sku, 'attrs' => $attrs + [
+        'Acabado de la caja' => 'Oro claro', 'Color de la correa' => 'Arena', 'Material de la caja' => 'Aluminio',
+        'Tamaño de la caja' => '42 mm', 'Conectividad' => 'GPS', 'Tamaño de la banda' => 'S/M',
+    ], 'price_cash' => $cash, 'price_gateway' => $gateway];
+}
+
+function first_errors(array $report): string
+{
+    return implode(' | ', $report['products'][0]['errors']);
+}
+
 // --- Validador ---------------------------------------------------------------
+$report = $validator->validateCatalog(['products' => [watch()]]);
+expect($report['products'][0]['errors'] === [], 'validador: reloj con configuración correcta', $report['products'][0]['errors']);
+expect(($report['products'][0]['product']['options'][0]['name'] ?? null) === 'Acabado de la caja'
+    && ($report['products'][0]['product']['variants'][0]['attrs']['Conectividad'] ?? null) === 'GPS'
+    && $report['products'][0]['product']['variants'][0]['storage'] === null, 'validador: normaliza options y attrs');
+$plain = $validator->validateCatalog(['products' => [product()]])['products'][0]['product'];
+expect($plain['options'] === [] && $plain['variants'][0]['attrs'] === null, 'validador: producto sin options queda con options [] y attrs null');
+$bad = watch();
+unset($bad['variants'][0]['attrs']['Conectividad']);
+expect(str_contains(first_errors($validator->validateCatalog(['products' => [$bad]])), 'Conectividad'), 'validador: attrs sin un eje');
+$bad = watch(['variants' => [watch_variant('AW-X', ['Acabado de la caja' => 'Oro rosa'], 1490000, 1540000)]]);
+expect(str_contains(first_errors($validator->validateCatalog(['products' => [$bad]])), 'Oro rosa'), 'validador: valor fuera de la lista');
+$bad = watch(['variants' => [watch_variant('AW-A', [], 1490000, 1540000), watch_variant('AW-B', [], 1500000, 1550000)]]);
+expect(str_contains(first_errors($validator->validateCatalog(['products' => [$bad]])), 'repetida'), 'validador: configuración repetida');
+$bad = product();
+$bad['variants'][0]['attrs'] = ['Conectividad' => 'GPS'];
+expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: attrs sin options');
+$bad = watch();
+$bad['options'][4]['values'] = [];
+expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: eje sin valores');
+$bad = watch();
+$bad['options'][5]['values'] = ['S/M', 'S/M'];
+expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: valor repetido en un eje');
+$bad = watch(['colors' => [['name' => 'Azul', 'hex' => '#123456', 'image' => null]]]);
+expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: options y colors no se mezclan');
+
 $report = $validator->validateCatalog(['products' => [product()]]);
 expect($report['products'][0]['errors'] === [], 'validador: producto correcto sin errores', $report['products'][0]['errors']);
 

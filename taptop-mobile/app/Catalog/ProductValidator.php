@@ -211,7 +211,11 @@ final class ProductValidator
                 $warnings[] = $nameWarning;
             }
         }
-        $variants = $this->validateVariants($raw['variants'] ?? null, $colorIndex, $label, $errors, $warnings);
+        $options = $this->validateOptions($raw['options'] ?? [], $label, $errors);
+        if ($options !== [] && $colors !== []) {
+            $errors[] = "{$label}: un producto con options no lleva colors (el acabado va como opción).";
+        }
+        $variants = $this->validateVariants($raw['variants'] ?? null, $colorIndex, $options, $label, $errors, $warnings);
         $sizes = $this->validateSizes($raw['sizes'] ?? [], $label, $errors);
 
         $product = $errors === [] ? [
@@ -224,6 +228,7 @@ final class ProductValidator
             'available' => $available,
             'visible' => $visible,
             'colors' => $colors,
+            'options' => $options,
             'variants' => $variants,
             'sizes' => $sizes,
             'slides' => [],
@@ -259,6 +264,85 @@ final class ProductValidator
             $errors[] = "{$label}: al menos un tamaño debe estar disponible.";
         }
         return $sizes;
+    }
+
+    /**
+     * Ejes de configuración (p. ej. "Material de la caja": Aluminio, Titanio…). Todos los valores se
+     * muestran; solo se venden las combinaciones que aparecen como variante (con attrs).
+     * @return list<array{name: string, values: list<string>}>
+     */
+    private function validateOptions(mixed $rawOptions, string $label, array &$errors): array
+    {
+        if (!is_array($rawOptions) || ($rawOptions !== [] && !array_is_list($rawOptions))) {
+            $errors[] = "{$label}: options debe ser una lista.";
+            return [];
+        }
+        $options = [];
+        $names = [];
+        foreach ($rawOptions as $i => $option) {
+            $optionLabel = sprintf('%s, opción #%d', $label, $i + 1);
+            $name = is_array($option) ? ($option['name'] ?? null) : null;
+            if (!is_string($name) || trim($name) === '' || mb_strlen($name) > 40) {
+                $errors[] = "{$optionLabel}: falta el nombre (máx. 40 caracteres).";
+                continue;
+            }
+            $name = trim($name);
+            if (isset($names[mb_strtolower($name)])) {
+                $errors[] = "{$optionLabel}: opción repetida \"{$name}\".";
+                continue;
+            }
+            $names[mb_strtolower($name)] = true;
+            $rawValues = $option['values'] ?? null;
+            if (!is_array($rawValues) || $rawValues === [] || !array_is_list($rawValues)) {
+                $errors[] = "{$optionLabel}: \"{$name}\" necesita al menos un valor.";
+                continue;
+            }
+            $values = [];
+            foreach ($rawValues as $value) {
+                if (!is_string($value) || trim($value) === '' || mb_strlen($value) > 40) {
+                    $errors[] = "{$optionLabel}: los valores de \"{$name}\" deben ser texto (máx. 40 caracteres).";
+                    continue 2;
+                }
+                if (in_array(trim($value), $values, true)) {
+                    $errors[] = "{$optionLabel}: valor repetido \"" . trim($value) . "\" en \"{$name}\".";
+                    continue 2;
+                }
+                $values[] = trim($value);
+            }
+            $options[] = ['name' => $name, 'values' => $values];
+        }
+        return $options;
+    }
+
+    /**
+     * attrs de una variante de un producto con options: exactamente un valor de la lista por opción.
+     * @return array<string, string>|null null si hay error
+     */
+    private function validateAttrs(mixed $rawAttrs, array $options, string $label, array &$errors): ?array
+    {
+        if (!is_array($rawAttrs) || ($rawAttrs !== [] && array_is_list($rawAttrs))) {
+            $errors[] = "{$label}: attrs debe ser un objeto con un valor por opción.";
+            return null;
+        }
+        $attrs = [];
+        foreach ($options as $option) {
+            $value = $rawAttrs[$option['name']] ?? null;
+            if (!is_string($value)) {
+                $errors[] = "{$label}: falta \"{$option['name']}\" en attrs.";
+                return null;
+            }
+            if (!in_array($value, $option['values'], true)) {
+                $errors[] = "{$label}: \"{$value}\" no es un valor de \"{$option['name']}\".";
+                return null;
+            }
+            $attrs[$option['name']] = $value;
+        }
+        $extra = array_diff(array_keys($rawAttrs), array_column($options, 'name'));
+        if ($extra !== []) {
+            $errors[] = "{$label}: attrs trae opciones que no existen: " . implode(', ', $extra) . '.';
+            return null;
+        }
+        return $attrs;
     }
 
     /** @return array{0: list<array>, 1: array<string, string>} colores y mapa nombre-en-minúsculas → nombre */
@@ -308,8 +392,11 @@ final class ProductValidator
         return [$colors, $index];
     }
 
-    /** @param array<string, string> $colorIndex */
-    private function validateVariants(mixed $rawVariants, array $colorIndex, string $label, array &$errors, array &$warnings): array
+    /**
+     * @param array<string, string> $colorIndex
+     * @param list<array{name: string, values: list<string>}> $options
+     */
+    private function validateVariants(mixed $rawVariants, array $colorIndex, array $options, string $label, array &$errors, array &$warnings): array
     {
         $variants = [];
         if (!is_array($rawVariants) || $rawVariants === [] || !array_is_list($rawVariants)) {
@@ -326,6 +413,20 @@ final class ProductValidator
             $sku = $variant['sku'] ?? null;
             if (!is_string($sku) || preg_match(self::SKU, $sku) !== 1) {
                 $errors[] = "{$variantLabel}: SKU inválido (mayúsculas, números y guiones).";
+                continue;
+            }
+            $attrs = null;
+            if ($options !== []) {
+                if (isset($variant['storage']) || isset($variant['note']) || isset($variant['color'])) {
+                    $errors[] = "{$variantLabel}: con options la variante usa attrs, no storage, note ni color.";
+                    continue;
+                }
+                $attrs = $this->validateAttrs($variant['attrs'] ?? null, $options, $variantLabel, $errors);
+                if ($attrs === null) {
+                    continue;
+                }
+            } elseif (array_key_exists('attrs', $variant)) {
+                $errors[] = "{$variantLabel}: attrs solo va en productos con options.";
                 continue;
             }
             $storage = $this->optionalString($variant, 'storage', $variantLabel, $errors);
@@ -354,9 +455,13 @@ final class ProductValidator
             if ($cash < 1000 || $cash > 100000000) {
                 $warnings[] = "{$variantLabel}: price_cash fuera de un rango razonable; revisa ceros de más o de menos.";
             }
-            $combination = mb_strtolower(($storage ?? '') . '|' . ($note ?? '') . '|' . ($color ?? ''));
+            $combination = $attrs !== null
+                ? implode('|', $attrs)
+                : mb_strtolower(($storage ?? '') . '|' . ($note ?? '') . '|' . ($color ?? ''));
             if (isset($combinations[$combination])) {
-                $errors[] = "{$variantLabel}: combinación repetida de capacidad, nota y color.";
+                $errors[] = $attrs !== null
+                    ? "{$variantLabel}: configuración repetida (mismos valores que otra variante)."
+                    : "{$variantLabel}: combinación repetida de capacidad, nota y color.";
                 continue;
             }
             $combinations[$combination] = true;
@@ -365,6 +470,7 @@ final class ProductValidator
                 'storage' => $storage,
                 'note' => $note,
                 'color' => $color,
+                'attrs' => $attrs,
                 'price_cash' => $cash,
                 'price_gateway' => $gateway,
                 'available' => $this->boolField($variant, 'available', $variantLabel, $errors),
