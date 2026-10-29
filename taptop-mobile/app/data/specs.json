@@ -243,12 +243,7 @@
     },
     "apple-watch-ultra-4": {
       "status": "borrador",
-      "slides": [
-        { "title": "Caja de titanio de 49 mm", "image": null },
-        { "title": "Pantalla de hasta 3000 nits", "image": null },
-        { "title": "Hasta 50 h de batería", "image": null },
-        { "title": "Resistente al agua hasta 100 m", "image": null }
-      ],
+      "slides": [],
       "specs": [
         { "title": "Caja", "detail": "Titanio grado 5, 49 × 44 × 12 mm; acabados Natural y Negro; titanio 100 % reciclado; 63 g" },
         { "title": "Pantalla", "detail": "Retina OLED LTPO3 siempre activa, 422 × 514 px, 326 ppi, hasta 3000 nits, cristal de zafiro plano" },
