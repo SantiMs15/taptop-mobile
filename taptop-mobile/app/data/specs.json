@@ -261,7 +261,7 @@
         { "title": "Correa", "detail": "Una incluida según disponibilidad" }
       ]
     },
-    "apple-watch-series-12-46mm": {
+    "apple-watch-series-12": {
       "status": "pendiente",
       "slides": [
         { "title": "Chip S11", "image": null },
@@ -269,6 +269,8 @@
         { "title": "Resistente al agua hasta 50 m", "image": null }
       ],
       "specs": [
+        { "title": "Tamaños", "detail": "Caja de 42 mm o 46 mm" },
+        { "title": "Conectividad", "detail": "GPS o GPS + celular" },
         { "title": "Chip", "detail": "S11, Neural Engine de 4 núcleos, 64 GB" },
         { "title": "Batería", "detail": "Hasta 24 h de uso normal; hasta 38 h en modo Ahorrar Batería; carga rápida al 80 % en unos 30 min" },
         { "title": "Resistencia", "detail": "50 m (ISO 22810:2010), para natación; polvo IP6X" },

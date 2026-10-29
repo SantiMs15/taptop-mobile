@@ -160,9 +160,9 @@ $real = load_json_file(APP_PATH . '/data/products.json');
 $report = $validator->validateCatalog($real);
 $realErrors = array_merge($report['errors'], ...array_map(static fn ($e) => $e['errors'], $report['products']));
 expect($realErrors === [], 'catálogo real: sin errores', $realErrors);
-expect(count($report['products']) === 27, 'catálogo real: 27 productos', count($report['products']));
+expect(count($report['products']) === 26, 'catálogo real: 26 productos (Series 12 en uno solo)', count($report['products']));
 $variantTotal = array_sum(array_map(static fn ($e) => count($e['product']['variants'] ?? []), $report['products']));
-expect($variantTotal === 39, 'catálogo real: 39 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
+expect($variantTotal === 38, 'catálogo real: 38 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
 
 // Desde aquí, el catálogo real con todo disponible: lo agotado hoy no debe romper las pruebas.
 $inStock = $real;
@@ -185,6 +185,13 @@ $ipads = array_values(array_filter(array_keys($bySlug), static fn (string $slug)
 expect($ipads === ['ipad-pro-11-m5', 'ipad-air-11-m4', 'ipad-a16'], 'catálogo real: iPads Pro M5, Air M4 y A16', $ipads);
 $burgundy = array_filter($bySlug['iphone-18-pro']['variants'], static fn (array $v): bool => ($v['color'] ?? null) === 'Borgoña');
 expect(count($burgundy) === 1, 'catálogo real: una sola línea Borgoña en el iPhone 18 Pro');
+$s12 = $bySlug['apple-watch-series-12'] ?? null;
+expect($s12 !== null && count($s12['variants']) === 1 && $s12['variants'][0]['sku'] === 'AW-S12-42-AL-OROCL-ARENA-SM-GPS'
+    && $s12['variants'][0]['price_cash'] === 1490000 && $s12['variants'][0]['price_gateway'] === 1540000, 'catálogo real: Series 12 con su única configuración', $s12['variants'] ?? null);
+expect(!isset($bySlug['apple-watch-series-12-42mm']) && !isset($bySlug['apple-watch-series-12-46mm']), 'catálogo real: sin los Series 12 viejos por tamaño');
+expect(legacy_product_slug('apple-watch-series-12-46mm') === 'apple-watch-series-12' && legacy_product_slug('apple-watch-series-12-42mm') === 'apple-watch-series-12'
+    && legacy_product_slug('iphone-18-pro') === null, 'rutas: enlaces viejos del Series 12 redirigen');
+expect(!in_array('apple-watch-series-12-46mm', (array) config('home_featured'), true) && in_array('apple-watch-series-12', (array) config('home_featured'), true), 'inicio: destacado apunta al Series 12 nuevo');
 
 // --- Presentador ---------------------------------------------------------------
 $normalized = $validator->validateCatalog(['products' => [product()]])['products'][0]['product'];
@@ -378,6 +385,7 @@ $bur = find_product_by_sku('IP18PM-256-BUR')['variant'];
 $app3 = find_product_by_sku('APP3')['variant'];
 expect($priced['gateway'] === $bur['price_gateway'] + $app3['price_gateway'] && $priced['cash'] === $bur['price_cash'] + $app3['price_cash'] && $priced['count'] === 2, 'carrito: totales desde el catálogo', $priced);
 expect(cart_priced([['sku' => 'NO-EXISTE', 'color' => null, 'qty' => 1]])['lines'] === [], 'carrito: sku fuera del catálogo omitido');
+expect(cart_priced([['sku' => 'AW-S12-42', 'color' => null, 'qty' => 1]])['lines'] === [], 'carrito: SKU viejo del Series 12 se descarta');
 expect(cart_set_qty($cartLines, 0, 0) === [['sku' => 'APP3', 'color' => 'Blanco', 'qty' => 1]], 'carrito: qty 0 quita la línea');
 expect(cart_parse(cart_encode($cartLines)) === $cartLines, 'carrito: cookie ida y vuelta (con tildes)');
 $waCart = wa_message_cart($priced);

@@ -62,6 +62,10 @@ function dispatch(string $method, string $uri): void
     } elseif ($path === '/productos') {
         page_products();
     } elseif (preg_match('#^/productos/([a-z0-9]+(?:-[a-z0-9]+)*)$#', $path, $match) === 1) {
+        $legacy = legacy_product_slug($match[1]);
+        if ($legacy !== null) {
+            redirect('/productos/' . $legacy, 301);
+        }
         page_product($match[1]);
     } elseif ($path === '/carrito') {
         page_cart();
@@ -170,6 +174,15 @@ function page_products(): void
         'active_category' => $category,
         'active_brand' => $brand,
     ]);
+}
+
+/** Productos que se juntaron o renombraron: slug viejo → slug actual (los enlaces viejos no se rompen). */
+function legacy_product_slug(string $slug): ?string
+{
+    return [
+        'apple-watch-series-12-42mm' => 'apple-watch-series-12',
+        'apple-watch-series-12-46mm' => 'apple-watch-series-12',
+    ][$slug] ?? null;
 }
 
 function page_product(string $slug): void

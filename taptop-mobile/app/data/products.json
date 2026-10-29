@@ -290,23 +290,21 @@
       ]
     },
     {
-      "slug": "apple-watch-series-12-46mm",
+      "slug": "apple-watch-series-12",
       "brand": "apple",
       "category": "relojes",
-      "name": "Apple Watch Series 12 (46 mm)",
+      "name": "Apple Watch Series 12",
       "colors": [],
+      "options": [
+        { "name": "Acabado de la caja", "values": ["Bronce oscuro", "Oro claro", "Negro", "Gris espacial", "Blanco perla", "Azul noche", "Natural", "Oro radiante"] },
+        { "name": "Color de la correa", "values": ["Borgoña", "Oliva", "Azul marino", "Negro", "Arena"] },
+        { "name": "Material de la caja", "values": ["Aluminio", "Titanio", "Cerámica"] },
+        { "name": "Tamaño de la caja", "values": ["42 mm", "46 mm"] },
+        { "name": "Conectividad", "values": ["GPS", "GPS + celular"] },
+        { "name": "Tamaño de la banda", "values": ["S/M", "M/L"] }
+      ],
       "variants": [
-        { "sku": "AW-S12-46", "storage": null, "color": null, "price_cash": 1720000, "price_gateway": 1777000 }
-      ]
-    },
-    {
-      "slug": "apple-watch-series-12-42mm",
-      "brand": "apple",
-      "category": "relojes",
-      "name": "Apple Watch Series 12 (42 mm)",
-      "colors": [],
-      "variants": [
-        { "sku": "AW-S12-42", "storage": null, "color": null, "price_cash": 1490000, "price_gateway": 1540000 }
+        { "sku": "AW-S12-42-AL-OROCL-ARENA-SM-GPS", "attrs": { "Acabado de la caja": "Oro claro", "Color de la correa": "Arena", "Material de la caja": "Aluminio", "Tamaño de la caja": "42 mm", "Conectividad": "GPS", "Tamaño de la banda": "S/M" }, "price_cash": 1490000, "price_gateway": 1540000 }
       ]
     },
     {

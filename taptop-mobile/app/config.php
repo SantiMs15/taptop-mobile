@@ -100,7 +100,7 @@ return [
         'samsung-galaxy-s26-ultra',
         'macbook-air-m5',
         'iphone-17-pro-max',
-        'apple-watch-series-12-46mm',
+        'apple-watch-series-12',
         'airpods-4-cancelacion-activa-de-ruido',
         'ipad-pro-11-m5',
         // Reserva
