@@ -306,7 +306,8 @@
         { "name": "Tamaño de la banda", "values": ["S/M", "M/L"] }
       ],
       "variants": [
-        { "sku": "AW-S12-42-AL-OROCL-ARENA-SM-GPS", "attrs": { "Acabado de la caja": "Oro claro", "Color de la correa": "Arena", "Material de la caja": "Aluminio", "Tamaño de la caja": "42 mm", "Conectividad": "GPS", "Tamaño de la banda": "S/M" }, "price_cash": 1490000, "price_gateway": 1540000 }
+        { "sku": "AW-S12-42-AL-OROCL-ARENA-SM-GPS", "attrs": { "Acabado de la caja": "Oro claro", "Color de la correa": "Arena", "Material de la caja": "Aluminio", "Tamaño de la caja": "42 mm", "Conectividad": "GPS", "Tamaño de la banda": "S/M" }, "price_cash": 1490000, "price_gateway": 1540000 },
+        { "sku": "AW-S12-42-AL-NEGRO-NEGRO-SM-GPS", "attrs": { "Acabado de la caja": "Negro", "Color de la correa": "Negro", "Material de la caja": "Aluminio", "Tamaño de la caja": "42 mm", "Conectividad": "GPS", "Tamaño de la banda": "S/M" }, "price_cash": 1490000, "price_gateway": 1540000 }
       ]
     },
     {

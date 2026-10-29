@@ -176,7 +176,7 @@ $realErrors = array_merge($report['errors'], ...array_map(static fn ($e) => $e['
 expect($realErrors === [], 'catálogo real: sin errores', $realErrors);
 expect(count($report['products']) === 26, 'catálogo real: 26 productos (Series 12 en uno solo)', count($report['products']));
 $variantTotal = array_sum(array_map(static fn ($e) => count($e['product']['variants'] ?? []), $report['products']));
-expect($variantTotal === 38, 'catálogo real: 38 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
+expect($variantTotal === 39, 'catálogo real: 39 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
 
 // Desde aquí, el catálogo real con todo disponible: lo agotado hoy no debe romper las pruebas.
 $inStock = $real;
@@ -200,8 +200,8 @@ expect($ipads === ['ipad-pro-11-m5', 'ipad-air-11-m4', 'ipad-a16'], 'catálogo r
 $burgundy = array_filter($bySlug['iphone-18-pro']['variants'], static fn (array $v): bool => ($v['color'] ?? null) === 'Borgoña');
 expect(count($burgundy) === 1, 'catálogo real: una sola línea Borgoña en el iPhone 18 Pro');
 $s12 = $bySlug['apple-watch-series-12'] ?? null;
-expect($s12 !== null && count($s12['variants']) === 1 && $s12['variants'][0]['sku'] === 'AW-S12-42-AL-OROCL-ARENA-SM-GPS'
-    && $s12['variants'][0]['price_cash'] === 1490000 && $s12['variants'][0]['price_gateway'] === 1540000, 'catálogo real: Series 12 con su única configuración', $s12['variants'] ?? null);
+expect($s12 !== null && count($s12['variants']) === 2 && $s12['variants'][0]['sku'] === 'AW-S12-42-AL-OROCL-ARENA-SM-GPS' && $s12['variants'][1]['sku'] === 'AW-S12-42-AL-NEGRO-NEGRO-SM-GPS'
+    && $s12['variants'][0]['price_cash'] === 1490000 && $s12['variants'][0]['price_gateway'] === 1540000, 'catálogo real: Series 12 con sus 2 configuraciones', $s12['variants'] ?? null);
 expect(!isset($bySlug['apple-watch-series-12-42mm']) && !isset($bySlug['apple-watch-series-12-46mm']), 'catálogo real: sin los Series 12 viejos por tamaño');
 expect(legacy_product_slug('apple-watch-series-12-46mm') === 'apple-watch-series-12' && legacy_product_slug('apple-watch-series-12-42mm') === 'apple-watch-series-12'
     && legacy_product_slug('iphone-18-pro') === null, 'rutas: enlaces viejos del Series 12 redirigen');
@@ -246,6 +246,12 @@ $cfgHtml = view('partials/config-options', ['card' => (new ProductPresenter('mar
 expect(substr_count($cfgHtml, '<label class="swatch') === 5 && str_contains($cfgHtml, '--swatch: #D8C7A6') && str_contains($cfgHtml, 'swatches swatches--lg')
     && substr_count($cfgHtml, '<label class="option') === 8 + 3 + 2 + 2 + 2, 'configurador: ejes con hex en círculos, el resto en botones', substr_count($cfgHtml, 'class="swatch'));
 expect(str_contains($cfgHtml, '<label class="swatch is-unavailable"') && str_contains($cfgHtml, 'title="Oliva (no disponible)"'), 'configurador: círculo sin configuración marcado y con título');
+$hexedTwo = $hexed;
+$hexedTwo['variants'][] = watch_variant('AW-S12-42-AL-NEGRO-NEGRO-SM-GPS', ['Acabado de la caja' => 'Negro', 'Color de la correa' => 'Negro'], 1490000, 1540000);
+$hexedTwo['options'][0]['hex'] = array_fill_keys($hexedTwo['options'][0]['values'], '#888888');
+$twoHtml = view('partials/config-options', ['card' => (new ProductPresenter('mark', true))->detail($validator->validateCatalog(['products' => [$hexedTwo]])['products'][0]['product']), 'uid' => 'pdp-t']);
+expect(!str_contains($twoHtml, 'title="Negro (no disponible)"') && str_contains($twoHtml, 'title="Oliva (no disponible)"') && str_contains($twoHtml, 'title="Bronce oscuro (no disponible)"'),
+    'configurador: solo se tacha lo que no está en ninguna configuración');
 
 $mark = (new ProductPresenter('mark', true))->card($normalized, 'test');
 expect($mark !== null && count($mark['colors']) === 2, 'mark: muestra los 2 colores');

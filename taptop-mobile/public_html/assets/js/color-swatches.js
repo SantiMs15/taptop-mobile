@@ -292,13 +292,33 @@
       return -1;
     }
 
-    /** Hay alguna configuración con ese valor en el eje y lo ya elegido en los demás. */
+    /** Hay alguna configuración con ese valor en el eje. */
     function cfgExists(axis, value) {
       return data.cfg.opts.some(function (opt) {
-        return opt.every(function (index, other) {
-          return other === axis ? index === value : index === state.cfg[other];
-        });
+        return opt[axis] === value;
       });
+    }
+
+    /**
+     * Configuración con ese valor en el eje que más se parece a lo elegido (más opciones iguales;
+     * si empatan, la más barata). -1 si ninguna tiene ese valor.
+     */
+    function cfgClosest(axis, value) {
+      var best = -1;
+      var bestScore = -1;
+      data.cfg.opts.forEach(function (opt, i) {
+        if (opt[axis] !== value) {
+          return;
+        }
+        var score = opt.filter(function (index, other) {
+          return index === state.cfg[other];
+        }).length;
+        if (score > bestScore || (score === bestScore && entry(null, i).cash < entry(null, best).cash)) {
+          best = i;
+          bestScore = score;
+        }
+      });
+      return best;
     }
 
     function cfgLabel(sel) {
@@ -370,6 +390,13 @@
           state.cfg[axis] = Number(input.value);
           state.touched = true;
           var found = cfgFind(state.cfg);
+          if (found === -1) {
+            // Sin configuración exacta: si el valor existe en otra, se ajustan las demás opciones.
+            found = cfgClosest(axis, state.cfg[axis]);
+            if (found !== -1) {
+              state.cfg = data.cfg.opts[found].slice();
+            }
+          }
           if (found === -1) {
             renderUnavailable();
           } else {

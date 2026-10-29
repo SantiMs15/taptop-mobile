@@ -1,9 +1,9 @@
 <?php
 /**
  * Configurador (Apple Watch): un selector por opción con todos sus valores. Solo se venden las
- * combinaciones que existen como variante; un valor que no forma parte de ninguna con lo ya
- * elegido se ve en gris, pero se puede elegir (la ficha pasa a "No disponible" y WhatsApp).
- * color-swatches.js mantiene grises, leyendas y precio al cambiar.
+ * combinaciones que existen como variante. Un valor que no está en ninguna se ve en gris, pero se
+ * puede elegir (la ficha pasa a "No disponible" y WhatsApp); uno que sí está lleva a la
+ * configuración más parecida (color-swatches.js ajusta las demás opciones, leyendas y precio).
  * @var array $card vista de ProductPresenter (con client.cfg)
  * @var string $uid prefijo único para ids y names
  */
@@ -12,14 +12,10 @@ if ($cfg === null) {
     return;
 }
 $selected = $cfg['opts'][$card['selected']['option']];
-/** ¿Hay alguna configuración con $value en $axis y lo ya elegido en los demás ejes? */
-$exists = static function (int $axis, int $value) use ($cfg, $selected): bool {
+/** ¿Alguna configuración tiene $value en $axis? */
+$exists = static function (int $axis, int $value) use ($cfg): bool {
     foreach ($cfg['opts'] as $opt) {
-        $match = $opt[$axis] === $value;
-        foreach ($opt as $other => $index) {
-            $match = $match && ($other === $axis || $index === $selected[$other]);
-        }
-        if ($match) {
+        if ($opt[$axis] === $value) {
             return true;
         }
     }
