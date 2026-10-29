@@ -111,6 +111,24 @@ function warranty_months_for(string $category): int
         : (int) config('warranty_months', 12);
 }
 
+/**
+ * Texto bajo el título del catálogo: el de la categoría (o el de la marca, o el general) más
+ * la garantía de esa categoría y el envío. Sin categoría (equipos y accesorios mezclados) no se da plazo.
+ */
+function catalog_lede(?string $category, ?string $brand): string
+{
+    if ($category !== null) {
+        $text = (string) (config('categories')[$category]['lede'] ?? '');
+    } elseif ($brand !== null) {
+        $text = (string) (config('brand_ledes')[$brand] ?? '');
+    } else {
+        $text = (string) config('catalog_lede', '');
+    }
+    $term = $category !== null ? warranty_label(warranty_months_for($category)) . ' de ' : '';
+    $tail = 'Originales, con ' . $term . 'garantía directa y envío a toda Colombia.';
+    return trim($text . ' ' . $tail);
+}
+
 /** Plazo legible: 12 → "1 año", 24 → "2 años", 3 → "3 meses". */
 function warranty_label(int $months): string
 {

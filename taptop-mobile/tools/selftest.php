@@ -360,6 +360,14 @@ expect(normalize_request_path('/%09/otro-sitio.com/') === null, 'ruta con tab re
 $siteHost = strtolower((string) parse_url((string) config('site_url'), PHP_URL_HOST));
 expect(!str_ends_with($siteHost, '.hostingersite.com') || is_noindex(), 'noindex activo mientras site_url sea el dominio temporal');
 
+// --- Texto bajo el título del catálogo --------------------------------------------
+expect(str_contains(catalog_lede('iphone', null), 'iPhone') && str_ends_with(catalog_lede('iphone', null), 'Originales, con 1 año de garantía directa y envío a toda Colombia.'), 'catálogo: texto de iPhone con garantía de 1 año', catalog_lede('iphone', null));
+expect(str_contains(catalog_lede('airpods', null), '3 meses de garantía'), 'catálogo: AirPods con garantía de accesorios', catalog_lede('airpods', null));
+expect(catalog_lede('iphone', 'apple') === catalog_lede('iphone', null) && str_contains(catalog_lede(null, 'samsung'), 'Galaxy') && catalog_lede(null, null) !== '', 'catálogo: categoría, marca y general');
+expect(str_ends_with(catalog_lede(null, null), 'Originales, con garantía directa y envío a toda Colombia.') && !str_contains(catalog_lede(null, 'apple'), '1 año'), 'catálogo: sin categoría no promete un plazo de garantía');
+$ledes = array_map(static fn (string $c): string => catalog_lede($c, null), nav_category_keys());
+expect(count(array_unique($ledes)) === count($ledes) && !str_contains(implode(' ', $ledes), 'IVA'), 'catálogo: un texto propio por categoría', $ledes);
+
 // --- Logo del header ---------------------------------------------------------------
 $headerMark = logo_mark_3d('brand__mark');
 preg_match_all('#/assets/(images/brand/logo-3d-mark-\d+\.webp)\?v=[1-9]\d* [123]x#', $headerMark, $found);

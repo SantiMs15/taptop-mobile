@@ -111,14 +111,15 @@ return [
     ],
     'home_featured_limit' => 8,
     // El orden es el orden en la web. 'includes': categorías de datos que agrupa el menú.
+    // 'lede': texto bajo el título del catálogo; la frase de garantía y envío se agrega sola.
     'categories' => [
-        'iphone' => ['label' => 'iPhone'],
-        'samsung' => ['label' => 'Samsung'],
-        'mac' => ['label' => 'Mac'],
-        'ipad' => ['label' => 'iPad'],
-        'relojes' => ['label' => 'Apple Watch'],
-        'airpods' => ['label' => 'AirPods'],
-        'accesorios' => ['label' => 'Accesorios', 'includes' => ['accesorios', 'adaptadores']],
+        'iphone' => ['label' => 'iPhone', 'lede' => 'Los iPhone que tenemos disponibles, en sus distintas capacidades y colores.'],
+        'samsung' => ['label' => 'Samsung', 'lede' => 'Plegables Galaxy Z Fold y Z Flip y la línea Galaxy S, en sus distintas capacidades y colores.'],
+        'mac' => ['label' => 'Mac', 'lede' => 'MacBook para llevar a todas partes y Mac mini para el escritorio, con chips de Apple.'],
+        'ipad' => ['label' => 'iPad', 'lede' => 'iPad Pro, iPad Air e iPad para estudiar, trabajar o crear.'],
+        'relojes' => ['label' => 'Apple Watch', 'lede' => 'Apple Watch Series y Ultra: elige el acabado de la caja, el color de la correa y el tamaño.'],
+        'airpods' => ['label' => 'AirPods', 'lede' => 'AirPods con cancelación activa de ruido para escuchar música, hablar y entrenar.'],
+        'accesorios' => ['label' => 'Accesorios', 'lede' => 'Apple Pencil y adaptadores de corriente para tus equipos.', 'includes' => ['accesorios', 'adaptadores']],
         'adaptadores' => ['label' => 'Adaptadores', 'nav' => false],
     ],
     'brands' => [
@@ -127,6 +128,12 @@ return [
         'nicols' => 'Nicols',
     ],
     'brand_filters' => ['apple', 'samsung'],
+    // Texto bajo el título del catálogo sin categoría: general y por marca.
+    'catalog_lede' => 'Celulares, computadores, tabletas, relojes y audífonos de Apple y Samsung.',
+    'brand_ledes' => [
+        'apple' => 'iPhone, Mac, iPad, Apple Watch, AirPods y accesorios de Apple.',
+        'samsung' => 'Celulares Samsung Galaxy: plegables Z Fold y Z Flip y la línea Galaxy S.',
+    ],
 
     // --- Analítica (vacíos = no se carga nada, ni se muestra el banner de cookies) ---
     'ga4_measurement_id' => '',

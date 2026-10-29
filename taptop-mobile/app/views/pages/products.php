@@ -2,6 +2,7 @@
 /**
  * Listado (6.1): filtros por categoría y marca (sin filtro de precio) y grilla de tarjetas.
  * @var string $heading
+ * @var string $lede texto bajo el título (catalog_lede)
  * @var list<array> $cards
  * @var list<array> $categories
  * @var list<array> $brands
@@ -9,7 +10,7 @@
 ?>
 <section class="page-head container">
   <h1 class="page-title"><?= e($heading) ?></h1>
-  <p class="page-lede">Precios en pesos colombianos, con IVA incluido. Cada producto tiene dos precios: por consignación o transferencia, y con tarjeta o pasarela de pago, que incluye el costo de la plataforma.</p>
+  <p class="page-lede"><?= e($lede) ?></p>
 </section>
 
 <div class="container filters">

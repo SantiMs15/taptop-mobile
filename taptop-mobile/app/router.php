@@ -168,6 +168,7 @@ function page_products(): void
     render_page('products', [
         'meta' => page_meta('products', $heading, url('/productos', ['categoria' => $category, 'marca' => $brand]), ['color-swatches.js']),
         'heading' => $heading,
+        'lede' => catalog_lede($category, $brand),
         'cards' => sold_out_last($cards),
         'categories' => category_nav($category, $brand),
         'brands' => brand_nav($category, $brand),
