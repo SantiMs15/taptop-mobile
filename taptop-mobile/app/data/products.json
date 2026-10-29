@@ -30,7 +30,7 @@
       "category": "iphone",
       "name": "iPhone 18 Pro",
       "colors": [
-        { "name": "Negro", "hex": "#2A2B2E", "image": null },
+        { "name": "Negro", "hex": "#2A2B2E", "image": "/assets/images/products/iphone-18-pro-negro.webp" },
         { "name": "Plata", "hex": "#DADBDD", "image": null },
         { "name": "Glaciar", "hex": "#CFE1EA", "image": "/assets/images/products/iphone-18-pro-glaciar.webp" },
         { "name": "Borgoña", "hex": "#6A2433", "image": "/assets/images/products/iphone-18-pro-borgona.webp" }

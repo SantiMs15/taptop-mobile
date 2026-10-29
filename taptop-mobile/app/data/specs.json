@@ -70,9 +70,9 @@
     "iphone-18-pro": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip A20 Pro", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-frontal.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-frontal.webp" } },
-        { "title": "Cámara Fusion de 48 MP con apertura variable", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-camara.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-camara.webp" } },
-        { "title": "Hasta 36 h de video en la versión eSIM", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-trasera.webp" } }
+        { "title": "Chip A20 Pro", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-frontal.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-frontal.webp", "Negro": "/assets/images/products/iphone-18-pro-negro-frontal.webp" } },
+        { "title": "Cámara Fusion de 48 MP con apertura variable", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-camara.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-camara.webp", "Negro": "/assets/images/products/iphone-18-pro-negro-camara.webp" } },
+        { "title": "Hasta 36 h de video en la versión eSIM", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-trasera.webp", "Negro": "/assets/images/products/iphone-18-pro-negro-trasera.webp" } }
       ],
       "specs": [
         { "title": "Chip", "detail": "A20 Pro (2 nm), CPU de 6 núcleos, GPU de 7 núcleos, Neural Engine dual de 16 núcleos" },
