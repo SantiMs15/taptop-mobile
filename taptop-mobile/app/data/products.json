@@ -250,7 +250,7 @@
         { "name": "Plata", "hex": "#DFE0E2", "image": null, "available": false }
       ],
       "variants": [
-        { "sku": "IPADP11-M5-256", "storage": "256 GB", "color": null, "price_cash": 3720000, "price_gateway": 3842000 }
+        { "sku": "IPADP11-M5-256", "storage": "256 GB", "color": null, "price_cash": 3900000, "price_gateway": 4028000 }
       ]
     },
     {
