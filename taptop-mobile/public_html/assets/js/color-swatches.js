@@ -255,6 +255,7 @@
         fixOption();
         render(true);
         updateMedia();
+        buildThumbs();
         var params = trackParams(el.cta);
         params.color = data.colors[state.color].name;
         track('select_color', params);
@@ -274,6 +275,65 @@
         track('select_storage', params);
       });
     });
+
+    // --- Galería de miniaturas (detalle): la elegida pasa a la foto grande ------------------
+    var gallery = card.querySelector('[data-gallery]');
+    var galleryWrap = card.querySelector('[data-gallery-wrap]');
+
+    function thumbColor() {
+      return hasColors ? data.colors[state.color] : { hex: '#C8C1B5', name: data.name };
+    }
+
+    function selectThumb(button) {
+      toArray(gallery.querySelectorAll('[data-thumb]')).forEach(function (other) {
+        other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+      });
+    }
+
+    /** Arma las miniaturas del color elegido (sin galería, se oculta). */
+    function buildThumbs() {
+      if (!gallery || !data.gallery) {
+        return;
+      }
+      var list = data.gallery[hasColors ? state.color : 0] || [];
+      gallery.textContent = '';
+      list.forEach(function (item, i) {
+        var button = doc.createElement('button');
+        button.className = 'thumb';
+        button.type = 'button';
+        button.setAttribute('data-thumb', String(i));
+        button.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+        button.setAttribute('aria-label', 'Ver foto: ' + item.alt);
+        var image = doc.createElement('img');
+        image.src = item.src;
+        image.alt = '';
+        image.width = 76;
+        image.height = 76;
+        image.decoding = 'async';
+        button.appendChild(image);
+        gallery.appendChild(button);
+      });
+      gallery.hidden = list.length === 0;
+      if (galleryWrap) {
+        galleryWrap.classList.toggle('has-gallery', list.length > 0);
+      }
+    }
+
+    if (gallery && data.gallery) {
+      gallery.addEventListener('click', function (event) {
+        var button = event.target.closest ? event.target.closest('[data-thumb]') : null;
+        if (!button || !el.media) {
+          return;
+        }
+        var item = (data.gallery[hasColors ? state.color : 0] || [])[Number(button.getAttribute('data-thumb'))];
+        if (!item) {
+          return;
+        }
+        selectThumb(button);
+        showPhoto(el.media, item.src, item.alt, thumbColor());
+        track('select_photo', { index: button.getAttribute('data-thumb') });
+      });
+    }
 
     // --- Configurador (Apple Watch): ejes → configuración, o "No disponible" ----------------
     var cfgInputs = data.cfg ? toArray(card.querySelectorAll('[data-cfg-axis]')) : [];
@@ -453,6 +513,9 @@
     });
     render(false);
     updateMedia();
+    if (hasColors && state.color !== data.sel.c) {
+      buildThumbs();
+    }
     if (cfgInputs.length) {
       // Si el navegador restauró radios de otra combinación, se vuelve a la configuración inicial.
       state.cfg = data.cfg.opts[state.option].slice();

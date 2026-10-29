@@ -267,6 +267,13 @@ expect($picsD['media']['image'] === '/assets/images/products/reloj-prueba-negro-
 $picsFind = static fn (string $sku): ?array => ['product' => $picsP, 'variant' => $picsP['variants'][$sku === $watchSku ? 0 : 1]];
 $picsCart = cart_priced([['sku' => 'AW-S12-42-AL-NEGRO-NEGRO-SM-GPS', 'color' => null, 'qty' => 1]], $picsFind);
 expect(($picsCart['lines'][0]['image'] ?? null) === '/assets/images/products/reloj-prueba-negro-negro.webp', 'carrito: foto de la configuración de la línea', $picsCart['lines'][0] ?? null);
+// Galería de miniaturas: foto del color + fotos de "En detalle" del mismo color.
+$g18 = (new ProductPresenter('mark', true))->detail(product_repository()->findBySlug('iphone-18-pro'));
+$gSel = $g18['client']['gallery'][$g18['selected']['color']] ?? [];
+expect(count($g18['gallery']) === 4 && $g18['gallery'] === $gSel && $gSel[0]['src'] === $g18['media']['image']
+    && str_ends_with($gSel[1]['src'], '-frontal.webp') && str_contains($gSel[1]['alt'], 'Chip A20 Pro'), 'galería: foto del color y las 3 de En detalle', $gSel);
+expect(count($g18['client']['gallery']) === count($g18['colors']) && count(array_unique(array_column(array_merge(...$g18['client']['gallery']), 'src'))) === 16, 'galería: una lista por color, sin repetidas');
+expect((new ProductPresenter('mark', true))->detail($normalized)['gallery'] === [] && (new ProductPresenter('mark', true))->detail($watchP)['gallery'] === [], 'galería: sin fotos o con una sola, no hay galería');
 $hexedP = $validator->validateCatalog(['products' => [$hexed]])['products'][0]['product'];
 $cfgHtml = view('partials/config-options', ['card' => (new ProductPresenter('mark', true))->detail($hexedP), 'uid' => 'pdp-t']);
 expect(substr_count($cfgHtml, '<label class="swatch') === 5 && str_contains($cfgHtml, '--swatch: #D8C7A6') && str_contains($cfgHtml, 'swatches swatches--lg')

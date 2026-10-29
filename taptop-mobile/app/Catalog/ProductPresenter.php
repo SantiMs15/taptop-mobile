@@ -44,6 +44,8 @@ final class ProductPresenter
             static fn (array $s): array => ['title' => $s['title'], 'byColor' => $s['byColor']],
             $view['slides']
         );
+        $view['client']['gallery'] = $this->gallery($product, $view);
+        $view['gallery'] = $view['client']['gallery'][$view['selected']['color'] ?? 0] ?? [];
         $view['sizes'] = $product['sizes'] ?? [];
         $view['specs'] = $product['specs'];
         $view['specs_status'] = $product['specs_status'];
@@ -342,6 +344,35 @@ final class ProductPresenter
             ];
         }
         return count($slides) >= 3 ? $slides : [];
+    }
+
+    /**
+     * Miniaturas del detalle, una lista por color (en el orden de 'colors'; sin colores, una sola):
+     * la foto principal y las fotos de "En detalle" de ese color, sin repetir. Con menos de 2 fotos
+     * no hay galería (lista vacía).
+     * @return list<list<array{src: string, alt: string}>>
+     */
+    private function gallery(array $product, array $view): array
+    {
+        $colors = $view['colors'] !== [] ? $view['colors'] : [null];
+        $lists = [];
+        foreach ($colors as $color) {
+            $subject = $color !== null ? $product['name'] . ' en ' . $color['name'] : $view['media']['alt'];
+            $main = $color !== null ? $color['image'] : $view['media']['image'];
+            $items = $main !== null ? [$main => $subject] : [];
+            foreach ($product['slides'] as $slide) {
+                $src = $color !== null ? ($slide['images'][$color['name']] ?? $slide['image']) : $slide['image'];
+                if ($src !== null && !isset($items[$src])) {
+                    $items[$src] = $subject . ': ' . $slide['title'];
+                }
+            }
+            $list = [];
+            foreach ($items as $src => $alt) {
+                $list[] = ['src' => $src, 'alt' => $alt];
+            }
+            $lists[] = count($list) >= 2 ? $list : [];
+        }
+        return $lists;
     }
 
     private function altText(string $name, ?string $color, bool $placeholder): string
