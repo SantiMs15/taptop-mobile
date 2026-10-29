@@ -32,8 +32,8 @@
       "colors": [
         { "name": "Negro", "hex": "#2A2B2E", "image": null },
         { "name": "Plata", "hex": "#DADBDD", "image": null },
-        { "name": "Glaciar", "hex": "#CFE1EA", "image": null },
-        { "name": "Borgoña", "hex": "#6A2433", "image": null }
+        { "name": "Glaciar", "hex": "#CFE1EA", "image": "/assets/images/products/iphone-18-pro-glaciar.webp" },
+        { "name": "Borgoña", "hex": "#6A2433", "image": "/assets/images/products/iphone-18-pro-borgona.webp" }
       ],
       "variants": [
         { "sku": "IP18P-256", "storage": "256 GB", "color": null, "price_cash": 4400000, "price_gateway": 4545000 },

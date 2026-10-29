@@ -146,8 +146,8 @@ final class ProductPresenter
                 $key = ($hasColors ? (string) $newCi : '_') . '|' . $newOi;
                 $entries[$key] = $entry;
                 $allPrices[$variant['price_cash']] = true;
-                // Inicial: el más barato; si empatan, primero un color con foto propia.
-                $candidate = [$variant['price_cash'], ($color['image'] ?? null) === null ? 1 : 0, $newCi, $newOi];
+                // Inicial: el más barato entre los colores con foto propia; sin fotos, el más barato.
+                $candidate = [($color['image'] ?? null) === null ? 1 : 0, $variant['price_cash'], $newCi, $newOi];
                 if ($bestAny === null || $candidate < $bestAny) {
                     $bestAny = $candidate;
                 }
