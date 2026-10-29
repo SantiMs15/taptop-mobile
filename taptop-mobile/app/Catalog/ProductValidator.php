@@ -269,7 +269,8 @@ final class ProductValidator
     /**
      * Ejes de configuración (p. ej. "Material de la caja": Aluminio, Titanio…). Todos los valores se
      * muestran; solo se venden las combinaciones que aparecen como variante (con attrs).
-     * @return list<array{name: string, values: list<string>}>
+     * Un eje de color (acabado, correa) trae "hex": {valor: "#RRGGBB"} y se dibuja con círculos.
+     * @return list<array{name: string, values: list<string>, hex: ?array<string, string>}>
      */
     private function validateOptions(mixed $rawOptions, string $label, array &$errors): array
     {
@@ -309,7 +310,29 @@ final class ProductValidator
                 }
                 $values[] = trim($value);
             }
-            $options[] = ['name' => $name, 'values' => $values];
+            $hex = null;
+            if (array_key_exists('hex', $option)) {
+                $rawHex = $option['hex'];
+                if (!is_array($rawHex) || array_is_list($rawHex)) {
+                    $errors[] = "{$optionLabel}: hex de \"{$name}\" debe ser un objeto valor → #RRGGBB.";
+                    continue;
+                }
+                $hex = [];
+                foreach ($values as $value) {
+                    $code = $rawHex[$value] ?? null;
+                    if (!is_string($code) || preg_match(self::HEX, $code) !== 1) {
+                        $errors[] = "{$optionLabel}: falta el hex (#RRGGBB) de \"{$value}\" en \"{$name}\".";
+                        continue 2;
+                    }
+                    $hex[$value] = strtoupper($code);
+                }
+                $extra = array_diff(array_keys($rawHex), $values);
+                if ($extra !== []) {
+                    $errors[] = "{$optionLabel}: hex de valores que no están en \"{$name}\": " . implode(', ', $extra) . '.';
+                    continue;
+                }
+            }
+            $options[] = ['name' => $name, 'values' => $values, 'hex' => $hex];
         }
         return $options;
     }

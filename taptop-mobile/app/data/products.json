@@ -296,8 +296,10 @@
       "name": "Apple Watch Series 12",
       "colors": [],
       "options": [
-        { "name": "Acabado de la caja", "values": ["Bronce oscuro", "Oro claro", "Negro", "Gris espacial", "Blanco perla", "Azul noche", "Natural", "Oro radiante"] },
-        { "name": "Color de la correa", "values": ["Borgoña", "Oliva", "Azul marino", "Negro", "Arena"] },
+        { "name": "Acabado de la caja", "values": ["Bronce oscuro", "Oro claro", "Negro", "Gris espacial", "Blanco perla", "Azul noche", "Natural", "Oro radiante"],
+          "hex": { "Bronce oscuro": "#5B4636", "Oro claro": "#E3D3B8", "Negro": "#2B2A29", "Gris espacial": "#6E6E73", "Blanco perla": "#EDEAE4", "Azul noche": "#2B3A55", "Natural": "#C8C1B5", "Oro radiante": "#D9B26F" } },
+        { "name": "Color de la correa", "values": ["Borgoña", "Oliva", "Azul marino", "Negro", "Arena"],
+          "hex": { "Borgoña": "#6A2433", "Oliva": "#6B6B47", "Azul marino": "#1F2D4D", "Negro": "#1F1F1F", "Arena": "#D8C7A6" } },
         { "name": "Material de la caja", "values": ["Aluminio", "Titanio", "Cerámica"] },
         { "name": "Tamaño de la caja", "values": ["42 mm", "46 mm"] },
         { "name": "Conectividad", "values": ["GPS", "GPS + celular"] },

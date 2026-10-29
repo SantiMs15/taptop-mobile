@@ -318,6 +318,10 @@
         var label = input.nextElementSibling;
         if (label) {
           label.classList.toggle('is-unavailable', unavailable);
+          var title = label.getAttribute('data-cfg-title');
+          if (title) {
+            label.setAttribute('title', title + (unavailable ? ' (no disponible)' : ''));
+          }
           var stateText = label.querySelector('[data-cfg-state]');
           if (stateText) {
             stateText.textContent = unavailable ? ', no disponible' : '';

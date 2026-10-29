@@ -117,6 +117,20 @@ expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['produ
 $bad = watch(['colors' => [['name' => 'Azul', 'hex' => '#123456', 'image' => null]]]);
 expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: options y colors no se mezclan');
 
+$hexed = watch();
+$hexed['options'][1]['hex'] = ['Borgoña' => '#6a2433', 'Oliva' => '#6B6B47', 'Azul marino' => '#1F2D4D', 'Negro' => '#1F1F1F', 'Arena' => '#D8C7A6'];
+$report = $validator->validateCatalog(['products' => [$hexed]]);
+expect(($report['products'][0]['product']['options'][1]['hex']['Borgoña'] ?? null) === '#6A2433' && $report['products'][0]['product']['options'][2]['hex'] === null, 'validador: hex por valor en ejes de color', $report['products'][0]['errors']);
+$bad = $hexed;
+unset($bad['options'][1]['hex']['Arena']);
+expect(str_contains(first_errors($validator->validateCatalog(['products' => [$bad]])), 'Arena'), 'validador: eje de color sin hex de un valor');
+$bad = $hexed;
+$bad['options'][1]['hex']['Rosa'] = '#FFC0CB';
+expect(str_contains(first_errors($validator->validateCatalog(['products' => [$bad]])), 'Rosa'), 'validador: hex de un valor que no existe');
+$bad = $hexed;
+$bad['options'][1]['hex']['Oliva'] = 'verde';
+expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: hex inválido en opción');
+
 $report = $validator->validateCatalog(['products' => [product()]]);
 expect($report['products'][0]['errors'] === [], 'validador: producto correcto sin errores', $report['products'][0]['errors']);
 
@@ -227,6 +241,11 @@ $ignored = (new ProductPresenter('mark', true))->detail($twoStorages, 'TP-256');
 expect($ignored['current']['sku'] === 'TP-128' && $ignored['from'] === true, 'configurador: ?config= no aplica a productos sin opciones', $ignored['current']['sku']);
 expect(find_catalog_entry($watchP, $watchSku, null) !== null && find_catalog_entry($watchP, $watchSku, 'Negro') === null, 'configurador: carrito acepta el SKU sin color y rechaza con color');
 expect(!isset((new ProductPresenter('mark', true))->detail($normalized)['client']['cfg']), 'configurador: producto con colores no trae cfg');
+$hexedP = $validator->validateCatalog(['products' => [$hexed]])['products'][0]['product'];
+$cfgHtml = view('partials/config-options', ['card' => (new ProductPresenter('mark', true))->detail($hexedP), 'uid' => 'pdp-t']);
+expect(substr_count($cfgHtml, '<label class="swatch') === 5 && str_contains($cfgHtml, '--swatch: #D8C7A6') && str_contains($cfgHtml, 'swatches swatches--lg')
+    && substr_count($cfgHtml, '<label class="option') === 8 + 3 + 2 + 2 + 2, 'configurador: ejes con hex en círculos, el resto en botones', substr_count($cfgHtml, 'class="swatch'));
+expect(str_contains($cfgHtml, '<label class="swatch is-unavailable"') && str_contains($cfgHtml, 'title="Oliva (no disponible)"'), 'configurador: círculo sin configuración marcado y con título');
 
 $mark = (new ProductPresenter('mark', true))->card($normalized, 'test');
 expect($mark !== null && count($mark['colors']) === 2, 'mark: muestra los 2 colores');
