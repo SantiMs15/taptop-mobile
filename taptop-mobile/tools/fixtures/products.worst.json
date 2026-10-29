@@ -1,0 +1,1030 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-15",
+  "currency": "COP",
+  "notes": "Catálogo semilla de la Etapa 0, desde la hoja 'Lista de precios' (pestaña Precios, 15-oct-2026). Solo nombre, categoría, marca, colores, variantes y precios (price_cash = consignación o transferencia; price_gateway = tarjeta o pasarela). Sin costos ni márgenes. Productos sin fila en la hoja quedan agotados (available false). Los hex son provisionales: se reemplazan con el gotero sobre las fotos propias.",
+  "products": [
+    {
+      "slug": "samsung-galaxy-z-fold8-ultra",
+      "brand": "samsung",
+      "available": false,
+      "category": "samsung",
+      "name": "Samsung Galaxy Z Fold8 5G Edición Especial Thom Browne con S Pen Fold Edition y funda con soporte magnético",
+      "colors": [
+        {
+          "name": "Cream",
+          "hex": "#ECE4D3",
+          "image": null
+        },
+        {
+          "name": "Graphite",
+          "hex": "#3A3C40",
+          "image": null
+        },
+        {
+          "name": "Violet Shadow",
+          "hex": "#6C6789",
+          "image": null
+        },
+        {
+          "name": "Green Shadow",
+          "hex": "#5E6C62",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "SGZFOLD8U-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 6350000,
+          "price_gateway": 6558000
+        }
+      ]
+    },
+    {
+      "slug": "iphone-18-pro-max",
+      "brand": "apple",
+      "category": "iphone",
+      "name": "iPhone 18 Pro Max",
+      "colors": [
+        {
+          "name": "Negro",
+          "hex": "#2A2B2E",
+          "image": "/assets/images/products/iphone-18-pro-max-negro.webp"
+        },
+        {
+          "name": "Plata",
+          "hex": "#DADBDD",
+          "image": "/assets/images/products/iphone-18-pro-max-plata.webp",
+          "available": false
+        },
+        {
+          "name": "Glaciar",
+          "hex": "#CFE1EA",
+          "image": "/assets/images/products/iphone-18-pro-max-glaciar.webp"
+        },
+        {
+          "name": "Borgoña",
+          "hex": "#6A2433",
+          "image": "/assets/images/products/iphone-18-pro-max-borgona.webp"
+        },
+        {
+          "name": "Titanio natural con acabado arenado",
+          "hex": "#C8C1B5"
+        },
+        {
+          "name": "Azul medianoche profundo",
+          "hex": "#1F2D4D"
+        },
+        {
+          "name": "Rosa claro con reflejo perlado",
+          "hex": "#F2C6CF"
+        },
+        {
+          "name": "Verde salvia",
+          "hex": "#9CAF88"
+        },
+        {
+          "name": "Amarillo",
+          "hex": "#F3E27A"
+        },
+        {
+          "name": "Púrpura oscuro",
+          "hex": "#4B3A5A"
+        },
+        {
+          "name": "Blanco estelar",
+          "hex": "#F4F1EA"
+        },
+        {
+          "name": "Grafito",
+          "hex": "#3A3B3D"
+        },
+        {
+          "name": "Coral",
+          "hex": "#F08A6C"
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IP18PM-256",
+          "storage": "256 GB",
+          "color": null,
+          "price_cash": 5400000,
+          "price_gateway": 5577000
+        },
+        {
+          "sku": "IP18PM-256-BLK",
+          "storage": "256 GB",
+          "color": "Negro",
+          "price_cash": 5050000,
+          "price_gateway": 5216000
+        },
+        {
+          "sku": "IP18PM-256-GLA",
+          "storage": "256 GB",
+          "color": "Glaciar",
+          "price_cash": 5250000,
+          "price_gateway": 5422000
+        },
+        {
+          "sku": "IP18PM-256-BUR",
+          "storage": "256 GB",
+          "color": "Borgoña",
+          "price_cash": 5300000,
+          "price_gateway": 5474000
+        },
+        {
+          "sku": "IP18PM-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 5950000,
+          "price_gateway": 6145000,
+          "available": false
+        },
+        {
+          "sku": "IP18PM-512-BUR",
+          "storage": "512 GB",
+          "color": "Borgoña",
+          "price_cash": 5830000,
+          "price_gateway": 6021000
+        }
+      ]
+    },
+    {
+      "slug": "macbook-neo",
+      "brand": "apple",
+      "category": "mac",
+      "name": "MacBook Pro 16\" M5 Max",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "MBNEO-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 29140000,
+          "price_gateway": 30194000
+        }
+      ]
+    },
+    {
+      "slug": "adaptador-apple-nfc",
+      "brand": "apple",
+      "category": "adaptadores",
+      "name": "Cubo",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "APL-ADAPT-NFC",
+          "storage": null,
+          "color": null,
+          "price_cash": 49000,
+          "price_gateway": 51000
+        }
+      ]
+    },
+    {
+      "slug": "ipad-pro-11-m5",
+      "brand": "apple",
+      "category": "ipad",
+      "name": "iPad Pro 11\" (M5)",
+      "colors": [
+        {
+          "name": "Negro espacial",
+          "hex": "#2F3034",
+          "image": null,
+          "available": false
+        },
+        {
+          "name": "Plata",
+          "hex": "#DFE0E2",
+          "image": null,
+          "available": false
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IPADP11-M5-256",
+          "storage": "256 GB",
+          "color": null,
+          "price_cash": 3720000,
+          "price_gateway": 3842000,
+          "available": false
+        }
+      ],
+      "available": false
+    },
+    {
+      "slug": "iphone-18-pro",
+      "brand": "apple",
+      "category": "iphone",
+      "name": "iPhone 18 Pro",
+      "colors": [
+        {
+          "name": "Negro",
+          "hex": "#2A2B2E"
+        },
+        {
+          "name": "Plata",
+          "hex": "#DADBDD"
+        },
+        {
+          "name": "Glaciar",
+          "hex": "#CFE1EA"
+        },
+        {
+          "name": "Borgoña",
+          "hex": "#6A2433"
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IP18P-256",
+          "storage": "256 GB",
+          "color": null,
+          "price_cash": 4400000,
+          "price_gateway": 4545000
+        },
+        {
+          "sku": "IP18P-256-BUR",
+          "storage": "256 GB",
+          "color": "Borgoña",
+          "price_cash": 4500000,
+          "price_gateway": 4648000
+        }
+      ]
+    },
+    {
+      "slug": "iphone-17-pro-max",
+      "brand": "apple",
+      "category": "iphone",
+      "name": "iPhone 17 Pro Max",
+      "colors": [
+        {
+          "name": "Silver",
+          "hex": "#DCDDDF",
+          "image": null,
+          "available": false
+        },
+        {
+          "name": "Cosmic Orange",
+          "hex": "#E5793B",
+          "image": "/assets/images/products/iphone-17-pro-max-naranja-cosmico.webp"
+        },
+        {
+          "name": "Deep Blue",
+          "hex": "#2E3B57",
+          "image": "/assets/images/products/iphone-17-pro-max-azul-profundo.webp"
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IP17PM-256-ESIM",
+          "storage": "256 GB",
+          "note": "eSIM",
+          "color": null,
+          "price_cash": 4250000,
+          "price_gateway": 4390000
+        },
+        {
+          "sku": "IP17PM-256-SIM",
+          "storage": "256 GB",
+          "note": "SIM física",
+          "color": null,
+          "price_cash": 4300000,
+          "price_gateway": 4441000
+        }
+      ]
+    },
+    {
+      "slug": "iphone-17",
+      "brand": "apple",
+      "available": false,
+      "category": "iphone",
+      "name": "iPhone 17",
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#2E2F33",
+          "image": null
+        },
+        {
+          "name": "White",
+          "hex": "#F3F2EE",
+          "image": null
+        },
+        {
+          "name": "Mist Blue",
+          "hex": "#B8C9DB",
+          "image": null
+        },
+        {
+          "name": "Sage",
+          "hex": "#B9C4A7",
+          "image": null
+        },
+        {
+          "name": "Lavender",
+          "hex": "#CFC3E3",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IP17-256",
+          "storage": "256 GB",
+          "color": null,
+          "price_cash": 3320000,
+          "price_gateway": 3429000
+        }
+      ]
+    },
+    {
+      "slug": "iphone-16",
+      "brand": "apple",
+      "available": false,
+      "category": "iphone",
+      "name": "iPhone 16",
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#3B3D40",
+          "image": null
+        },
+        {
+          "name": "White",
+          "hex": "#F2F1EC",
+          "image": null
+        },
+        {
+          "name": "Pink",
+          "hex": "#F2B8CF",
+          "image": null
+        },
+        {
+          "name": "Teal",
+          "hex": "#A6CFC8",
+          "image": null
+        },
+        {
+          "name": "Ultramarine",
+          "hex": "#8C9BF2",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IP16-128",
+          "storage": "128 GB",
+          "color": null,
+          "price_cash": 2850000,
+          "price_gateway": 2944000
+        }
+      ]
+    },
+    {
+      "slug": "samsung-galaxy-z-fold8",
+      "brand": "samsung",
+      "available": false,
+      "category": "samsung",
+      "name": "Samsung Galaxy Z Fold8",
+      "colors": [
+        {
+          "name": "Cream",
+          "hex": "#ECE4D3",
+          "image": null
+        },
+        {
+          "name": "Graphite",
+          "hex": "#3A3C40",
+          "image": null
+        },
+        {
+          "name": "Lavender",
+          "hex": "#C9C0E2",
+          "image": null
+        },
+        {
+          "name": "Pistachio",
+          "hex": "#C8D7B3",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "SGZFOLD8-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 5350000,
+          "price_gateway": 5526000
+        }
+      ]
+    },
+    {
+      "slug": "samsung-galaxy-z-flip8",
+      "brand": "samsung",
+      "category": "samsung",
+      "name": "Samsung Galaxy Z Flip8",
+      "colors": [
+        {
+          "name": "Cream",
+          "hex": "#ECE4D3",
+          "image": null
+        },
+        {
+          "name": "Graphite",
+          "hex": "#3A3C40",
+          "image": null
+        },
+        {
+          "name": "Pink",
+          "hex": "#F0C4CC",
+          "image": null
+        },
+        {
+          "name": "Mint",
+          "hex": "#BFE2CF",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "SGZFLIP8-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 3800000,
+          "price_gateway": 3925000
+        }
+      ]
+    },
+    {
+      "slug": "samsung-galaxy-s26-ultra",
+      "brand": "samsung",
+      "category": "samsung",
+      "name": "Samsung Galaxy S26 Ultra",
+      "colors": [
+        {
+          "name": "Cobalt Violet",
+          "hex": "#4A3E86",
+          "image": null
+        },
+        {
+          "name": "Sky Blue",
+          "hex": "#A8C8E6",
+          "image": null
+        },
+        {
+          "name": "Black",
+          "hex": "#1F2023",
+          "image": null
+        },
+        {
+          "name": "White",
+          "hex": "#F1F1F0",
+          "image": null
+        },
+        {
+          "name": "Silver Shadow",
+          "hex": "#B7B9BC",
+          "image": null
+        },
+        {
+          "name": "Pink Gold",
+          "hex": "#E6C2B4",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "SGS26U-256",
+          "storage": "256 GB",
+          "color": null,
+          "price_cash": 3340000,
+          "price_gateway": 3450000
+        },
+        {
+          "sku": "SGS26U-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 3830000,
+          "price_gateway": 3956000
+        }
+      ]
+    },
+    {
+      "slug": "samsung-galaxy-s26-plus",
+      "brand": "samsung",
+      "available": false,
+      "category": "samsung",
+      "name": "Samsung Galaxy S26+",
+      "colors": [
+        {
+          "name": "Cobalt Violet",
+          "hex": "#4A3E86",
+          "image": null
+        },
+        {
+          "name": "Sky Blue",
+          "hex": "#A8C8E6",
+          "image": null
+        },
+        {
+          "name": "Black",
+          "hex": "#1F2023",
+          "image": null
+        },
+        {
+          "name": "White",
+          "hex": "#F1F1F0",
+          "image": null
+        },
+        {
+          "name": "Silver Shadow",
+          "hex": "#B7B9BC",
+          "image": null
+        },
+        {
+          "name": "Pink Gold",
+          "hex": "#E6C2B4",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "SGS26P-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 3150000,
+          "price_gateway": 3254000
+        }
+      ]
+    },
+    {
+      "slug": "samsung-galaxy-s25-ultra",
+      "brand": "samsung",
+      "category": "samsung",
+      "name": "Samsung Galaxy S25 Ultra",
+      "colors": [
+        {
+          "name": "Titanium Silverblue",
+          "hex": "#A3B1C2",
+          "image": null
+        },
+        {
+          "name": "Titanium Black",
+          "hex": "#2E3034",
+          "image": null
+        },
+        {
+          "name": "Titanium Gray",
+          "hex": "#8E8C88",
+          "image": null
+        },
+        {
+          "name": "Titanium Whitesilver",
+          "hex": "#E2E1DC",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "SGS25U-256",
+          "storage": "256 GB",
+          "color": null,
+          "price_cash": 2900000,
+          "price_gateway": 2996000,
+          "available": false
+        },
+        {
+          "sku": "SGS25U-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 3150000,
+          "price_gateway": 3254000
+        }
+      ]
+    },
+    {
+      "slug": "macbook-air-m5",
+      "brand": "apple",
+      "category": "mac",
+      "name": "MacBook Air 13\" M5",
+      "sizes": [
+        {
+          "label": "13\"",
+          "available": true
+        },
+        {
+          "label": "15\"",
+          "available": false
+        }
+      ],
+      "colors": [
+        {
+          "name": "Plata",
+          "hex": "#DFE0E2",
+          "image": "/assets/images/products/macbook-air-m5-plata.webp"
+        },
+        {
+          "name": "Azul cielo",
+          "hex": "#C3D4E3",
+          "image": "/assets/images/products/macbook-air-m5-azul-cielo.webp"
+        },
+        {
+          "name": "Medianoche",
+          "hex": "#2D3440",
+          "image": "/assets/images/products/macbook-air-m5-medianoche.webp"
+        },
+        {
+          "name": "Blanco estrella",
+          "hex": "#EFE8DC",
+          "image": "/assets/images/products/macbook-air-m5-blanco-estrella.webp"
+        }
+      ],
+      "variants": [
+        {
+          "sku": "MBA-M5-16-512",
+          "storage": "16 GB / 512 GB",
+          "color": null,
+          "price_cash": 4450000,
+          "price_gateway": 4596000
+        },
+        {
+          "sku": "MBA-M5-16-1TB",
+          "storage": "16 GB / 1 TB",
+          "color": null,
+          "price_cash": 5150000,
+          "price_gateway": 5319000
+        },
+        {
+          "sku": "MBA-M5-24-1TB",
+          "storage": "24 GB / 1 TB",
+          "color": null,
+          "price_cash": 6050000,
+          "price_gateway": 6248000
+        }
+      ]
+    },
+    {
+      "slug": "mac-mini-m4-pro",
+      "brand": "apple",
+      "category": "mac",
+      "name": "Mac mini M4 Pro",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "MACMINI-M4PRO-24-512",
+          "storage": "24 GB / 512 GB",
+          "color": null,
+          "price_cash": 5750000,
+          "price_gateway": 5939000
+        }
+      ]
+    },
+    {
+      "slug": "mac-mini-m4",
+      "brand": "apple",
+      "category": "mac",
+      "name": "Mac mini M4",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "MACMINI-M4-16-256",
+          "storage": "16 GB / 256 GB",
+          "color": null,
+          "price_cash": 3050000,
+          "price_gateway": 3151000
+        },
+        {
+          "sku": "MACMINI-M4-24-512",
+          "storage": "24 GB / 512 GB",
+          "color": null,
+          "price_cash": 4450000,
+          "price_gateway": 4596000
+        }
+      ]
+    },
+    {
+      "slug": "ipad-air-11-m4",
+      "brand": "apple",
+      "category": "ipad",
+      "name": "iPad Air 11\" (M4)",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "IPADA11-M4-128",
+          "storage": "128 GB",
+          "color": null,
+          "price_cash": 2500000,
+          "price_gateway": 2583000
+        }
+      ]
+    },
+    {
+      "slug": "ipad-a16",
+      "brand": "apple",
+      "category": "ipad",
+      "name": "iPad (A16)",
+      "colors": [
+        {
+          "name": "Rosado",
+          "hex": "#EBC7C3",
+          "image": null
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IPADA16-128",
+          "storage": "128 GB",
+          "color": null,
+          "price_cash": 1750000,
+          "price_gateway": 1808000
+        }
+      ]
+    },
+    {
+      "slug": "apple-watch-ultra-4",
+      "brand": "apple",
+      "category": "relojes",
+      "name": "Apple Watch Ultra 4",
+      "colors": [],
+      "options": [
+        {
+          "name": "Acabado de la caja",
+          "values": [
+            "Natural",
+            "Negro"
+          ],
+          "hex": {
+            "Natural": "#C8C1B5",
+            "Negro": "#2B2A29"
+          }
+        },
+        {
+          "name": "Color de la correa",
+          "values": [
+            "Borgoña",
+            "Oliva",
+            "Azul marino",
+            "Negro",
+            "Arena",
+            "Loop Alpine verde, talla M (145-190 mm)"
+          ],
+          "hex": {
+            "Borgoña": "#6A2433",
+            "Oliva": "#6B6B47",
+            "Azul marino": "#1F2D4D",
+            "Negro": "#1F1F1F",
+            "Arena": "#D8C7A6",
+            "Loop Alpine verde, talla M (145-190 mm)": "#4F6B4A"
+          }
+        },
+        {
+          "name": "Material de la caja",
+          "values": [
+            "Titanio"
+          ]
+        },
+        {
+          "name": "Tamaño de la caja",
+          "values": [
+            "49 mm"
+          ]
+        },
+        {
+          "name": "Conectividad",
+          "values": [
+            "GPS + celular"
+          ]
+        },
+        {
+          "name": "Tamaño de la banda",
+          "values": [
+            "S/M",
+            "M/L"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "sku": "AW-U4-49-TI-NEGRO-NEGRO-SM-CEL",
+          "image": "/assets/images/products/apple-watch-ultra-4-negro-negro.webp",
+          "attrs": {
+            "Acabado de la caja": "Negro",
+            "Color de la correa": "Negro",
+            "Material de la caja": "Titanio",
+            "Tamaño de la caja": "49 mm",
+            "Conectividad": "GPS + celular",
+            "Tamaño de la banda": "S/M"
+          },
+          "price_cash": 3040000,
+          "price_gateway": 3140000
+        }
+      ]
+    },
+    {
+      "slug": "apple-watch-series-12",
+      "brand": "apple",
+      "category": "relojes",
+      "name": "Apple Watch Series 12",
+      "colors": [],
+      "options": [
+        {
+          "name": "Acabado de la caja",
+          "values": [
+            "Bronce oscuro",
+            "Oro claro",
+            "Negro",
+            "Gris espacial",
+            "Blanco perla",
+            "Azul noche",
+            "Natural",
+            "Oro radiante"
+          ],
+          "hex": {
+            "Bronce oscuro": "#5B4636",
+            "Oro claro": "#E3D3B8",
+            "Negro": "#2B2A29",
+            "Gris espacial": "#6E6E73",
+            "Blanco perla": "#EDEAE4",
+            "Azul noche": "#2B3A55",
+            "Natural": "#C8C1B5",
+            "Oro radiante": "#D9B26F"
+          }
+        },
+        {
+          "name": "Color de la correa",
+          "values": [
+            "Borgoña",
+            "Oliva",
+            "Azul marino",
+            "Negro",
+            "Arena"
+          ],
+          "hex": {
+            "Borgoña": "#6A2433",
+            "Oliva": "#6B6B47",
+            "Azul marino": "#1F2D4D",
+            "Negro": "#1F1F1F",
+            "Arena": "#D8C7A6"
+          }
+        },
+        {
+          "name": "Material de la caja",
+          "values": [
+            "Aluminio",
+            "Titanio",
+            "Cerámica"
+          ]
+        },
+        {
+          "name": "Tamaño de la caja",
+          "values": [
+            "42 mm",
+            "46 mm"
+          ]
+        },
+        {
+          "name": "Conectividad",
+          "values": [
+            "GPS",
+            "GPS + celular"
+          ]
+        },
+        {
+          "name": "Tamaño de la banda",
+          "values": [
+            "S/M",
+            "M/L"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "sku": "AW-S12-42-AL-OROCL-ARENA-SM-GPS",
+          "image": "/assets/images/products/apple-watch-series-12-oro-claro-arena.webp",
+          "attrs": {
+            "Acabado de la caja": "Oro claro",
+            "Color de la correa": "Arena",
+            "Material de la caja": "Aluminio",
+            "Tamaño de la caja": "42 mm",
+            "Conectividad": "GPS",
+            "Tamaño de la banda": "S/M"
+          },
+          "price_cash": 1490000,
+          "price_gateway": 1540000
+        },
+        {
+          "sku": "AW-S12-42-AL-NEGRO-NEGRO-SM-GPS",
+          "image": "/assets/images/products/apple-watch-series-12-negro-negro.webp",
+          "attrs": {
+            "Acabado de la caja": "Negro",
+            "Color de la correa": "Negro",
+            "Material de la caja": "Aluminio",
+            "Tamaño de la caja": "42 mm",
+            "Conectividad": "GPS",
+            "Tamaño de la banda": "S/M"
+          },
+          "price_cash": 1490000,
+          "price_gateway": 1540000
+        }
+      ]
+    },
+    {
+      "slug": "airpods-pro-3",
+      "brand": "apple",
+      "category": "airpods",
+      "name": "AirPods Pro 3",
+      "article": "los",
+      "available": true,
+      "colors": [
+        {
+          "name": "Blanco",
+          "hex": "#F5F5F7",
+          "image": "/assets/images/products/airpods-pro-3-blanco.webp"
+        }
+      ],
+      "variants": [
+        {
+          "sku": "APP3",
+          "storage": null,
+          "color": null,
+          "price_cash": 750000,
+          "price_gateway": 776000
+        }
+      ]
+    },
+    {
+      "slug": "airpods-4-cancelacion-activa-de-ruido",
+      "brand": "apple",
+      "category": "airpods",
+      "name": "AirPods 4 con cancelación activa de ruido",
+      "article": "los",
+      "colors": [
+        {
+          "name": "Blanco",
+          "hex": "#F5F5F7",
+          "image": "/assets/images/products/airpods-4-cancelacion-activa-de-ruido-blanco.webp"
+        }
+      ],
+      "variants": [
+        {
+          "sku": "AP4-ANC",
+          "storage": null,
+          "color": null,
+          "price_cash": 610000,
+          "price_gateway": 631000
+        }
+      ]
+    },
+    {
+      "slug": "apple-pencil-pro",
+      "brand": "apple",
+      "category": "accesorios",
+      "name": "Apple Pencil Pro",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "APL-PENCIL-PRO",
+          "storage": null,
+          "color": null,
+          "price_cash": 430000,
+          "price_gateway": 445000
+        }
+      ]
+    },
+    {
+      "slug": "adaptador-apple-sin-nfc",
+      "brand": "apple",
+      "category": "adaptadores",
+      "name": "Adaptador Apple (sin NFC)",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "APL-ADAPT-NONFC",
+          "storage": null,
+          "color": null,
+          "price_cash": 85000,
+          "price_gateway": 89000
+        }
+      ]
+    },
+    {
+      "slug": "adaptador-nicols",
+      "brand": "nicols",
+      "category": "adaptadores",
+      "name": "Adaptador Nicols",
+      "colors": [],
+      "variants": [
+        {
+          "sku": "NIC-ADAPT",
+          "storage": null,
+          "color": null,
+          "price_cash": 93000,
+          "price_gateway": 97000
+        }
+      ]
+    }
+  ]
+}

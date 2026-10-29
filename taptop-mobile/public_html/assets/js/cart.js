@@ -16,10 +16,28 @@
     return Array.prototype.slice.call(doc.querySelectorAll('[data-cart-count]'));
   }
 
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Pulso corto del contador: une el aviso de abajo con el carrito de arriba. WAAPI para
+  // poder repetirlo sin quitar y poner clases.
+  function pulse(node) {
+    if (calm || typeof node.animate !== 'function') {
+      return;
+    }
+    node.animate(
+      [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }],
+      { duration: 300, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+    );
+  }
+
   function setCount(count) {
     var n = Number(count) || 0;
     counters().forEach(function (node) {
+      var changed = node.textContent !== String(n);
       node.textContent = String(n);
+      if (changed) {
+        pulse(node);
+      }
     });
     Array.prototype.forEach.call(doc.querySelectorAll('[data-cart-link]'), function (link) {
       link.setAttribute('aria-label', 'Carrito, ' + n + (n === 1 ? ' producto' : ' productos'));
@@ -32,8 +50,9 @@
       toast.className = 'cart-toast';
       toast.setAttribute('role', 'status');
       toast.setAttribute('aria-live', 'polite');
-      toast.hidden = true;
       doc.body.appendChild(toast);
+      // Fija el estado oculto antes de mostrarlo para que la primera vez también entre.
+      toast.getBoundingClientRect();
     }
     toast.textContent = '';
     var text = doc.createElement('span');
@@ -43,10 +62,10 @@
     link.textContent = 'Ver carrito';
     toast.appendChild(text);
     toast.appendChild(link);
-    toast.hidden = false;
+    toast.classList.add('is-visible');
     window.clearTimeout(timer);
     timer = window.setTimeout(function () {
-      toast.hidden = true;
+      toast.classList.remove('is-visible');
     }, 4000);
   }
 

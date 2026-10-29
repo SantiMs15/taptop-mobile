@@ -178,7 +178,9 @@ function cart_priced(array $lines, ?callable $find = null): array
             'available' => $available,
             'slug' => $product['slug'],
             'name' => $product['name'],
-            'label' => product_variant_label($product, $line['color'], $variant),
+            'label' => $label = product_variant_label($product, $line['color'], $variant),
+            // Lo que va después del nombre ("Cream 512 GB"): en el carrito el nombre ya está arriba.
+            'detail' => ltrim(substr($label, strlen($product['name'])), ' ,'),
             'image' => $image,
             'kind' => $kind,
             'hex' => $hex ?? placeholder_default_hex($kind),

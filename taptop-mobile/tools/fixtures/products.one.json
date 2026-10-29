@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-15",
+  "currency": "COP",
+  "notes": "Catálogo semilla de la Etapa 0, desde la hoja 'Lista de precios' (pestaña Precios, 15-oct-2026). Solo nombre, categoría, marca, colores, variantes y precios (price_cash = consignación o transferencia; price_gateway = tarjeta o pasarela). Sin costos ni márgenes. Productos sin fila en la hoja quedan agotados (available false). Los hex son provisionales: se reemplazan con el gotero sobre las fotos propias.",
+  "products": [
+    {
+      "slug": "iphone-18-pro-max",
+      "brand": "apple",
+      "category": "iphone",
+      "name": "iPhone 18 Pro Max",
+      "colors": [
+        {
+          "name": "Negro",
+          "hex": "#2A2B2E",
+          "image": "/assets/images/products/iphone-18-pro-max-negro.webp"
+        },
+        {
+          "name": "Plata",
+          "hex": "#DADBDD",
+          "image": "/assets/images/products/iphone-18-pro-max-plata.webp",
+          "available": false
+        },
+        {
+          "name": "Glaciar",
+          "hex": "#CFE1EA",
+          "image": "/assets/images/products/iphone-18-pro-max-glaciar.webp"
+        },
+        {
+          "name": "Borgoña",
+          "hex": "#6A2433",
+          "image": "/assets/images/products/iphone-18-pro-max-borgona.webp"
+        }
+      ],
+      "variants": [
+        {
+          "sku": "IP18PM-256",
+          "storage": "256 GB",
+          "color": null,
+          "price_cash": 5400000,
+          "price_gateway": 5577000
+        },
+        {
+          "sku": "IP18PM-256-BLK",
+          "storage": "256 GB",
+          "color": "Negro",
+          "price_cash": 5050000,
+          "price_gateway": 5216000
+        },
+        {
+          "sku": "IP18PM-256-GLA",
+          "storage": "256 GB",
+          "color": "Glaciar",
+          "price_cash": 5250000,
+          "price_gateway": 5422000
+        },
+        {
+          "sku": "IP18PM-256-BUR",
+          "storage": "256 GB",
+          "color": "Borgoña",
+          "price_cash": 5300000,
+          "price_gateway": 5474000
+        },
+        {
+          "sku": "IP18PM-512",
+          "storage": "512 GB",
+          "color": null,
+          "price_cash": 5950000,
+          "price_gateway": 6145000,
+          "available": false
+        },
+        {
+          "sku": "IP18PM-512-BUR",
+          "storage": "512 GB",
+          "color": "Borgoña",
+          "price_cash": 5830000,
+          "price_gateway": 6021000
+        }
+      ]
+    }
+  ]
+}

@@ -91,7 +91,29 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent; /* sin el destello gris al tocar; cada control trae su :active */
   scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+/* Controles táctiles: clic inmediato (sin espera de doble toque) y sin seleccionar la
+   etiqueta ni abrir el menú contextual al dejar el dedo. El texto de contenido sigue
+   siendo seleccionable. */
+button,
+.btn,
+.swatch,
+.option,
+.thumb,
+.spec__summary,
+.switch__item,
+.cart-link {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+a {
+  touch-action: manipulation;
 }
 
 body {
@@ -292,23 +314,27 @@ mark.todo {
   z-index: 1;
 }
 
-.btn--primary:hover,
-.btn--outline:hover {
-  background:
-    radial-gradient(65% 87.5% at 50% -21%, rgb(64 180 255 / 0.15) 99%, transparent 100%),
-    var(--pearl-bg);
-  color: #fff;
-  box-shadow:
-    inset 0 0.3rem 0.5rem rgb(129 216 255 / 0.4),
-    inset 0 -0.1rem 0.3rem rgb(0 0 0 / 0.7),
-    inset 0 -0.4rem 0.9rem rgb(64 180 255 / 0.6),
-    0 3rem 3rem rgb(0 0 0 / 0.3),
-    0 1rem 1rem -0.6rem rgb(0 0 0 / 0.8);
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover,
+  .btn--outline:hover {
+    background:
+      radial-gradient(65% 87.5% at 50% -21%, rgb(64 180 255 / 0.15) 99%, transparent 100%),
+      var(--pearl-bg);
+    color: #fff;
+    box-shadow:
+      inset 0 0.3rem 0.5rem rgb(129 216 255 / 0.4),
+      inset 0 -0.1rem 0.3rem rgb(0 0 0 / 0.7),
+      inset 0 -0.4rem 0.9rem rgb(64 180 255 / 0.6),
+      0 3rem 3rem rgb(0 0 0 / 0.3),
+      0 1rem 1rem -0.6rem rgb(0 0 0 / 0.8);
+  }
 }
 
-.btn--primary:hover::before,
-.btn--outline:hover::before {
-  content: "\2726"; /* estrella llena */
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover::before,
+  .btn--outline:hover::before {
+    content: "\2726"; /* estrella llena */
+  }
 }
 
 /* Si el botón ya trae ícono (WhatsApp, etc.), sin estrella */
@@ -317,10 +343,12 @@ mark.todo {
   content: none;
 }
 
-.btn--primary:hover::after,
-.btn--outline:hover::after {
-  opacity: 0.4;
-  transform: translateY(5%);
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover::after,
+  .btn--outline:hover::after {
+    opacity: 0.4;
+    transform: translateY(5%);
+  }
 }
 
 .btn--primary:active,
@@ -339,8 +367,10 @@ mark.todo {
   color: var(--c-wa-ink);
 }
 
-.btn--wa:hover {
-  background: var(--c-wa-hover);
+@media (hover: hover) and (pointer: fine) {
+  .btn--wa:hover {
+    background: var(--c-wa-hover);
+  }
 }
 
 /* CTA de tarjeta: tranquilo en la grilla, el glifo verde dice "WhatsApp". */
@@ -354,14 +384,18 @@ mark.todo {
   color: var(--c-wa-glyph);
 }
 
-.btn--wa-quiet:hover {
-  border-color: var(--c-ink);
-  background: var(--c-ink);
-  color: var(--c-white);
+@media (hover: hover) and (pointer: fine) {
+  .btn--wa-quiet:hover {
+    border-color: var(--c-ink);
+    background: var(--c-ink);
+    color: var(--c-white);
+  }
 }
 
-.btn--wa-quiet:hover .icon--wa {
-  color: var(--c-wa);
+@media (hover: hover) and (pointer: fine) {
+  .btn--wa-quiet:hover .icon--wa {
+    color: var(--c-wa);
+  }
 }
 
 .btn--sm {
@@ -391,8 +425,10 @@ mark.todo {
   transition: text-decoration-color 300ms var(--ease-out);
 }
 
-.text-link:hover {
-  text-decoration-color: var(--c-ink);
+@media (hover: hover) and (pointer: fine) {
+  .text-link:hover {
+    text-decoration-color: var(--c-ink);
+  }
 }
 
 .link-button {
@@ -563,11 +599,16 @@ mark.todo {
   transition: color 300ms var(--ease-out);
 }
 
-.switch__item:hover,
 .switch__item.is-highlighted,
 .switch__item[aria-current="page"],
 .switch__item[aria-selected="true"] {
   color: var(--c-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .switch__item:hover {
+    color: var(--c-ink);
+  }
 }
 
 .switch__capsule {
@@ -684,6 +725,14 @@ mark.todo {
   font-size: 1.0625rem;
   font-weight: 600;
   letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+/* Bajo 360px el nombre no cabe junto a los tres botones: queda solo el logo. */
+@media (max-width: 359px) {
+  .brand__name {
+    display: none;
+  }
 }
 
 .cart-link {
@@ -700,8 +749,10 @@ mark.todo {
 }
 
 /* Siempre en estado activo: pastilla navy rellena; el hover solo la aclara. */
-.cart-link:hover {
-  background: var(--c-slate);
+@media (hover: hover) and (pointer: fine) {
+  .cart-link:hover {
+    background: var(--c-slate);
+  }
 }
 
 .cart-link .icon {
@@ -741,8 +792,10 @@ mark.todo {
   color: var(--c-wa-glyph);
 }
 
-.btn--header:hover .icon--wa {
-  color: var(--c-wa);
+@media (hover: hover) and (pointer: fine) {
+  .btn--header:hover .icon--wa {
+    color: var(--c-wa);
+  }
 }
 
 .menu-toggle {
@@ -797,10 +850,24 @@ mark.todo {
     -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
     box-shadow: 0 24px 40px rgb(13 38 85 / 0.1);
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out), display 150ms allow-discrete;
   }
 
+  /* Baja desde el header al abrir (200ms) y sube más rápido al cerrar (150ms). */
   .site-header.is-open .site-nav {
     display: block;
+    opacity: 1;
+    transform: none;
+    transition-duration: 200ms;
+  }
+
+  @starting-style {
+    .site-header.is-open .site-nav {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
   }
 
   .switch--nav .switch__list {
@@ -855,10 +922,15 @@ mark.todo {
     color: var(--c-slate);
   }
 
-  .site-header--overlay:not(.is-scrolled) .switch--nav .switch__item:hover,
   .site-header--overlay:not(.is-scrolled) .switch--nav .switch__item.is-highlighted,
   .site-header--overlay:not(.is-scrolled) .switch--nav .switch__item[aria-current="page"] {
     color: var(--c-ink);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .site-header--overlay:not(.is-scrolled) .switch--nav .switch__item:hover {
+      color: var(--c-ink);
+    }
   }
 }
 
@@ -1763,11 +1835,13 @@ mark.todo {
   transition: color 300ms var(--ease-out);
 }
 
-.category-index__link:hover {
-  color: var(--c-slate);
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.14em;
+@media (hover: hover) and (pointer: fine) {
+  .category-index__link:hover {
+    color: var(--c-slate);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.14em;
+  }
 }
 
 .category-index__count {
@@ -1959,9 +2033,11 @@ mark.todo {
 }
 
 /* Al pasar sobre la foto, el producto agotado se desvanece más y la franja queda al frente. */
-.card.is-sold-out .card__media:hover .ph,
-.card.is-sold-out .card__media:hover .media__img {
-  opacity: 0.3;
+@media (hover: hover) and (pointer: fine) {
+  .card.is-sold-out .card__media:hover .ph,
+  .card.is-sold-out .card__media:hover .media__img {
+    opacity: 0.3;
+  }
 }
 
 /* El botón baja al fondo: en una fila de la grilla todos quedan alineados. */
@@ -1994,8 +2070,10 @@ mark.todo {
   text-decoration: none;
 }
 
-.card__title a:hover {
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .card__title a:hover {
+    text-decoration: underline;
+  }
 }
 
 .card__spec,
@@ -2109,6 +2187,7 @@ mark.todo {
   height: 34px;
   border-radius: 50%;
   cursor: pointer;
+  transition: transform 120ms var(--ease-out);
 }
 
 .swatch::before {
@@ -2132,8 +2211,10 @@ mark.todo {
   transition: border-color 300ms var(--ease-out);
 }
 
-.swatch:hover::after {
-  border-color: rgb(13 38 85 / 0.3);
+@media (hover: hover) and (pointer: fine) {
+  .swatch:hover::after {
+    border-color: rgb(13 38 85 / 0.3);
+  }
 }
 
 .swatch__input:checked + .swatch::after {
@@ -2156,8 +2237,10 @@ mark.todo {
     var(--swatch);
 }
 
-.swatch.is-sold-out:hover::after {
-  border-color: transparent;
+@media (hover: hover) and (pointer: fine) {
+  .swatch.is-sold-out:hover::after {
+    border-color: transparent;
+  }
 }
 
 .swatches--lg .swatch {
@@ -2191,11 +2274,14 @@ mark.todo {
   font-variant-numeric: tabular-nums;
   cursor: pointer;
   transition: border-color 300ms var(--ease-out), box-shadow 300ms var(--ease-out),
-    background-color 300ms var(--ease-out), color 300ms var(--ease-out);
+    background-color 300ms var(--ease-out), color 300ms var(--ease-out),
+    transform 120ms var(--ease-out);
 }
 
-.option:hover {
-  border-color: rgb(13 38 85 / 0.4);
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    border-color: rgb(13 38 85 / 0.4);
+  }
 }
 
 .option__sub {
@@ -2371,13 +2457,20 @@ mark.todo {
   text-decoration: none;
 }
 
-.breadcrumb a:hover {
-  color: var(--c-ink);
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb a:hover {
+    color: var(--c-ink);
+    text-decoration: underline;
+  }
 }
 
 .breadcrumb [aria-current="page"] {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
   color: var(--c-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pdp {
@@ -2412,6 +2505,13 @@ mark.todo {
   line-height: 1.02;
   letter-spacing: var(--track-title);
   text-wrap: balance;
+}
+
+/* Pantallas muy angostas: un nombre largo no empuja el precio tan abajo. */
+@media (max-width: 359px) {
+  .pdp__title {
+    font-size: 1.875rem;
+  }
 }
 
 .pdp__actions {
@@ -2460,11 +2560,13 @@ mark.todo {
   background: linear-gradient(180deg, #F6F8FC 0%, #EEF2F9 60%, #E5EAF4 100%);
   box-shadow: inset 0 0 0 1px rgb(13 38 85 / 0.12);
   cursor: pointer;
-  transition: box-shadow 300ms var(--ease-out);
+  transition: box-shadow 300ms var(--ease-out), transform 120ms var(--ease-out);
 }
 
-.thumb:hover {
-  box-shadow: inset 0 0 0 1px rgb(13 38 85 / 0.4);
+@media (hover: hover) and (pointer: fine) {
+  .thumb:hover {
+    box-shadow: inset 0 0 0 1px rgb(13 38 85 / 0.4);
+  }
 }
 
 .thumb[aria-pressed="true"] {
@@ -2722,6 +2824,24 @@ mark.todo {
   transform: rotate(45deg);
 }
 
+/* Abre y cierra con altura donde existe ::details-content + interpolate-size (Chrome 131+);
+   en los demás navegadores se abre al instante, como antes. */
+.specs {
+  interpolate-size: allow-keywords;
+}
+
+.spec::details-content {
+  block-size: 0;
+  overflow: clip;
+  opacity: 0;
+  transition: block-size 250ms var(--ease-out), opacity 250ms var(--ease-out), content-visibility 250ms allow-discrete;
+}
+
+.spec[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
 .spec__body {
   max-width: 64ch;
   padding-bottom: 22px;
@@ -2820,9 +2940,11 @@ mark.todo {
   text-decoration: none;
 }
 
-.brand-links__item:hover {
-  color: var(--c-ink);
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .brand-links__item:hover {
+    color: var(--c-ink);
+    text-decoration: underline;
+  }
 }
 
 .brand-links__item[aria-current="page"] {
@@ -2917,8 +3039,10 @@ mark.todo {
   text-decoration: none;
 }
 
-.contact__item a:hover {
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .contact__item a:hover {
+    text-decoration: underline;
+  }
 }
 
 @media (min-width: 900px) {
@@ -3173,6 +3297,15 @@ ul.info-list {
   font-size: 1.125rem;
   line-height: 1;
   cursor: pointer;
+  transition: transform 120ms var(--ease-out);
+}
+
+/* Respuesta al dedo en cuanto toca (no al soltar): reemplaza el destello del navegador. */
+.swatch:active,
+.option:active,
+.thumb:active,
+.cart__step:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .cart__step:disabled {
@@ -3279,10 +3412,17 @@ ul.info-list {
   color: var(--c-white);
   font-size: var(--fs-sm);
   box-shadow: 0 12px 32px rgb(13 38 85 / 0.28);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out), visibility 0s linear 200ms;
 }
 
-.cart-toast[hidden] {
-  display: none;
+.cart-toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out), visibility 0s;
 }
 
 .cart-toast a {
@@ -3481,9 +3621,11 @@ textarea.field__input {
   text-decoration: none;
 }
 
-.footer-links a:hover {
-  color: var(--c-ink);
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .footer-links a:hover {
+    color: var(--c-ink);
+    text-decoration: underline;
+  }
 }
 
 .footer-links .icon {
@@ -3553,8 +3695,10 @@ textarea.field__input {
   height: 30px;
 }
 
-.wa-float:hover {
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .wa-float:hover {
+    transform: translateY(-2px);
+  }
 }
 
 /* En móvil no se muestra: WhatsApp ya está en el "Escríbenos" del header. */
@@ -3594,6 +3738,20 @@ textarea.field__input {
   padding: 20px;
   border-radius: var(--radius-plinth);
   font-size: var(--fs-sm);
+  transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out), display 300ms allow-discrete;
+}
+
+.consent[hidden] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition-duration: 200ms;
+}
+
+@starting-style {
+  .consent:not([hidden]) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 
 @media (min-width: 900px) {
@@ -3624,6 +3782,13 @@ textarea.field__input {
   /* El temporizador del carrusel conserva su duración si la persona lo reanuda. */
   .stage .tab.is-running .tab__progress {
     animation-duration: var(--slide-dur, 3000ms) !important;
+  }
+
+  .cart-toast,
+  .consent,
+  .site-nav {
+    transform: none !important;
+    transition-duration: 150ms !important;
   }
 
   .slide__title .w,

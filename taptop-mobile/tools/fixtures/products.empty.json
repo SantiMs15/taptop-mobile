@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-15",
+  "currency": "COP",
+  "notes": "Catálogo semilla de la Etapa 0, desde la hoja 'Lista de precios' (pestaña Precios, 15-oct-2026). Solo nombre, categoría, marca, colores, variantes y precios (price_cash = consignación o transferencia; price_gateway = tarjeta o pasarela). Sin costos ni márgenes. Productos sin fila en la hoja quedan agotados (available false). Los hex son provisionales: se reemplazan con el gotero sobre las fotos propias.",
+  "products": []
+}

@@ -21,6 +21,7 @@ $isHome = $pageId === 'home';
 <?php partial('footer', ['page' => $pageId]); ?>
 <?php partial('whatsapp-float', ['page' => $pageId]); ?>
 <?php if (analytics_enabled()) { partial('consent-banner'); } ?>
+<?php if (dev_data_set() !== null) { partial('dev-data-toggle', ['current' => dev_data_set()]); } ?>
 <script type="application/json" id="tt-config"><?= json_for_script(analytics_client_config()) ?></script>
 <script src="<?= e(asset('js/site.js')) ?>" defer></script>
 <script src="<?= e(asset('js/analytics.js')) ?>" defer></script>

@@ -7,24 +7,27 @@
  */
 $business = (string) config('business_name');
 $freeShipping = format_price((int) config('free_shipping_min'));
+// Solo categorías con productos; sin ninguna (catálogo vacío o dañado) no va la sección.
+$indexCategories = array_filter($categories, static fn (array $item): bool => $item['key'] !== null && $item['count'] > 0);
 ?>
 <?php partial('hero-carousel', ['hero' => $hero]); ?>
 
+<?php if ($indexCategories !== []): ?>
 <section class="section section--index" aria-labelledby="index-title">
   <div class="container">
     <h2 class="section-title" id="index-title">¿Qué estás buscando?</h2>
     <ul class="category-index">
-      <?php foreach ($categories as $item): ?>
-        <?php if ($item['key'] === null || $item['count'] === 0) { continue; } ?>
+      <?php foreach ($indexCategories as $item): ?>
       <li>
         <a class="category-index__link" href="<?= e($item['href']) ?>">
-          <span class="category-index__name"><?= e($item['label']) ?></span><span class="category-index__count" aria-hidden="true"><?= (int) $item['count'] ?></span><span class="visually-hidden">, <?= (int) $item['count'] ?> productos</span>
+          <span class="category-index__name"><?= e($item['label']) ?></span><span class="category-index__count" aria-hidden="true"><?= (int) $item['count'] ?></span><span class="visually-hidden">, <?= (int) $item['count'] ?> <?= $item['count'] === 1 ? 'producto' : 'productos' ?></span>
         </a>
       </li>
       <?php endforeach; ?>
     </ul>
   </div>
 </section>
+<?php endif; ?>
 
 <?php if ($featured !== []): ?>
 <section class="section section--featured" aria-labelledby="featured-title">

@@ -32,7 +32,7 @@ $lineTrack = static fn (array $l): array => ['product_slug' => $l['slug'], 'sku'
       </a>
       <div class="cart__info">
         <a class="cart__name" href="<?= e($line['url']) ?>"><?= e($line['name']) ?></a>
-        <p class="cart__label"><?= e($line['label']) ?></p>
+        <?php if ($line['detail'] !== ''): ?><p class="cart__label"><?= e($line['detail']) ?></p><?php endif; ?>
         <?php if (!$line['available']): ?><span class="badge badge--sold">Agotado</span><?php endif; ?>
         <form class="cart__qty" method="post" action="<?= e(url('/carrito/actualizar')) ?>">
           <input type="hidden" name="index" value="<?= (int) $line['index'] ?>">

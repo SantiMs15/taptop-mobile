@@ -478,6 +478,40 @@ function organization_jsonld(): array
 // Catálogo
 // ---------------------------------------------------------------------------
 
+/** Catálogos de prueba de tools/fixtures (break-ui). Solo existen en el servidor local. */
+const DEV_DATA_SETS = ['demo' => 'Demo', 'worst' => 'Peor caso', 'one' => 'Uno', 'empty' => 'Vacío'];
+
+/**
+ * Conjunto de datos de prueba elegido con ?data=worst|one|empty|demo (queda en una cookie para
+ * seguir navegando). null en producción o fuera de `php -S`: ahí siempre manda products.json.
+ */
+function dev_data_set(): ?string
+{
+    if (PHP_SAPI !== 'cli-server' || config('environment') === 'production') {
+        return null;
+    }
+    static $set = null;
+    if ($set === null) {
+        $asked = $_GET['data'] ?? null;
+        if (is_string($asked) && isset(DEV_DATA_SETS[$asked])) {
+            $set = $asked;
+            if (!headers_sent()) {
+                setcookie('tt_dev_data', $set, ['path' => '/', 'samesite' => 'Lax']);
+            }
+        } else {
+            $cookie = $_COOKIE['tt_dev_data'] ?? 'demo';
+            $set = is_string($cookie) && isset(DEV_DATA_SETS[$cookie]) ? $cookie : 'demo';
+        }
+    }
+    return $set;
+}
+
+function dev_catalog_file(): ?string
+{
+    $set = dev_data_set();
+    return $set === null || $set === 'demo' ? null : dirname(APP_PATH) . '/tools/fixtures/products.' . $set . '.json';
+}
+
 /** Con $replace (solo selftest) usa otro catálogo, para no depender de lo que esté agotado hoy. */
 function product_repository(?ProductRepository $replace = null): ProductRepository
 {
@@ -489,7 +523,7 @@ function product_repository(?ProductRepository $replace = null): ProductReposito
         $validator = new ProductValidator((array) config('categories', []), (array) config('brands', []));
         $repository = match (config('catalog_source', 'json')) {
             'json' => new JsonProductRepository(
-                APP_PATH . '/data/products.json',
+                dev_catalog_file() ?? APP_PATH . '/data/products.json',
                 APP_PATH . '/data/specs.json',
                 $validator
             ),
