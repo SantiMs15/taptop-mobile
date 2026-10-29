@@ -27,14 +27,17 @@ final class ProductPresenter
     /** Tarjeta del listado. null si el modo 'hide' deja el producto sin nada disponible. */
     public function card(array $product, string $page): ?array
     {
-        return $this->build($product, 'tarjeta', $page, $this->soldOutMode);
+        return $this->build($product, 'tarjeta', $page, $this->soldOutMode, null);
     }
 
-    /** Detalle: nunca se oculta (un enlace compartido no debe romperse), a lo sumo se marca agotado. */
-    public function detail(array $product): array
+    /**
+     * Detalle: nunca se oculta (un enlace compartido no debe romperse), a lo sumo se marca agotado.
+     * $preferredSku (de ?config=) abre en esa configuración si existe y está disponible.
+     */
+    public function detail(array $product, ?string $preferredSku = null): array
     {
-        $view = $this->build($product, 'detalle', 'detalle', $this->soldOutMode)
-            ?? $this->build($product, 'detalle', 'detalle', 'mark');
+        $view = $this->build($product, 'detalle', 'detalle', $this->soldOutMode, $preferredSku)
+            ?? $this->build($product, 'detalle', 'detalle', 'mark', $preferredSku);
         $view['slides'] = $this->slides($product, $view);
         // Fotos de los slides por color, para que color-swatches.js las cambie junto con la principal.
         $view['client']['slides'] = array_map(
@@ -53,16 +56,19 @@ final class ProductPresenter
         return $this->showPlaceholders;
     }
 
-    private function build(array $product, string $placement, string $page, string $mode): ?array
+    private function build(array $product, string $placement, string $page, string $mode, ?string $preferredSku): ?array
     {
         $kind = placeholder_kind($product);
         $hasColors = $product['colors'] !== [];
         $colors = $hasColors ? $product['colors'] : [null];
+        $configurable = ($product['options'] ?? []) !== [];
 
+        // Con options (configurador) cada variante es su propia opción; si no, se agrupan por capacidad/nota.
         $options = [];
         foreach ($product['variants'] as $variant) {
-            $key = ($variant['storage'] ?? '') . '|' . ($variant['note'] ?? '');
-            $options[$key] ??= ['storage' => $variant['storage'], 'note' => $variant['note']];
+            $attrs = $variant['attrs'] ?? null;
+            $key = $attrs !== null ? 'sku:' . $variant['sku'] : ($variant['storage'] ?? '') . '|' . ($variant['note'] ?? '');
+            $options[$key] ??= ['storage' => $variant['storage'], 'note' => $variant['note'], 'sku' => $attrs !== null ? $variant['sku'] : null, 'attrs' => $attrs];
         }
         $options = array_values($options);
 
@@ -105,7 +111,8 @@ final class ProductPresenter
                 'index' => $newOi,
                 'storage' => $option['storage'],
                 'note' => $option['note'],
-                'label' => $option['storage'] ?? $option['note'] ?? 'Única',
+                'attrs' => $option['attrs'],
+                'label' => $option['attrs'] !== null ? config_label($option['attrs']) : ($option['storage'] ?? $option['note'] ?? 'Única'),
                 'sub' => $option['storage'] !== null ? $option['note'] : null,
             ];
         }
@@ -141,13 +148,13 @@ final class ProductPresenter
                     'cta' => $available ? self::CTA_CONFIRM : self::CTA_ASK,
                     'buy' => $available ? buy_path($product['slug'], $variant['sku'], $colorName) : null,
                     'color' => $colorName,
-                    'storage' => $variant['storage'] ?? $variant['note'],
+                    'storage' => ($variant['attrs'] ?? null) !== null ? config_label($variant['attrs']) : ($variant['storage'] ?? $variant['note']),
                 ];
                 $key = ($hasColors ? (string) $newCi : '_') . '|' . $newOi;
                 $entries[$key] = $entry;
                 $allPrices[$variant['price_cash']] = true;
                 // Inicial: el más barato entre los colores con foto propia; sin fotos, el más barato.
-                $candidate = [($color['image'] ?? null) === null ? 1 : 0, $variant['price_cash'], $newCi, $newOi];
+                $candidate = [$variant['sku'] === $preferredSku ? 0 : 1, ($color['image'] ?? null) === null ? 1 : 0, $variant['price_cash'], $newCi, $newOi];
                 if ($bestAny === null || $candidate < $bestAny) {
                     $bestAny = $candidate;
                 }
@@ -171,7 +178,7 @@ final class ProductPresenter
         }
 
         $allSoldOut = $best === null;
-        [, , $selColor, $selOption] = $best ?? $bestAny;
+        [, , , $selColor, $selOption] = $best ?? $bestAny;
         $selectedKey = ($hasColors ? (string) $selColor : '_') . '|' . $selOption;
         $current = $entries[$selectedKey];
         $from = count($allSoldOut ? $allPrices : $availablePrices) > 1;
@@ -188,7 +195,7 @@ final class ProductPresenter
         $hex = $selectedColor['hex'] ?? placeholder_default_hex($kind);
         $image = $selectedColor['image'] ?? null;
 
-        $singleOption = count($viewOptions) === 1 ? $viewOptions[0] : null;
+        $singleOption = !$configurable && count($viewOptions) === 1 ? $viewOptions[0] : null;
 
         return [
             'slug' => $product['slug'],
@@ -229,13 +236,39 @@ final class ProductPresenter
                 'from' => $from,
                 'name' => $product['name'],
                 'placeholderAlt' => 'Imagen de referencia de ' . $product['name'],
-            ],
+            ] + ($configurable ? ['cfg' => $this->configurator($product, $viewOptions)] : []),
         ];
+    }
+
+    /**
+     * Datos del configurador para color-swatches.js: los ejes con todos sus valores, por cada
+     * opción (configuración) el índice de su valor en cada eje, y el enlace de WhatsApp para
+     * preguntar por una combinación sin variante ({CONFIG} lo reemplaza el JS).
+     * @return array{axes: list<array{name: string, values: list<string>}>, opts: list<list<int>>, ask: string}
+     */
+    private function configurator(array $product, array $viewOptions): array
+    {
+        $opts = [];
+        foreach ($viewOptions as $option) {
+            $opts[] = array_map(
+                static fn (array $axis): int => (int) array_search($option['attrs'][$axis['name']], $axis['values'], true),
+                $product['options']
+            );
+        }
+        return ['axes' => $product['options'], 'opts' => $opts, 'ask' => whatsapp_link(wa_message_config_ask($product))];
     }
 
     /** Variante para una opción y un color: primero la de precio propio del color, luego la general. */
     private function resolveVariant(array $variants, array $option, ?string $colorName): ?array
     {
+        if ($option['sku'] !== null) {
+            foreach ($variants as $variant) {
+                if ($variant['sku'] === $option['sku']) {
+                    return $variant;
+                }
+            }
+            return null;
+        }
         $generic = null;
         foreach ($variants as $variant) {
             if ($variant['storage'] !== $option['storage'] || $variant['note'] !== $option['note']) {

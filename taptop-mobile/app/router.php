@@ -179,7 +179,7 @@ function page_product(string $slug): void
         page_not_found();
         return;
     }
-    $detail = product_presenter()->detail($product);
+    $detail = product_presenter()->detail($product, is_string($_GET['config'] ?? null) ? $_GET['config'] : null);
     // Vista previa (WhatsApp, redes): foto del color pedido en ?color=, si no la del color inicial.
     $ogImage = $detail['media']['image'];
     $colorParam = is_string($_GET['color'] ?? null) ? $_GET['color'] : '';

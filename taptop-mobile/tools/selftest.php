@@ -189,6 +189,26 @@ expect(count($burgundy) === 1, 'catálogo real: una sola línea Borgoña en el i
 // --- Presentador ---------------------------------------------------------------
 $normalized = $validator->validateCatalog(['products' => [product()]])['products'][0]['product'];
 
+// Configurador (reloj): cada configuración es una opción con SKU propio.
+$watchSku = 'AW-S12-42-AL-OROCL-ARENA-SM-GPS';
+$watchLabel = 'Apple Watch Series 12 42 mm, Aluminio Oro claro, correa Arena S/M, GPS';
+$watchP = $validator->validateCatalog(['products' => [watch()]])['products'][0]['product'];
+expect(product_variant_label($watchP, null, $watchP['variants'][0]) === $watchLabel, 'configurador: etiqueta completa', product_variant_label($watchP, null, $watchP['variants'][0]));
+$wd = (new ProductPresenter('mark', true))->detail($watchP);
+expect(count($wd['options']) === 1 && $wd['single_option'] === null, 'configurador: una opción por configuración y sin texto fijo', [$wd['options'], $wd['single_option']]);
+expect(($wd['client']['cfg']['axes'][0]['name'] ?? null) === 'Acabado de la caja' && ($wd['client']['cfg']['opts'][0] ?? null) === [1, 4, 0, 0, 0, 0], 'configurador: ejes e índices de valores', $wd['client']['cfg'] ?? null);
+expect($wd['current']['sku'] === $watchSku && $wd['current']['cash'] === 1490000, 'configurador: inicial con su SKU y precio', $wd['current']);
+expect(str_contains(rawurldecode($wd['current']['wa']), $watchLabel) && str_contains(rawurldecode($wd['current']['wa']), 'config=' . $watchSku), 'configurador: WhatsApp con etiqueta y enlace ?config=', rawurldecode($wd['current']['wa']));
+expect(str_contains($wd['client']['cfg']['ask'] ?? '', '%7BCONFIG%7D'), 'configurador: plantilla de consulta con marcador');
+$two = $validator->validateCatalog(['products' => [watch(['variants' => [
+    watch_variant($watchSku, [], 1490000, 1540000),
+    watch_variant('AW-S12-46-AL-OROCL-ARENA-SM-GPS', ['Tamaño de la caja' => '46 mm'], 1720000, 1777000),
+]])]])['products'][0]['product'];
+expect((new ProductPresenter('mark', true))->detail($two, 'AW-S12-46-AL-OROCL-ARENA-SM-GPS')['current']['cash'] === 1720000, 'configurador: ?config= elige esa configuración');
+expect((new ProductPresenter('mark', true))->detail($two, 'NO-EXISTE')['current']['cash'] === 1490000, 'configurador: ?config= desconocido abre en la más barata');
+expect(find_catalog_entry($watchP, $watchSku, null) !== null && find_catalog_entry($watchP, $watchSku, 'Negro') === null, 'configurador: carrito acepta el SKU sin color y rechaza con color');
+expect(!isset((new ProductPresenter('mark', true))->detail($normalized)['client']['cfg']), 'configurador: producto con colores no trae cfg');
+
 $mark = (new ProductPresenter('mark', true))->card($normalized, 'test');
 expect($mark !== null && count($mark['colors']) === 2, 'mark: muestra los 2 colores');
 expect($mark['colors'][1]['available'] === false, 'mark: color agotado marcado');

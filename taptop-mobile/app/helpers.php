@@ -200,6 +200,9 @@ function product_de_article(array $product): string
 /** "iPhone 18 Pro Borgoña 256 GB" (+ ", SIM física" si la variante tiene nota). */
 function product_variant_label(array $product, ?string $color, ?array $variant): string
 {
+    if (($variant['attrs'] ?? null) !== null) {
+        return $product['name'] . ' ' . config_label($variant['attrs']);
+    }
     $parts = [$product['name']];
     if ($color !== null && $color !== '') {
         $parts[] = $color;
@@ -230,9 +233,41 @@ function color_slug(string $name): string
  * Enlace absoluto al producto (con el color elegido). Va al final del mensaje de WhatsApp:
  * WhatsApp arma la vista previa con el og:image de esa página, así llega la foto del equipo.
  */
-function product_share_url(array $product, ?string $color): string
+/**
+ * Configuración de reloj en texto: "42 mm, Aluminio Oro claro, correa Arena S/M, GPS".
+ * Con otros ejes, sus valores separados por coma.
+ * @param array<string, string> $attrs
+ */
+function config_label(array $attrs): string
 {
-    return absolute_url(url('/productos/' . $product['slug'], ['color' => $color !== null ? color_slug($color) : null]));
+    $axes = ['Tamaño de la caja', 'Material de la caja', 'Acabado de la caja', 'Color de la correa', 'Tamaño de la banda', 'Conectividad'];
+    if (array_diff($axes, array_keys($attrs)) !== []) {
+        return implode(', ', $attrs);
+    }
+    return sprintf(
+        '%s, %s %s, correa %s %s, %s',
+        $attrs['Tamaño de la caja'],
+        $attrs['Material de la caja'],
+        $attrs['Acabado de la caja'],
+        $attrs['Color de la correa'],
+        $attrs['Tamaño de la banda'],
+        $attrs['Conectividad']
+    );
+}
+
+/** Enlace del producto; con $sku (configuración) agrega ?config= para abrir en ella. */
+function product_share_url(array $product, ?string $color, ?string $sku = null): string
+{
+    return absolute_url(url('/productos/' . $product['slug'], [
+        'color' => $color !== null ? color_slug($color) : null,
+        'config' => $sku,
+    ]));
+}
+
+/** SKU para ?config= solo si la variante es una configuración (tiene attrs). */
+function variant_config_sku(?array $variant): ?string
+{
+    return ($variant['attrs'] ?? null) !== null ? $variant['sku'] : null;
 }
 
 function wa_message_confirm(array $product, ?string $color, array $variant): string
@@ -245,7 +280,7 @@ function wa_message_confirm(array $product, ?string $color, array $variant): str
         product_variant_label($product, $color, $variant),
         format_price($variant['price_cash']),
         format_price($variant['price_gateway']),
-        product_share_url($product, $color)
+        product_share_url($product, $color, variant_config_sku($variant))
     );
 }
 
@@ -257,7 +292,20 @@ function wa_message_sold_out(array $product, ?string $color, ?array $variant): s
         config('business_name'),
         product_de_article($product),
         product_variant_label($product, $color, $variant),
-        product_share_url($product, $color)
+        product_share_url($product, $color, variant_config_sku($variant))
+    );
+}
+
+/** Pregunta por una combinación sin variante; el JS pone la configuración en lugar de {CONFIG}. */
+function wa_message_config_ask(array $product): string
+{
+    return sprintf(
+        "Hola %s, quiero saber si tienen disponible %s %s {CONFIG}.
+%s",
+        config('business_name'),
+        $product['article'] ?? 'el',
+        $product['name'],
+        product_share_url($product, null)
     );
 }
 
