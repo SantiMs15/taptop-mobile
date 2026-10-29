@@ -247,7 +247,7 @@
       "name": "iPad Pro 11\" (M5)",
       "colors": [
         { "name": "Negro espacial", "hex": "#2F3034", "image": null },
-        { "name": "Plata", "hex": "#DFE0E2", "image": null }
+        { "name": "Plata", "hex": "#DFE0E2", "image": null, "available": false }
       ],
       "variants": [
         { "sku": "IPADP11-M5-256", "storage": "256 GB", "color": null, "price_cash": 3720000, "price_gateway": 3842000 }
@@ -258,7 +258,12 @@
       "brand": "apple",
       "category": "ipad",
       "name": "iPad Air 11\" (M4)",
-      "colors": [],
+      "colors": [
+        { "name": "Gris espacial", "hex": "#3A3B3F", "image": null },
+        { "name": "Azul", "hex": "#A7BCD0", "image": null, "available": false },
+        { "name": "Morado", "hex": "#C8BEDA", "image": null, "available": false },
+        { "name": "Blanco estelar", "hex": "#EDE7DC", "image": null, "available": false }
+      ],
       "variants": [
         { "sku": "IPADA11-M4-128", "storage": "128 GB", "color": null, "price_cash": 2500000, "price_gateway": 2583000 }
       ]
@@ -269,7 +274,10 @@
       "category": "ipad",
       "name": "iPad (A16)",
       "colors": [
-        { "name": "Rosado", "hex": "#EBC7C3", "image": null }
+        { "name": "Azul", "hex": "#A9C2DC", "image": null },
+        { "name": "Rosa", "hex": "#EBC7C3", "image": null },
+        { "name": "Amarillo", "hex": "#F1E29C", "image": null },
+        { "name": "Plata", "hex": "#E2E3E5", "image": null, "available": false }
       ],
       "variants": [
         { "sku": "IPADA16-128", "storage": "128 GB", "color": null, "price_cash": 1750000, "price_gateway": 1808000 }
