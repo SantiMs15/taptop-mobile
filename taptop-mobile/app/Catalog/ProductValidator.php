@@ -452,6 +452,18 @@ final class ProductValidator
                 $errors[] = "{$variantLabel}: attrs solo va en productos con options.";
                 continue;
             }
+            // Foto propia de la configuración (los demás productos llevan la foto en el color).
+            $image = $variant['image'] ?? null;
+            if ($image !== null) {
+                if ($attrs === null) {
+                    $errors[] = "{$variantLabel}: la foto por variante solo va en configuraciones (attrs); usa la del color.";
+                    continue;
+                }
+                if (!is_string($image) || str_contains($image, '..') || preg_match(self::IMAGE_PATH, $image) !== 1) {
+                    $errors[] = "{$variantLabel}: ruta de imagen inválida.";
+                    continue;
+                }
+            }
             $storage = $this->optionalString($variant, 'storage', $variantLabel, $errors);
             $note = $this->optionalString($variant, 'note', $variantLabel, $errors);
             $color = $this->optionalString($variant, 'color', $variantLabel, $errors);
@@ -494,6 +506,7 @@ final class ProductValidator
                 'note' => $note,
                 'color' => $color,
                 'attrs' => $attrs,
+                'image' => $image,
                 'price_cash' => $cash,
                 'price_gateway' => $gateway,
                 'available' => $this->boolField($variant, 'available', $variantLabel, $errors),

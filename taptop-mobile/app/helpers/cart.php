@@ -157,6 +157,10 @@ function cart_priced(array $lines, ?callable $find = null): array
             $image = $card['media']['image'] ?? null;
             $hex = $card['media']['hex'] ?? null;
         }
+        if (($variant['image'] ?? null) !== null) {
+            // Configuración con foto propia (Apple Watch).
+            $image = $variant['image'];
+        }
         $lineCash = $available ? $entry['cash'] * $line['qty'] : 0;
         $lineGateway = $available ? $entry['gw'] * $line['qty'] : 0;
         if ($available) {
@@ -178,7 +182,10 @@ function cart_priced(array $lines, ?callable $find = null): array
             'image' => $image,
             'kind' => $kind,
             'hex' => $hex ?? placeholder_default_hex($kind),
-            'url' => url('/productos/' . $product['slug'], ['color' => $line['color'] !== null ? color_slug($line['color']) : null]),
+            'url' => url('/productos/' . $product['slug'], [
+                'color' => $line['color'] !== null ? color_slug($line['color']) : null,
+                'config' => variant_config_sku($variant),
+            ]),
             'cash' => $entry['cash'],
             'gw' => $entry['gw'],
             'line_cash' => $lineCash,

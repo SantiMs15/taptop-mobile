@@ -114,6 +114,17 @@ expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['produ
 $bad = watch();
 $bad['options'][5]['values'] = ['S/M', 'S/M'];
 expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: valor repetido en un eje');
+$pic = watch();
+$pic['variants'][0]['image'] = '/assets/images/products/reloj-prueba-oro-claro-arena.webp';
+$report = $validator->validateCatalog(['products' => [$pic]]);
+expect(($report['products'][0]['product']['variants'][0]['image'] ?? null) === '/assets/images/products/reloj-prueba-oro-claro-arena.webp'
+    && $validator->validateCatalog(['products' => [watch()]])['products'][0]['product']['variants'][0]['image'] === null, 'validador: foto por configuración', $report['products'][0]['errors']);
+$bad = watch();
+$bad['variants'][0]['image'] = '../secreto.png';
+expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: ruta de foto de configuración inválida');
+$bad = product();
+$bad['variants'][0]['image'] = '/assets/images/products/telefono-prueba-azul.webp';
+expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: foto por variante solo en configuraciones');
 $bad = watch(['colors' => [['name' => 'Azul', 'hex' => '#123456', 'image' => null]]]);
 expect($validator->validateCatalog(['products' => [$bad]])['products'][0]['product'] === null, 'validador: options y colors no se mezclan');
 
@@ -245,6 +256,17 @@ $ignored = (new ProductPresenter('mark', true))->detail($twoStorages, 'TP-256');
 expect($ignored['current']['sku'] === 'TP-128' && $ignored['from'] === true, 'configurador: ?config= no aplica a productos sin opciones', $ignored['current']['sku']);
 expect(find_catalog_entry($watchP, $watchSku, null) !== null && find_catalog_entry($watchP, $watchSku, 'Negro') === null, 'configurador: carrito acepta el SKU sin color y rechaza con color');
 expect(!isset((new ProductPresenter('mark', true))->detail($normalized)['client']['cfg']), 'configurador: producto con colores no trae cfg');
+$pics = watch(['variants' => [
+    ['image' => '/assets/images/products/reloj-prueba-oro-claro-arena.webp'] + watch_variant($watchSku, [], 1490000, 1540000),
+    ['image' => '/assets/images/products/reloj-prueba-negro-negro.webp'] + watch_variant('AW-S12-42-AL-NEGRO-NEGRO-SM-GPS', ['Acabado de la caja' => 'Negro', 'Color de la correa' => 'Negro'], 1490000, 1540000),
+]]);
+$picsP = $validator->validateCatalog(['products' => [$pics]])['products'][0]['product'];
+$picsD = (new ProductPresenter('mark', true))->detail($picsP, 'AW-S12-42-AL-NEGRO-NEGRO-SM-GPS');
+expect($picsD['media']['image'] === '/assets/images/products/reloj-prueba-negro-negro.webp' && $picsD['media']['alt'] === 'Apple Watch Series 12 42 mm, Aluminio Negro, correa Negro S/M, GPS'
+    && ($picsD['client']['m']['_|0']['img'] ?? null) === '/assets/images/products/reloj-prueba-oro-claro-arena.webp', 'configurador: foto y texto alternativo de la configuración elegida', [$picsD['media'], $picsD['client']['m']['_|0']['img'] ?? null]);
+$picsFind = static fn (string $sku): ?array => ['product' => $picsP, 'variant' => $picsP['variants'][$sku === $watchSku ? 0 : 1]];
+$picsCart = cart_priced([['sku' => 'AW-S12-42-AL-NEGRO-NEGRO-SM-GPS', 'color' => null, 'qty' => 1]], $picsFind);
+expect(($picsCart['lines'][0]['image'] ?? null) === '/assets/images/products/reloj-prueba-negro-negro.webp', 'carrito: foto de la configuración de la línea', $picsCart['lines'][0] ?? null);
 $hexedP = $validator->validateCatalog(['products' => [$hexed]])['products'][0]['product'];
 $cfgHtml = view('partials/config-options', ['card' => (new ProductPresenter('mark', true))->detail($hexedP), 'uid' => 'pdp-t']);
 expect(substr_count($cfgHtml, '<label class="swatch') === 5 && str_contains($cfgHtml, '--swatch: #D8C7A6') && str_contains($cfgHtml, 'swatches swatches--lg')

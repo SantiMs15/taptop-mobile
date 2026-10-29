@@ -106,9 +106,11 @@
     function showPhoto(container, src, alt, color) {
       var placeholder = container.querySelector('.ph');
       var image = container.querySelector('img[data-media-img]');
+      // Solo la última foto pedida se muestra (si el cliente cambia rápido de color o configuración).
+      container.ttWant = src || null;
       if (placeholder) {
         placeholder.style.setProperty('--dv', color.hex);
-        placeholder.setAttribute('aria-label', 'Imagen de referencia de ' + data.name + ' en ' + color.name);
+        placeholder.setAttribute('aria-label', color.label || 'Imagen de referencia de ' + data.name + ' en ' + color.name);
       }
       if (!src) {
         if (image) {
@@ -123,7 +125,7 @@
       next.src = src;
       var ready = typeof next.decode === 'function' ? next.decode() : Promise.resolve();
       ready.then(function () {
-        if (data.colors[state.color] !== color) {
+        if (container.ttWant !== src) {
           return;
         }
         if (!image) {
@@ -354,6 +356,25 @@
       });
     }
 
+    /** Foto de la configuración; sin foto (o combinación sin variante), la silueta con el color de la caja. */
+    function cfgMedia(current) {
+      if (!el.media) {
+        return;
+      }
+      var hex = null;
+      data.cfg.axes.forEach(function (axis, a) {
+        if (hex === null && axis.hex) {
+          hex = axis.hex[axis.values[state.cfg[a]]];
+        }
+      });
+      var subject = data.name + ' ' + cfgLabel(state.cfg);
+      showPhoto(el.media, current ? current.img : null, subject, {
+        hex: hex || '#C8C1B5',
+        name: cfgLabel(state.cfg),
+        label: 'Imagen de referencia de ' + subject
+      });
+    }
+
     /** Combinación sin variante: sin precio ni compra; WhatsApp pregunta por esa combinación. */
     function renderUnavailable() {
       var label = cfgLabel(state.cfg);
@@ -399,6 +420,7 @@
           }
           if (found === -1) {
             renderUnavailable();
+            cfgMedia(null);
           } else {
             state.option = found;
             [gwRow, cashLabel, el.ship].forEach(function (node) {
@@ -407,6 +429,7 @@
               }
             });
             render(true);
+            cfgMedia(entry(null, state.option));
           }
           cfgRefresh();
           var params = trackParams(el.cta);

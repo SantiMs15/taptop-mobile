@@ -151,6 +151,7 @@ final class ProductPresenter
                     'buy' => $available ? buy_path($product['slug'], $variant['sku'], $colorName) : null,
                     'color' => $colorName,
                     'storage' => ($variant['attrs'] ?? null) !== null ? config_label($variant['attrs']) : ($variant['storage'] ?? $variant['note']),
+                    'img' => $variant['image'] ?? null,
                 ];
                 $key = ($hasColors ? (string) $newCi : '_') . '|' . $newOi;
                 $entries[$key] = $entry;
@@ -197,6 +198,19 @@ final class ProductPresenter
         $selectedColor = $hasColors ? $viewColors[$selColor] : null;
         $hex = $selectedColor['hex'] ?? placeholder_default_hex($kind);
         $image = $selectedColor['image'] ?? null;
+        $subjectSuffix = $selectedColor['name'] ?? null;
+        if ($configurable) {
+            // Configurador: la foto es la de la configuración; sin foto, la silueta con el color de la caja.
+            $image = $current['img'];
+            $subjectSuffix = $current['storage'];
+            $variantAttrs = $options[$keptOptions[$selOption]]['attrs'];
+            foreach ($product['options'] as $axis) {
+                if (($axis['hex'] ?? null) !== null) {
+                    $hex = $axis['hex'][$variantAttrs[$axis['name']]];
+                    break;
+                }
+            }
+        }
 
         $singleOption = !$configurable && count($viewOptions) === 1 ? $viewOptions[0] : null;
 
@@ -223,7 +237,9 @@ final class ProductPresenter
                 'image' => $image,
                 'hex' => $hex,
                 'placeholder' => $image === null && $this->showPlaceholders,
-                'alt' => $this->altText($product['name'], $selectedColor['name'] ?? null, $image === null),
+                'alt' => $configurable
+                    ? ($image === null ? 'Imagen de referencia de ' : '') . $product['name'] . ' ' . $subjectSuffix
+                    : $this->altText($product['name'], $subjectSuffix, $image === null),
             ],
             'track' => $trackBase,
             'client' => [
