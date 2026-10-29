@@ -216,7 +216,7 @@ expect($s12 !== null && count($s12['variants']) === 2 && $s12['variants'][0]['sk
 $u4 = $bySlug['apple-watch-ultra-4'] ?? null;
 expect($u4 !== null && ($u4['available'] ?? true) === true && count($u4['variants']) === 1 && $u4['variants'][0]['sku'] === 'AW-U4-49-TI-NEGRO-NEGRO-SM-CEL'
     && $u4['variants'][0]['price_cash'] === 3040000 && $u4['variants'][0]['price_gateway'] === 3140000
-    && ($u4['variants'][0]['attrs']['Conectividad'] ?? null) === 'GPS + celular', 'catálogo real: Ultra 4 con su única configuración', $u4['variants'] ?? null);
+    && ($u4['variants'][0]['attrs']['Conectividad'] ?? null) === 'GPS + celular' && ($u4['variants'][0]['image'] ?? null) === '/assets/images/products/apple-watch-ultra-4-negro-negro.webp', 'catálogo real: Ultra 4 con su única configuración y su foto', $u4['variants'] ?? null);
 expect(!isset($bySlug['apple-watch-series-12-42mm']) && !isset($bySlug['apple-watch-series-12-46mm']), 'catálogo real: sin los Series 12 viejos por tamaño');
 expect(legacy_product_slug('apple-watch-series-12-46mm') === 'apple-watch-series-12' && legacy_product_slug('apple-watch-series-12-42mm') === 'apple-watch-series-12'
     && legacy_product_slug('iphone-18-pro') === null, 'rutas: enlaces viejos del Series 12 redirigen');

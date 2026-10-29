@@ -292,7 +292,7 @@
         { "name": "Tamaño de la banda", "values": ["S/M", "M/L"] }
       ],
       "variants": [
-        { "sku": "AW-U4-49-TI-NEGRO-NEGRO-SM-CEL", "attrs": { "Acabado de la caja": "Negro", "Color de la correa": "Negro", "Material de la caja": "Titanio", "Tamaño de la caja": "49 mm", "Conectividad": "GPS + celular", "Tamaño de la banda": "S/M" }, "price_cash": 3040000, "price_gateway": 3140000 }
+        { "sku": "AW-U4-49-TI-NEGRO-NEGRO-SM-CEL", "image": "/assets/images/products/apple-watch-ultra-4-negro-negro.webp", "attrs": { "Acabado de la caja": "Negro", "Color de la correa": "Negro", "Material de la caja": "Titanio", "Tamaño de la caja": "49 mm", "Conectividad": "GPS + celular", "Tamaño de la banda": "S/M" }, "price_cash": 3040000, "price_gateway": 3140000 }
       ]
     },
     {
