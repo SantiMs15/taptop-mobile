@@ -348,8 +348,8 @@ final class ProductPresenter
 
     /**
      * Miniaturas del detalle, una lista por color (en el orden de 'colors'; sin colores, una sola):
-     * la foto principal y las fotos de "En detalle" de ese color, sin repetir. Con menos de 2 fotos
-     * no hay galería (lista vacía).
+     * la foto principal y las fotos de "En detalle" de ese color, sin repetir. El primer plano de la
+     * cámara (toma "-camara") queda solo en "En detalle". Con menos de 2 fotos no hay galería.
      * @return list<list<array{src: string, alt: string}>>
      */
     private function gallery(array $product, array $view): array
@@ -362,7 +362,7 @@ final class ProductPresenter
             $items = $main !== null ? [$main => $subject] : [];
             foreach ($product['slides'] as $slide) {
                 $src = $color !== null ? ($slide['images'][$color['name']] ?? $slide['image']) : $slide['image'];
-                if ($src !== null && !isset($items[$src])) {
+                if ($src !== null && !isset($items[$src]) && !str_ends_with(pathinfo($src, PATHINFO_FILENAME), '-camara')) {
                     $items[$src] = $subject . ': ' . $slide['title'];
                 }
             }

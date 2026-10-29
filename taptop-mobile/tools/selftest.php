@@ -270,9 +270,9 @@ expect(($picsCart['lines'][0]['image'] ?? null) === '/assets/images/products/rel
 // Galería de miniaturas: foto del color + fotos de "En detalle" del mismo color.
 $g18 = (new ProductPresenter('mark', true))->detail(product_repository()->findBySlug('iphone-18-pro'));
 $gSel = $g18['client']['gallery'][$g18['selected']['color']] ?? [];
-expect(count($g18['gallery']) === 4 && $g18['gallery'] === $gSel && $gSel[0]['src'] === $g18['media']['image']
-    && str_ends_with($gSel[1]['src'], '-frontal.webp') && str_contains($gSel[1]['alt'], 'Chip A20 Pro'), 'galería: foto del color y las 3 de En detalle', $gSel);
-expect(count($g18['client']['gallery']) === count($g18['colors']) && count(array_unique(array_column(array_merge(...$g18['client']['gallery']), 'src'))) === 16, 'galería: una lista por color, sin repetidas');
+expect(count($g18['gallery']) === 3 && !str_contains(implode(' ', array_column($gSel, 'src')), '-camara') && $g18['gallery'] === $gSel && $gSel[0]['src'] === $g18['media']['image']
+    && str_ends_with($gSel[1]['src'], '-frontal.webp') && str_contains($gSel[1]['alt'], 'Chip A20 Pro'), 'galería: foto del color y las de En detalle sin el primer plano de la cámara', $gSel);
+expect(count($g18['client']['gallery']) === count($g18['colors']) && count(array_unique(array_column(array_merge(...$g18['client']['gallery']), 'src'))) === 12 && count($g18['slides']) === 3, 'galería: una lista por color, sin repetidas; En detalle conserva la cámara');
 expect((new ProductPresenter('mark', true))->detail($normalized)['gallery'] === [] && (new ProductPresenter('mark', true))->detail($watchP)['gallery'] === [], 'galería: sin fotos o con una sola, no hay galería');
 $hexedP = $validator->validateCatalog(['products' => [$hexed]])['products'][0]['product'];
 $cfgHtml = view('partials/config-options', ['card' => (new ProductPresenter('mark', true))->detail($hexedP), 'uid' => 'pdp-t']);
