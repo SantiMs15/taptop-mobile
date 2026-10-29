@@ -278,15 +278,21 @@
     {
       "slug": "apple-watch-ultra-4",
       "brand": "apple",
-      "available": false,
       "category": "relojes",
       "name": "Apple Watch Ultra 4",
-      "colors": [
-        { "name": "Natural", "hex": "#C8C1B5", "image": null },
-        { "name": "Negro", "hex": "#2B2A29", "image": null }
+      "colors": [],
+      "options": [
+        { "name": "Acabado de la caja", "values": ["Natural", "Negro"],
+          "hex": { "Natural": "#C8C1B5", "Negro": "#2B2A29" } },
+        { "name": "Color de la correa", "values": ["Borgoña", "Oliva", "Azul marino", "Negro", "Arena"],
+          "hex": { "Borgoña": "#6A2433", "Oliva": "#6B6B47", "Azul marino": "#1F2D4D", "Negro": "#1F1F1F", "Arena": "#D8C7A6" } },
+        { "name": "Material de la caja", "values": ["Titanio"] },
+        { "name": "Tamaño de la caja", "values": ["49 mm"] },
+        { "name": "Conectividad", "values": ["GPS + celular"] },
+        { "name": "Tamaño de la banda", "values": ["S/M", "M/L"] }
       ],
       "variants": [
-        { "sku": "AW-ULTRA4", "storage": null, "color": null, "price_cash": 3200000, "price_gateway": 3306000 }
+        { "sku": "AW-U4-49-TI-NEGRO-NEGRO-SM-CEL", "attrs": { "Acabado de la caja": "Negro", "Color de la correa": "Negro", "Material de la caja": "Titanio", "Tamaño de la caja": "49 mm", "Conectividad": "GPS + celular", "Tamaño de la banda": "S/M" }, "price_cash": 3040000, "price_gateway": 3140000 }
       ]
     },
     {
