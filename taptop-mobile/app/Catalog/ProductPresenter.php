@@ -243,8 +243,8 @@ final class ProductPresenter
     /**
      * Datos del configurador para color-swatches.js: los ejes con todos sus valores, por cada
      * opción (configuración) el índice de su valor en cada eje, y el enlace de WhatsApp para
-     * preguntar por una combinación sin variante ({CONFIG} lo reemplaza el JS).
-     * @return array{axes: list<array{name: string, values: list<string>}>, opts: list<list<int>>, ask: string}
+     * preguntar por una combinación sin variante ({CONFIG} lo reemplaza el JS con 'label' llenada).
+     * @return array{axes: list<array{name: string, values: list<string>}>, opts: list<list<int>>, label: string, ask: string}
      */
     private function configurator(array $product, array $viewOptions): array
     {
@@ -255,7 +255,12 @@ final class ProductPresenter
                 $product['options']
             );
         }
-        return ['axes' => $product['options'], 'opts' => $opts, 'ask' => whatsapp_link(wa_message_config_ask($product))];
+        return [
+            'axes' => $product['options'],
+            'opts' => $opts,
+            'label' => config_label_template(array_column($product['options'], 'name')),
+            'ask' => whatsapp_link(wa_message_config_ask($product)),
+        ];
     }
 
     /** Variante para una opción y un color: primero la de precio propio del color, luego la general. */

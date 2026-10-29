@@ -2226,6 +2226,22 @@ mark.todo {
   cursor: not-allowed;
 }
 
+/* Configurador: valor sin configuración disponible con lo ya elegido (se puede elegir) */
+.option.is-unavailable {
+  border-style: dashed;
+  color: var(--c-sold);
+}
+
+.option__input:checked + .option.is-unavailable {
+  border-style: solid;
+  color: #fff;
+}
+
+.config {
+  display: grid;
+  gap: 20px;
+}
+
 .options--lg .option {
   min-width: 96px;
   min-height: 52px;

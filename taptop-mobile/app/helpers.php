@@ -233,26 +233,30 @@ function color_slug(string $name): string
  * Enlace absoluto al producto (con el color elegido). Va al final del mensaje de WhatsApp:
  * WhatsApp arma la vista previa con el og:image de esa página, así llega la foto del equipo.
  */
+const CONFIG_LABEL_WATCH = '{Tamaño de la caja}, {Material de la caja} {Acabado de la caja}, correa {Color de la correa} {Tamaño de la banda}, {Conectividad}';
+
 /**
- * Configuración de reloj en texto: "42 mm, Aluminio Oro claro, correa Arena S/M, GPS".
- * Con otros ejes, sus valores separados por coma.
- * @param array<string, string> $attrs
+ * Plantilla de la etiqueta de una configuración para estos ejes ({eje} = su valor). La del reloj
+ * da "42 mm, Aluminio Oro claro, correa Arena S/M, GPS"; con otros ejes, los valores separados por coma.
+ * @param list<string> $axisNames
  */
+function config_label_template(array $axisNames): string
+{
+    preg_match_all('/\{([^}]+)\}/u', CONFIG_LABEL_WATCH, $match);
+    $sameAxes = array_diff($match[1], $axisNames) === [] && array_diff($axisNames, $match[1]) === [];
+    return $sameAxes
+        ? CONFIG_LABEL_WATCH
+        : implode(', ', array_map(static fn (string $name): string => '{' . $name . '}', $axisNames));
+}
+
+/** @param array<string, string> $attrs */
 function config_label(array $attrs): string
 {
-    $axes = ['Tamaño de la caja', 'Material de la caja', 'Acabado de la caja', 'Color de la correa', 'Tamaño de la banda', 'Conectividad'];
-    if (array_diff($axes, array_keys($attrs)) !== []) {
-        return implode(', ', $attrs);
+    $replace = [];
+    foreach ($attrs as $axis => $value) {
+        $replace['{' . $axis . '}'] = $value;
     }
-    return sprintf(
-        '%s, %s %s, correa %s %s, %s',
-        $attrs['Tamaño de la caja'],
-        $attrs['Material de la caja'],
-        $attrs['Acabado de la caja'],
-        $attrs['Color de la correa'],
-        $attrs['Tamaño de la banda'],
-        $attrs['Conectividad']
-    );
+    return strtr(config_label_template(array_keys($attrs)), $replace);
 }
 
 /** Enlace del producto; con $sku (configuración) agrega ?config= para abrir en ella. */

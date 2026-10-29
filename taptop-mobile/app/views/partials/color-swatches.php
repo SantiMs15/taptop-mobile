@@ -28,7 +28,7 @@ $selectedColor = $selected['color'] !== null ? $card['colors'][$selected['color'
   </div>
 </fieldset>
 <?php endif; ?>
-<?php if (count($card['options']) > 1): ?>
+<?php if (count($card['options']) > 1 && !isset($card['client']['cfg'])): // El configurador tiene su propio parcial. ?>
 <fieldset class="options options--<?= e($size) ?>" data-options>
   <legend class="field-legend">Capacidad</legend>
   <div class="options__list">

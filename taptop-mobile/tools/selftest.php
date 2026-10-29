@@ -200,6 +200,11 @@ expect(($wd['client']['cfg']['axes'][0]['name'] ?? null) === 'Acabado de la caja
 expect($wd['current']['sku'] === $watchSku && $wd['current']['cash'] === 1490000, 'configurador: inicial con su SKU y precio', $wd['current']);
 expect(str_contains(rawurldecode($wd['current']['wa']), $watchLabel) && str_contains(rawurldecode($wd['current']['wa']), 'config=' . $watchSku), 'configurador: WhatsApp con etiqueta y enlace ?config=', rawurldecode($wd['current']['wa']));
 expect(str_contains($wd['client']['cfg']['ask'] ?? '', '%7BCONFIG%7D'), 'configurador: plantilla de consulta con marcador');
+$tpl = $wd['client']['cfg']['label'] ?? '';
+foreach ($watchP['variants'][0]['attrs'] as $axis => $value) {
+    $tpl = str_replace('{' . $axis . '}', $value, $tpl);
+}
+expect('Apple Watch Series 12 ' . $tpl === $watchLabel, 'configurador: plantilla de etiqueta para el JS', $tpl);
 $two = $validator->validateCatalog(['products' => [watch(['variants' => [
     watch_variant($watchSku, [], 1490000, 1540000),
     watch_variant('AW-S12-46-AL-OROCL-ARENA-SM-GPS', ['Tamaño de la caja' => '46 mm'], 1720000, 1777000),

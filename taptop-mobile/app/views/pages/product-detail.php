@@ -42,6 +42,7 @@ $ctaTrack = $product['track'] + [
       </div>
 
       <?php partial('size-options', ['sizes' => $product['sizes'], 'uid' => $uid]); ?>
+      <?php partial('config-options', ['card' => $product, 'uid' => $uid]); ?>
       <?php partial('color-swatches', ['card' => $product, 'uid' => $uid, 'size' => 'lg']); ?>
       <?php partial('price-block', ['card' => $product, 'size' => 'lg']); ?>
 
