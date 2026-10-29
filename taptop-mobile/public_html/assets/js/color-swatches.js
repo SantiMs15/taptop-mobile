@@ -276,6 +276,7 @@
     // --- Configurador (Apple Watch): ejes → configuración, o "No disponible" ----------------
     var cfgInputs = data.cfg ? toArray(card.querySelectorAll('[data-cfg-axis]')) : [];
     var gwRow = el.gateway ? el.gateway.parentNode : null;
+    var cashLabel = el.cash ? el.cash.parentNode.querySelector('.price__label') : null;
 
     function cfgFind(sel) {
       for (var i = 0; i < data.cfg.opts.length; i++) {
@@ -335,7 +336,7 @@
       if (el.cash) {
         el.cash.textContent = 'No disponible';
       }
-      [el.from, gwRow, el.ship, el.stock, el.add, el.buy, el.buyNote].forEach(function (node) {
+      [el.from, gwRow, cashLabel, el.ship, el.stock, el.add, el.buy, el.buyNote].forEach(function (node) {
         if (node) {
           node.hidden = true;
         }
@@ -369,12 +370,11 @@
             renderUnavailable();
           } else {
             state.option = found;
-            if (gwRow) {
-              gwRow.hidden = false;
-            }
-            if (el.ship) {
-              el.ship.hidden = false;
-            }
+            [gwRow, cashLabel, el.ship].forEach(function (node) {
+              if (node) {
+                node.hidden = false;
+              }
+            });
             render(true);
           }
           cfgRefresh();
