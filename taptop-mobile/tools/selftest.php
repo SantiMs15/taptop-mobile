@@ -218,6 +218,13 @@ $two = $validator->validateCatalog(['products' => [watch(['variants' => [
 ]])]])['products'][0]['product'];
 expect((new ProductPresenter('mark', true))->detail($two, 'AW-S12-46-AL-OROCL-ARENA-SM-GPS')['current']['cash'] === 1720000, 'configurador: ?config= elige esa configuración');
 expect((new ProductPresenter('mark', true))->detail($two, 'NO-EXISTE')['current']['cash'] === 1490000, 'configurador: ?config= desconocido abre en la más barata');
+$pick46 = (new ProductPresenter('mark', true))->detail($two, 'AW-S12-46-AL-OROCL-ARENA-SM-GPS');
+expect($pick46['from'] === false && $pick46['client']['from'] === false && (new ProductPresenter('mark', true))->detail($two)['from'] === true, 'configurador: ?config= elegido no muestra "Desde"');
+$twoStorages = product();
+unset($twoStorages['variants'][1]['available']);
+$twoStorages = $validator->validateCatalog(['products' => [$twoStorages]])['products'][0]['product'];
+$ignored = (new ProductPresenter('mark', true))->detail($twoStorages, 'TP-256');
+expect($ignored['current']['sku'] === 'TP-128' && $ignored['from'] === true, 'configurador: ?config= no aplica a productos sin opciones', $ignored['current']['sku']);
 expect(find_catalog_entry($watchP, $watchSku, null) !== null && find_catalog_entry($watchP, $watchSku, 'Negro') === null, 'configurador: carrito acepta el SKU sin color y rechaza con color');
 expect(!isset((new ProductPresenter('mark', true))->detail($normalized)['client']['cfg']), 'configurador: producto con colores no trae cfg');
 

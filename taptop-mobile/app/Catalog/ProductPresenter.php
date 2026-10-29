@@ -62,6 +62,8 @@ final class ProductPresenter
         $hasColors = $product['colors'] !== [];
         $colors = $hasColors ? $product['colors'] : [null];
         $configurable = ($product['options'] ?? []) !== [];
+        // ?config= solo elige entre configuraciones; en otros productos se ignora.
+        $preferredSku = $configurable ? $preferredSku : null;
 
         // Con options (configurador) cada variante es su propia opción; si no, se agrupan por capacidad/nota.
         $options = [];
@@ -181,7 +183,8 @@ final class ProductPresenter
         [, , , $selColor, $selOption] = $best ?? $bestAny;
         $selectedKey = ($hasColors ? (string) $selColor : '_') . '|' . $selOption;
         $current = $entries[$selectedKey];
-        $from = count($allSoldOut ? $allPrices : $availablePrices) > 1;
+        // "Desde" solo cuando lo mostrado es lo más barato: no si ?config= eligió otra configuración.
+        $from = count($allSoldOut ? $allPrices : $availablePrices) > 1 && $current['sku'] !== $preferredSku;
 
         // Opciones disponibles para el color inicial (el JS las recalcula al cambiar de color).
         foreach ($viewOptions as &$option) {
