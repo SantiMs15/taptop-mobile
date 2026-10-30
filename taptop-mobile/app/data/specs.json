@@ -350,9 +350,9 @@
     "mac-mini-m4": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip M4", "image": null },
-        { "title": "Dos puertos USB-C al frente", "image": null },
-        { "title": "Mide 12,7 × 12,7 cm", "image": null }
+        { "title": "Chip M4", "image": "/assets/images/products/mac-mini-m4-plata-trasera.webp" },
+        { "title": "Dos puertos USB-C al frente", "image": "/assets/images/products/mac-mini-m4-plata.webp" },
+        { "title": "Mide 12,7 × 12,7 cm", "image": "/assets/images/products/mac-mini-m4-plata-detalle.webp" }
       ],
       "specs": [
         { "title": "Chip", "detail": "M4: CPU de 10 núcleos, GPU de 10 núcleos, Neural Engine de 16 núcleos" },
@@ -367,9 +367,9 @@
     "mac-mini-m4-pro": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip M4 Pro", "image": null },
-        { "title": "Tres puertos Thunderbolt 5", "image": null },
-        { "title": "Mide 12,7 × 12,7 cm", "image": null }
+        { "title": "Chip M4 Pro", "image": "/assets/images/products/mac-mini-m4-pro-plata.webp" },
+        { "title": "Tres puertos Thunderbolt 5", "image": "/assets/images/products/mac-mini-m4-pro-plata-trasera.webp" },
+        { "title": "Mide 12,7 × 12,7 cm", "image": "/assets/images/products/mac-mini-m4-pro-plata-detalle.webp" }
       ],
       "specs": [
         { "title": "Chip", "detail": "M4 Pro: CPU de 12 núcleos, GPU de 16 núcleos" },

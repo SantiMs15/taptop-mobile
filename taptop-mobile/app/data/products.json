@@ -224,7 +224,7 @@
       "brand": "apple",
       "category": "mac",
       "name": "Mac mini M4 Pro",
-      "colors": [],
+      "colors": [ { "name": "Plata", "hex": "#E3E4E6", "image": "/assets/images/products/mac-mini-m4-pro-plata.webp" } ],
       "variants": [
         { "sku": "MACMINI-M4PRO-24-512", "storage": "24 GB / 512 GB", "color": null, "price_cash": 5750000, "price_gateway": 5939000 }
       ]
@@ -234,7 +234,7 @@
       "brand": "apple",
       "category": "mac",
       "name": "Mac mini M4",
-      "colors": [],
+      "colors": [ { "name": "Plata", "hex": "#E3E4E6", "image": "/assets/images/products/mac-mini-m4-plata.webp" } ],
       "variants": [
         { "sku": "MACMINI-M4-16-256", "storage": "16 GB / 256 GB", "color": null, "price_cash": 3050000, "price_gateway": 3151000 },
         { "sku": "MACMINI-M4-24-512", "storage": "24 GB / 512 GB", "color": null, "price_cash": 4450000, "price_gateway": 4596000 }
