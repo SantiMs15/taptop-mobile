@@ -273,6 +273,14 @@
         { "title": "Funciones", "detail": "ECG, notificaciones de apnea del sueño, Control del ciclo, Emergencia SOS, Detección de caídas y choques" }
       ]
     },
+    "macbook-neo": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Teclado y trackpad", "images": { "Índigo": "/assets/images/products/macbook-neo-indigo-detalle.webp", "Amarillo cítrico": "/assets/images/products/macbook-neo-amarillo-citrico-detalle.webp" } },
+        { "title": "Diseño", "images": { "Índigo": "/assets/images/products/macbook-neo-indigo-trasera.webp", "Amarillo cítrico": "/assets/images/products/macbook-neo-amarillo-citrico-trasera.webp" } }
+      ],
+      "specs": []
+    },
     "macbook-air-m5": {
       "status": "borrador",
       "slides": [

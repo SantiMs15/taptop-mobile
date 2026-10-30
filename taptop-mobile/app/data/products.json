@@ -193,7 +193,7 @@
       "brand": "apple",
       "category": "mac",
       "name": "MacBook Neo",
-      "colors": [],
+      "colors": [ { "name": "Índigo", "hex": "#48546E", "image": "/assets/images/products/macbook-neo-indigo.webp" }, { "name": "Amarillo cítrico", "hex": "#DEDE82", "image": "/assets/images/products/macbook-neo-amarillo-citrico.webp" } ],
       "variants": [
         { "sku": "MBNEO-512", "storage": "512 GB", "color": null, "price_cash": 3150000, "price_gateway": 3254000 }
       ]
