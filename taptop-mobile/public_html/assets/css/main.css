@@ -2312,25 +2312,6 @@ mark.todo {
   cursor: not-allowed;
 }
 
-/* Configurador: valor sin configuración disponible con lo ya elegido (se puede elegir) */
-.option.is-unavailable {
-  border-style: dashed;
-  color: var(--c-sold);
-}
-
-/* Igual que un color agotado del iPhone (tachado), pero se puede elegir */
-.swatch.is-unavailable::before {
-  opacity: 0.45;
-  background:
-    linear-gradient(to top right, transparent calc(50% - 1px), var(--c-ink) calc(50% - 1px), var(--c-ink) calc(50% + 1px), transparent calc(50% + 1px)),
-    var(--swatch);
-}
-
-.option__input:checked + .option.is-unavailable {
-  border-style: solid;
-  color: #fff;
-}
-
 .config {
   display: grid;
   gap: 20px;

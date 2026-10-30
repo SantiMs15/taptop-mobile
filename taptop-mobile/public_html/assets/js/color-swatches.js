@@ -397,9 +397,13 @@
         var value = Number(input.value);
         var unavailable = !cfgExists(axis, value);
         input.checked = state.cfg[axis] === value;
+        // Como un color agotado del iPhone: tachado y no se puede elegir (la foto no cambia).
+        input.disabled = unavailable;
         var label = input.nextElementSibling;
         if (label) {
-          label.classList.toggle('is-unavailable', unavailable);
+          if (label.classList.contains('swatch')) {
+            label.classList.toggle('is-sold-out', unavailable);
+          }
           var title = label.getAttribute('data-cfg-title');
           if (title) {
             label.setAttribute('title', title + (unavailable ? ' (no disponible)' : ''));

@@ -279,7 +279,9 @@ $hexedP = $validator->validateCatalog(['products' => [$hexed]])['products'][0]['
 $cfgHtml = view('partials/config-options', ['card' => (new ProductPresenter('mark', true))->detail($hexedP), 'uid' => 'pdp-t']);
 expect(substr_count($cfgHtml, '<label class="swatch') === 5 && str_contains($cfgHtml, '--swatch: #D8C7A6') && str_contains($cfgHtml, 'swatches swatches--lg')
     && substr_count($cfgHtml, '<label class="option') === 8 + 3 + 2 + 2 + 2, 'configurador: ejes con hex en círculos, el resto en botones', substr_count($cfgHtml, 'class="swatch'));
-expect(str_contains($cfgHtml, '<label class="swatch is-unavailable"') && str_contains($cfgHtml, 'title="Oliva (no disponible)"'), 'configurador: círculo sin configuración marcado y con título');
+expect(str_contains($cfgHtml, '<label class="swatch is-sold-out"') && str_contains($cfgHtml, 'title="Oliva (no disponible)"'), 'configurador: círculo sin configuración marcado y con título');
+expect(preg_match('/<input[^>]*value="1" data-cfg-axis="1"[^>]* disabled>/', $cfgHtml) === 1 && preg_match('/<input[^>]*data-cfg-axis="0" checked>/', $cfgHtml) === 1,
+    'configurador: lo que no está en ninguna configuración no se puede elegir', $cfgHtml);
 $hexedTwo = $hexed;
 $hexedTwo['variants'][] = watch_variant('AW-S12-42-AL-NEGRO-NEGRO-SM-GPS', ['Acabado de la caja' => 'Negro', 'Color de la correa' => 'Negro'], 1490000, 1540000);
 $hexedTwo['options'][0]['hex'] = array_fill_keys($hexedTwo['options'][0]['values'], '#888888');
