@@ -30,7 +30,7 @@ $links = [
       </div>
     </nav>
     <a class="cart-link" href="<?= e(url('/carrito')) ?>" aria-label="<?= e($cartLabel) ?>" data-cart-link>
-      <?= icon('cart', 'icon') ?><span class="cart-link__count" data-cart-count aria-hidden="true"><?= $cartCount ?></span>
+      <?= icon('cart', 'icon') ?><span class="cart-link__count" data-cart-count aria-hidden="true"<?= $cartCount === 0 ? ' hidden' : '' ?>><?= $cartCount ?></span>
     </a>
     <a class="btn btn--outline btn--header" href="<?= e(whatsapp_link(wa_message_general())) ?>" target="_blank" rel="noopener noreferrer" aria-label="Escríbenos por WhatsApp"<?= track_attrs('whatsapp_click', ['placement' => 'header', 'page' => $page]) ?>>
       <?= icon('whatsapp', 'icon icon--wa') ?><span>Escríbenos</span>

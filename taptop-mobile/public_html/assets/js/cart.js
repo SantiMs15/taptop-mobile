@@ -35,6 +35,10 @@
     counters().forEach(function (node) {
       var changed = node.textContent !== String(n);
       node.textContent = String(n);
+      // En el header, el contador solo aparece con productos (carrito vacío = solo la silueta).
+      if (node.classList.contains('cart-link__count')) {
+        node.hidden = n === 0;
+      }
       if (changed) {
         pulse(node);
       }
