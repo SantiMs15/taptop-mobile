@@ -2605,7 +2605,8 @@ mark.todo {
   }
 }
 
-.trust {
+/* ul.trust: si no, el reset ul[class] le quita el padding de arriba y el texto queda pegado a la raya. */
+ul.trust {
   display: grid;
   gap: 14px;
   margin: 0;
@@ -3716,6 +3717,24 @@ textarea.field__input {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* 14b. Entrada al hacer scroll (site.js) --------------------------------------
+   Sube 14 px y se enfoca desde un leve desenfoque: la misma familia de movimiento del hero,
+   pero más corta. site.js quita estas clases al terminar. */
+.reveal {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(14px);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+  transition: opacity 560ms var(--ease-out) var(--reveal-delay, 0ms),
+    filter 560ms var(--ease-out) var(--reveal-delay, 0ms),
+    transform 560ms var(--ease-out) var(--reveal-delay, 0ms);
 }
 
 /* 15. Movimiento reducido: sin autoplay (lo decide el JS), sin blur ni recorridos. ---- */

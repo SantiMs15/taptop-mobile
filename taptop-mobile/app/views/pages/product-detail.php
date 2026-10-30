@@ -52,24 +52,22 @@ $ctaTrack = $product['track'] + [
       <?php endif; ?>
 
       <div class="pdp__actions">
-        <a class="btn btn--wa btn--lg btn--block" href="<?= e($current['wa']) ?>" target="_blank" rel="noopener noreferrer" data-cta<?= track_attrs('whatsapp_click', $ctaTrack) ?>>
-          <?= icon('whatsapp', 'icon') ?><span data-cta-label><?= e($current['cta']) ?></span>
+        <?php if (wompi() !== null): // SPIKE Wompi: pago con pasarela al precio con tarjeta. ?>
+        <a class="btn btn--primary btn--lg btn--block" href="<?= e((string) $current['buy']) ?>" data-buy<?= $current['buy'] === null ? ' hidden' : '' ?>>
+          <span>Comprar ahora</span>
         </a>
+        <?php endif; ?>
         <form method="post" action="<?= e(url('/carrito/agregar')) ?>" data-add-to-cart<?= $current['available'] ? '' : ' hidden' ?>>
           <input type="hidden" name="slug" value="<?= e($product['slug']) ?>">
           <input type="hidden" name="sku" value="<?= e((string) $current['sku']) ?>" data-add-sku>
           <input type="hidden" name="color" value="<?= e((string) $current['color']) ?>" data-add-color>
           <button class="btn btn--outline btn--lg btn--block" type="submit"<?= track_attrs('add_to_cart', $ctaTrack) ?>><?= icon('cart', 'icon') ?><span>Agregar al carrito</span></button>
         </form>
-        <?php if (wompi() !== null): // SPIKE Wompi: pago con pasarela al precio con tarjeta. ?>
-        <a class="btn btn--primary btn--lg btn--block" href="<?= e((string) $current['buy']) ?>" data-buy<?= $current['buy'] === null ? ' hidden' : '' ?>>
-          <span>Comprar ahora</span>
+        <?php // Apoyo al cliente: va al final y más discreto; comprar es la acción principal. ?>
+        <a class="btn btn--wa-quiet btn--block" href="<?= e($current['wa']) ?>" target="_blank" rel="noopener noreferrer" data-cta<?= track_attrs('whatsapp_click', $ctaTrack) ?>>
+          <?= icon('whatsapp', 'icon icon--wa') ?><span data-cta-label><?= e($current['cta']) ?></span>
         </a>
-        <p class="pdp__note" data-buy-note<?= $current['buy'] === null ? ' hidden' : '' ?>>Pago con tarjeta, PSE o Nequi en Wompi, al precio con pasarela.<?= wompi()->isSandbox() ? ' <strong>Modo de pruebas: no se cobra dinero real.</strong>' : '' ?></p>
-        <?php endif; ?>
       </div>
-
-      <p class="pdp__note">El precio con pasarela incluye el costo de la plataforma de pago. Tiempo y costo de envío: se confirman por WhatsApp según tu ciudad.</p>
 
       <ul class="trust" aria-label="Por qué comprar aquí">
         <li><?= icon('seal', 'icon') ?><span>Producto 100 % original.</span></li>

@@ -178,8 +178,69 @@
     restWithoutAnimation();
   }
 
+  // --- Entrada al hacer scroll ------------------------------------------------
+  // Solo lo que al cargar está bajo el pliegue: lo visible no se oculta (sin parpadeo ni
+  // retraso del LCP). Una vez por elemento; los que entran juntos van escalonados (60 ms).
+  var REVEAL = [
+    '.section-title:not(.section-head *):not(.features__head *):not(.specs-section__head *)',
+    '.section-head', '.category-index > li', '.grid-cards > *', '.pillar', '.cta-band__inner',
+    '.features__head', '.features__track', '.specs-section__head', '.specs-section__body',
+    '.info-block', '.list-count'
+  ].join(',');
+
+  function initReveal() {
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    var fold = window.innerHeight * 0.92;
+    var pending = [];
+    Array.prototype.forEach.call(doc.querySelectorAll(REVEAL), function (element) {
+      // En una fila deslizable (Destacados en el celular) entra la fila entera: las tarjetas de
+      // la derecha no cruzan el viewport y se quedarían ocultas hasta deslizar.
+      var parent = element.parentElement;
+      if (parent && parent.scrollWidth > parent.clientWidth + 1 && /auto|scroll/.test(window.getComputedStyle(parent).overflowX)) {
+        element = parent;
+      }
+      if (pending.indexOf(element) === -1 && element.getBoundingClientRect().top > fold) {
+        pending.push(element);
+      }
+    });
+    if (!pending.length) {
+      return;
+    }
+    function settle(element) {
+      element.classList.remove('reveal', 'is-in');
+      element.style.removeProperty('--reveal-delay');
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      var order = 0;
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) {
+          return;
+        }
+        var element = entry.target;
+        observer.unobserve(element);
+        element.style.setProperty('--reveal-delay', Math.min(order, 5) * 60 + 'ms');
+        order++;
+        element.classList.add('is-in');
+        // Al terminar se quitan las clases: no queda nada que pelee con hover o :active.
+        element.addEventListener('transitionend', function done(event) {
+          if (event.target === element && event.propertyName === 'opacity') {
+            element.removeEventListener('transitionend', done);
+            settle(element);
+          }
+        });
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    pending.forEach(function (element) {
+      element.classList.add('reveal');
+      observer.observe(element);
+    });
+  }
+
   function init() {
     initHeader();
+    initReveal();
     Array.prototype.forEach.call(doc.querySelectorAll('[data-switch]'), initSwitch);
     Array.prototype.forEach.call(doc.querySelectorAll('.stage__rotation, .stage__arrow, .round-button'), trackGlass);
   }
