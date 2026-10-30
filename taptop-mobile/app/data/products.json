@@ -259,10 +259,10 @@
       "category": "ipad",
       "name": "iPad Air 11\" (M4)",
       "colors": [
-        { "name": "Gris espacial", "hex": "#3A3B3F", "image": null },
-        { "name": "Azul", "hex": "#A7BCD0", "image": null, "available": false },
-        { "name": "Morado", "hex": "#C8BEDA", "image": null, "available": false },
-        { "name": "Blanco estelar", "hex": "#EDE7DC", "image": null, "available": false }
+        { "name": "Gris espacial", "hex": "#3A3B3F", "image": "/assets/images/products/ipad-air-11-m4-gris-espacial.webp" },
+        { "name": "Azul", "hex": "#A7BCD0", "image": "/assets/images/products/ipad-air-11-m4-azul.webp", "available": false },
+        { "name": "Morado", "hex": "#C8BEDA", "image": "/assets/images/products/ipad-air-11-m4-morado.webp", "available": false },
+        { "name": "Blanco estelar", "hex": "#EDE7DC", "image": "/assets/images/products/ipad-air-11-m4-blanco-estelar.webp", "available": false }
       ],
       "variants": [
         { "sku": "IPADA11-M4-128", "storage": "128 GB", "color": null, "price_cash": 2500000, "price_gateway": 2583000 }

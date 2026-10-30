@@ -331,6 +331,14 @@
         { "title": "Medidas y peso", "detail": "249,7 × 177,5 × 5,3 mm; 444 g (Wi-Fi) o 446 g (celular)" }
       ]
     },
+    "ipad-air-11-m4": {
+      "status": "borrador",
+      "slides": [
+        { "title": "Chip M4", "images": { "Gris espacial": "/assets/images/products/ipad-air-11-m4-gris-espacial-trasera.webp", "Azul": "/assets/images/products/ipad-air-11-m4-azul-trasera.webp", "Morado": "/assets/images/products/ipad-air-11-m4-morado-trasera.webp", "Blanco estelar": "/assets/images/products/ipad-air-11-m4-blanco-estelar-trasera.webp" } },
+        { "title": "Pantalla Liquid Retina de 11 pulgadas", "images": { "Gris espacial": "/assets/images/products/ipad-air-11-m4-gris-espacial-frontal.webp", "Azul": "/assets/images/products/ipad-air-11-m4-azul-frontal.webp", "Morado": "/assets/images/products/ipad-air-11-m4-morado-frontal.webp", "Blanco estelar": "/assets/images/products/ipad-air-11-m4-blanco-estelar-frontal.webp" } }
+      ],
+      "specs": []
+    },
     "mac-mini-m4": {
       "status": "borrador",
       "slides": [
