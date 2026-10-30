@@ -238,9 +238,131 @@
     });
   }
 
+  // --- Catálogo: cambiar de categoría sin recargar ------------------------------
+  // Los productos actuales se desvanecen, la cápsula se desliza a la categoría nueva y los
+  // productos de esa categoría entran escalonados. Si algo falla, navega normal.
+  function initCatalogFilter() {
+    var nav = doc.querySelector('.filters__categories');
+    var list = doc.querySelector('.section--list');
+    var head = doc.querySelector('.page-head');
+    if (!nav || !list || !head || typeof window.fetch !== 'function' || !window.history.pushState) {
+      return;
+    }
+    var switchEl = nav.querySelector('[data-switch]');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
+    var request = 0;
+
+    function markCurrent(url) {
+      Array.prototype.forEach.call(nav.querySelectorAll('.switch__item'), function (item) {
+        if (item.href === url) {
+          item.setAttribute('aria-current', 'page');
+        } else {
+          item.removeAttribute('aria-current');
+        }
+      });
+      if (switchEl) {
+        switchEl.dispatchEvent(new Event('tt:sync'));
+      }
+    }
+
+    function fadeOut() {
+      if (reduce.matches || typeof list.animate !== 'function') {
+        return Promise.resolve();
+      }
+      var frames = [
+        { opacity: 1, filter: 'blur(0)', transform: 'none' },
+        { opacity: 0, filter: 'blur(4px)', transform: 'translateY(6px)' }
+      ];
+      var animations = [list, head].map(function (node) {
+        return node.animate(frames, { duration: 260, easing: ease, fill: 'forwards' });
+      });
+      return animations[0].finished.then(function () { return animations; });
+    }
+
+    function enter(outAnimations) {
+      (outAnimations || []).forEach(function (animation) {
+        animation.cancel();
+      });
+      if (reduce.matches || typeof list.animate !== 'function') {
+        return;
+      }
+      head.animate([
+        { opacity: 0, filter: 'blur(4px)' },
+        { opacity: 1, filter: 'blur(0)' }
+      ], { duration: 520, easing: ease });
+      var count = list.querySelector('.list-count');
+      if (count) {
+        count.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: ease });
+      }
+      Array.prototype.forEach.call(list.querySelectorAll('.grid-cards > *, .empty-state'), function (card, i) {
+        card.animate([
+          { opacity: 0, filter: 'blur(6px)', transform: 'translateY(12px)' },
+          { opacity: 1, filter: 'blur(0)', transform: 'none' }
+        ], { duration: 680, delay: Math.min(i, 8) * 60, easing: ease, fill: 'backwards' });
+      });
+    }
+
+    function load(url, push) {
+      var id = ++request;
+      markCurrent(url);
+      var out = fadeOut();
+      var page = window.fetch(url, { credentials: 'same-origin' }).then(function (response) {
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+        return response.text();
+      });
+      Promise.all([page, out]).then(function (result) {
+        if (id !== request) {
+          return;
+        }
+        var next = new DOMParser().parseFromString(result[0], 'text/html');
+        var nextList = next.querySelector('.section--list');
+        var nextHead = next.querySelector('.page-head');
+        if (!nextList || !nextHead) {
+          throw new Error('Respuesta sin listado');
+        }
+        list.innerHTML = nextList.innerHTML;
+        head.innerHTML = nextHead.innerHTML;
+        doc.title = next.title;
+        if (push) {
+          window.history.pushState({ ttCatalog: true }, '', url);
+        }
+        // Si el listado quedó arriba del viewport, se vuelve a los filtros.
+        if (nav.getBoundingClientRect().top < 0) {
+          nav.scrollIntoView({ block: 'start', behavior: reduce.matches ? 'auto' : 'smooth' });
+        }
+        enter(result[1]);
+      }).catch(function () {
+        window.location.href = url;
+      });
+    }
+
+    nav.addEventListener('click', function (event) {
+      var link = event.target.closest ? event.target.closest('a.switch__item') : null;
+      if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      event.preventDefault();
+      if (link.getAttribute('aria-current') === 'page' || link.href === window.location.href) {
+        return;
+      }
+      load(link.href, true);
+    });
+
+    window.history.replaceState({ ttCatalog: true }, '', window.location.href);
+    window.addEventListener('popstate', function (event) {
+      if (event.state && event.state.ttCatalog) {
+        load(window.location.href, false);
+      }
+    });
+  }
+
   function init() {
     initHeader();
     initReveal();
+    initCatalogFilter();
     Array.prototype.forEach.call(doc.querySelectorAll('[data-switch]'), initSwitch);
     Array.prototype.forEach.call(doc.querySelectorAll('.stage__rotation, .stage__arrow, .round-button'), trackGlass);
   }

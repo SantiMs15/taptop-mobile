@@ -49,6 +49,19 @@ $noindex = is_noindex() || !empty($meta['noindex']);
       }
     }
   } catch (error) { /* sin sessionStorage no hay intro */ }
+  // Cambio de página animado (View Transitions): los bloques de la página nueva entran
+  // escalonados (main.css, 14c). Se registra aquí porque pagereveal llega antes que site.js.
+  window.addEventListener('pagereveal', function (event) {
+    if (!event.viewTransition) {
+      return;
+    }
+    root.classList.add('vt-in');
+    event.viewTransition.finished.finally(function () {
+      window.setTimeout(function () {
+        root.classList.remove('vt-in');
+      }, 1600);
+    });
+  });
 })(document);
 </script>
 <?php if ($meta['id'] === 'home'): ?>

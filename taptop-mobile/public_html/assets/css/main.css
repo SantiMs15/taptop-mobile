@@ -3740,6 +3740,88 @@ textarea.field__input {
     transform 560ms var(--ease-out) var(--reveal-delay, 0ms);
 }
 
+/* 14c. Cambio de página (View Transitions entre documentos) -----------------------
+   Inicio, Productos, Contacto, fichas: la página que sale se desvanece y en la nueva los
+   bloques entran escalonados, subiendo desde un leve desenfoque (como al cambiar de
+   categoría). El header no se mueve. La clase vt-in la pone head.php en pagereveal.
+   Navegadores sin soporte (Firefox) cambian de página normal. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: tt-page-out 420ms var(--ease-out) both;
+}
+
+::view-transition-new(root) {
+  animation: tt-page-fade 420ms var(--ease-out) 140ms both;
+}
+
+@keyframes tt-page-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Bloques de la página nueva, uno tras otro (140 ms entre bloques, 80 ms entre tarjetas). */
+.vt-in main > :not(.section--list):not(:has(.pdp)),
+.vt-in .breadcrumb,
+.vt-in .pdp__media,
+.vt-in .pdp__info,
+.vt-in .section--list .list-count,
+.vt-in .section--list .grid-cards > *,
+.vt-in .section--list .empty-state {
+  animation: tt-page-in 820ms var(--ease-out) var(--vt-d, 0ms) backwards;
+}
+
+.vt-in main > :nth-child(1),
+.vt-in .breadcrumb { --vt-d: 180ms; }
+.vt-in main > :nth-child(2),
+.vt-in .pdp__media { --vt-d: 320ms; }
+.vt-in main > :nth-child(3),
+.vt-in .pdp__info,
+.vt-in .section--list .list-count,
+.vt-in .section--list .empty-state { --vt-d: 460ms; }
+.vt-in main > :nth-child(4) { --vt-d: 600ms; }
+.vt-in main > :nth-child(5) { --vt-d: 740ms; }
+.vt-in .grid-cards > :nth-child(1) { --vt-d: 520ms; }
+.vt-in .grid-cards > :nth-child(2) { --vt-d: 600ms; }
+.vt-in .grid-cards > :nth-child(3) { --vt-d: 680ms; }
+.vt-in .grid-cards > :nth-child(4) { --vt-d: 760ms; }
+.vt-in .grid-cards > :nth-child(5) { --vt-d: 840ms; }
+.vt-in .grid-cards > :nth-child(6) { --vt-d: 920ms; }
+.vt-in .grid-cards > :nth-child(n + 7) { --vt-d: 1000ms; }
+
+@keyframes tt-page-out {
+  to {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(6px);
+  }
+}
+
+@keyframes tt-page-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(16px);
+  }
+}
+
 /* 15. Movimiento reducido: sin autoplay (lo decide el JS), sin blur ni recorridos. ---- */
 @media (prefers-reduced-motion: reduce) {
   *,
