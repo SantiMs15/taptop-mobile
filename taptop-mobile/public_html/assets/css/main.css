@@ -2906,36 +2906,6 @@ mark.todo {
   bottom: 4px;
 }
 
-.brand-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 20px;
-}
-
-.brand-links__item {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  color: var(--c-muted);
-  font-size: var(--fs-sm);
-  text-decoration: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .brand-links__item:hover {
-    color: var(--c-ink);
-    text-decoration: underline;
-  }
-}
-
-.brand-links__item[aria-current="page"] {
-  color: var(--c-ink);
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: var(--c-signal);
-  text-decoration-thickness: 2px;
-}
-
 .section--list {
   padding-bottom: clamp(72px, 9vw, 120px);
 }

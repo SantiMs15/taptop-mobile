@@ -1,11 +1,10 @@
 <?php
 /**
- * Listado (6.1): filtros por categoría y marca (sin filtro de precio) y grilla de tarjetas.
+ * Listado (6.1): filtro por categoría (sin filtros de marca ni de precio) y grilla de tarjetas.
  * @var string $heading
  * @var string $lede texto bajo el título (catalog_lede)
  * @var list<array> $cards
  * @var list<array> $categories
- * @var list<array> $brands
  */
 ?>
 <section class="page-head container">
@@ -27,13 +26,6 @@
         <?php endforeach; ?>
       </ul>
     </div>
-  </nav>
-  <nav class="filters__brands" aria-label="Marcas">
-    <ul class="brand-links">
-      <?php foreach ($brands as $item): ?>
-      <li><a class="brand-links__item" href="<?= e($item['href']) ?>"<?= $item['current'] ? ' aria-current="page"' : '' ?>><?= e($item['label']) ?></a></li>
-      <?php endforeach; ?>
-    </ul>
   </nav>
 </div>
 

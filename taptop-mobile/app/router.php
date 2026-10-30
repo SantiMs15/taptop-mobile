@@ -171,7 +171,6 @@ function page_products(): void
         'lede' => catalog_lede($category, $brand),
         'cards' => sold_out_last($cards),
         'categories' => category_nav($category, $brand),
-        'brands' => brand_nav($category, $brand),
         'active_category' => $category,
         'active_brand' => $brand,
     ]);
@@ -349,23 +348,6 @@ function category_nav(?string $current, ?string $brand): array
             'href' => url('/productos', ['categoria' => $key, 'marca' => $brand]),
             'count' => count($repository->filter(category_data_keys($key), $brand)),
             'current' => $current === $key,
-        ];
-    }
-    return $items;
-}
-
-function brand_nav(?string $category, ?string $current): array
-{
-    $items = [[
-        'label' => 'Todas las marcas',
-        'href' => url('/productos', ['categoria' => $category]),
-        'current' => $current === null,
-    ]];
-    foreach ((array) config('brand_filters', []) as $brand) {
-        $items[] = [
-            'label' => brand_label((string) $brand),
-            'href' => url('/productos', ['categoria' => $category, 'marca' => $brand]),
-            'current' => $current === $brand,
         ];
     }
     return $items;
