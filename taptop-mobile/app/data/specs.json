@@ -316,9 +316,8 @@
     "ipad-pro-11-m5": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip M5", "image": null },
-        { "title": "Pantalla Ultra Retina XDR de 11 pulgadas", "image": null },
-        { "title": "Compatible con Apple Pencil Pro", "image": null }
+        { "title": "Chip M5", "images": { "Negro espacial": "/assets/images/products/ipad-pro-11-m5-negro-espacial-trasera.webp" } },
+        { "title": "Pantalla Ultra Retina XDR de 11 pulgadas", "images": { "Negro espacial": "/assets/images/products/ipad-pro-11-m5-negro-espacial-frontal.webp" } }
       ],
       "specs": [
         { "title": "Pantalla", "detail": "Ultra Retina XDR tandem OLED de 11\", 2420 × 1668 (264 ppi), ProMotion 120 Hz, 1000 nits SDR y 1600 nits HDR, True Tone, P3" },

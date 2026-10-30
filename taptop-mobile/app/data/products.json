@@ -246,7 +246,7 @@
       "category": "ipad",
       "name": "iPad Pro 11\" (M5)",
       "colors": [
-        { "name": "Negro espacial", "hex": "#2F3034", "image": null },
+        { "name": "Negro espacial", "hex": "#2F3034", "image": "/assets/images/products/ipad-pro-11-m5-negro-espacial.webp" },
         { "name": "Plata", "hex": "#DFE0E2", "image": null, "available": false }
       ],
       "variants": [
