@@ -82,7 +82,7 @@ $isCart = $items['source'] === 'carrito';
       <?php if ($acceptError !== null): ?><p class="field__error" id="err-acepta"><?= e($acceptError) ?></p><?php endif; ?>
     </div>
 
-    <button class="btn btn--primary btn--lg" type="submit">Continuar al pago · <?= e(format_price($priced['gateway'])) ?></button>
+    <button class="btn btn--metal" type="submit">Continuar al pago · <?= e(format_price($priced['gateway'])) ?></button>
     <p class="checkout__note">Pago con tarjeta, PSE o Nequi en Wompi.</p>
     <?php if ($sandbox): ?>
     <p class="badge">Modo de pruebas (sandbox): no se cobra dinero real</p>

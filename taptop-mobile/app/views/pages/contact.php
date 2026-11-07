@@ -10,8 +10,8 @@ $zones = (array) config('shipping_zones', []);
   <div class="contact__intro">
     <h1 class="page-title">Contáctanos</h1>
     <p class="page-lede">Escríbenos por WhatsApp para confirmar disponibilidad, resolver dudas o seguir tu pedido. Te atiende una persona del equipo, no un robot.</p>
-    <a class="btn btn--wa btn--lg" href="<?= e(whatsapp_link(wa_message_general())) ?>" target="_blank" rel="noopener noreferrer"<?= track_attrs('whatsapp_click', ['placement' => 'contacto', 'page' => 'contacto']) ?>>
-      <?= icon('whatsapp', 'icon') ?><span>Escribir por WhatsApp</span>
+    <a class="btn btn--metal" href="<?= e(whatsapp_link(wa_message_general())) ?>" target="_blank" rel="noopener noreferrer"<?= track_attrs('whatsapp_click', ['placement' => 'contacto', 'page' => 'contacto']) ?>>
+      <?= icon('whatsapp', 'icon icon--wa') ?><span>Escribir por WhatsApp</span>
     </a>
   </div>
 

@@ -182,8 +182,8 @@
   // Solo lo que al cargar está bajo el pliegue: lo visible no se oculta (sin parpadeo ni
   // retraso del LCP). Una vez por elemento; los que entran juntos van escalonados (60 ms).
   var REVEAL = [
-    '.section-title:not(.section-head *):not(.features__head *):not(.specs-section__head *)',
-    '.section-head', '.category-index > li', '.grid-cards > *', '.pillar', '.cta-band__inner',
+    '.section-title:not(.section-head *):not(.features__head *):not(.specs-section__head *):not(.section-title--blur)',
+    '.section-head', '.dock', '.grid-cards > *', '.cta-band__inner',
     '.features__head', '.features__track', '.specs-section__head', '.specs-section__body',
     '.info-block', '.list-count'
   ].join(',');
@@ -236,6 +236,44 @@
       element.classList.add('reveal');
       observer.observe(element);
     });
+  }
+
+  // --- Título con desenfoque suave: entra una vez al verse -------------------------
+  function initSoftBlur() {
+    var title = doc.querySelector('[data-soft-blur]');
+    if (!title) {
+      return;
+    }
+    if (!('IntersectionObserver' in window)) {
+      title.classList.add('is-in');
+      return;
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        title.classList.add('is-in');
+      }
+    }, { threshold: 0.5 });
+    observer.observe(title);
+  }
+
+  // --- Por qué comprar: entra una vez al verse --------------------------------------
+  function initWhy() {
+    var why = doc.querySelector('[data-why]');
+    if (!why) {
+      return;
+    }
+    if (!('IntersectionObserver' in window)) {
+      why.classList.add('is-in');
+      return;
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        why.classList.add('is-in');
+      }
+    }, { threshold: 0.25 });
+    observer.observe(why);
   }
 
   // --- Catálogo: cambiar de categoría sin recargar ------------------------------
@@ -362,9 +400,11 @@
   function init() {
     initHeader();
     initReveal();
+    initSoftBlur();
+    initWhy();
     initCatalogFilter();
     Array.prototype.forEach.call(doc.querySelectorAll('[data-switch]'), initSwitch);
-    Array.prototype.forEach.call(doc.querySelectorAll('.stage__rotation, .stage__arrow, .round-button'), trackGlass);
+    Array.prototype.forEach.call(doc.querySelectorAll('.stage__arrow, .round-button'), trackGlass);
   }
 
   if (doc.readyState === 'loading') {

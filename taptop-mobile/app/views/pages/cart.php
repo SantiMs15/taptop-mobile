@@ -67,7 +67,7 @@ $lineTrack = static fn (array $l): array => ['product_slug' => $l['slug'], 'sku'
   <?php if ($cart['count'] > 0): ?>
   <div class="cart__actions">
     <?php if (wompi() !== null): ?>
-    <a class="btn btn--primary btn--lg" href="<?= e(url('/pago/envio', ['origen' => 'carrito'])) ?>"<?= track_attrs('begin_checkout', ['placement' => 'carrito', 'value' => $cart['gateway'], 'currency' => 'COP', 'quantity' => $cart['count']]) ?>>Pagar ahora · <?= e(format_price($cart['gateway'])) ?></a>
+    <a class="btn btn--metal" href="<?= e(url('/pago/envio', ['origen' => 'carrito'])) ?>"<?= track_attrs('begin_checkout', ['placement' => 'carrito', 'value' => $cart['gateway'], 'currency' => 'COP', 'quantity' => $cart['count']]) ?>>Pagar ahora · <?= e(format_price($cart['gateway'])) ?></a>
     <?php endif; ?>
     <a class="btn btn--wa btn--lg" href="<?= e(whatsapp_link(wa_message_cart($cart))) ?>" target="_blank" rel="noopener noreferrer"<?= track_attrs('whatsapp_click', ['placement' => 'carrito']) ?>><?= icon('whatsapp', 'icon') ?><span>Pagar por transferencia (WhatsApp)</span></a>
   </div>

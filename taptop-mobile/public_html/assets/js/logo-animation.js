@@ -1,10 +1,9 @@
 /**
  * Animación del logo (5.0 del brief).
  *
- * Intro: video corto del modelo (9 s a 3x = 3 s), solo en la primera página de la sesión
- * y solo si es el Inicio (head.php ya decidió y puso <html class="intro-on">). Botón
- * "Saltar", cierre automático y salidas de emergencia: si el video no arranca, se cierra;
- * si este archivo no carga, el CSS lo oculta solo a los 5 s.
+ * Intro: escaneo estilo Face ID, animado en CSS, solo en la primera página de la sesión y solo si
+ * es el Inicio (head.php ya decidió y puso <html class="intro-on">). Se cierra solo, con un clic o
+ * con Escape; si este archivo no carga, el CSS lo oculta solo a los 5 s.
  *
  * Hero 3D: <model-viewer> autoalojado, cargado después del contenido, en un momento
  * ocioso y solo con el escenario a la vista. Plan B: imagen fija con movimiento reducido,
@@ -27,25 +26,17 @@
       return;
     }
 
-    var video = intro.querySelector('video');
-    var skip = intro.querySelector('[data-intro-skip]');
     var closed = false;
-    var startTimer = setTimeout(close, 1800);
-    var maxTimer = setTimeout(close, 4200);
+    var timer = setTimeout(close, 3500);
 
     function close() {
       if (closed) {
         return;
       }
       closed = true;
-      clearTimeout(startTimer);
-      clearTimeout(maxTimer);
-      var hadFocus = doc.activeElement === skip;
+      clearTimeout(timer);
       root.classList.add('intro-leaving');
       intro.classList.add('is-leaving');
-      if (video) {
-        video.pause();
-      }
       var theme = doc.querySelector('meta[name="theme-color"]');
       if (theme) {
         theme.setAttribute('content', '#FFFFFF');
@@ -55,44 +46,16 @@
         if (intro.parentNode) {
           intro.parentNode.removeChild(intro);
         }
-        if (hadFocus) {
-          var main = doc.getElementById('contenido');
-          if (main) {
-            main.focus({ preventScroll: true });
-          }
-        }
         doc.dispatchEvent(new CustomEvent('tt:intro-done'));
       }, 720);
     }
 
-    if (skip) {
-      skip.addEventListener('click', close);
-    }
+    intro.addEventListener('click', close);
     doc.addEventListener('keydown', function (event) {
       if (event.key === 'Escape') {
         close();
       }
     });
-
-    if (!video) {
-      close();
-      return;
-    }
-    video.defaultPlaybackRate = 3;
-    video.playbackRate = 3;
-    video.addEventListener('loadedmetadata', function () {
-      video.playbackRate = 3;
-    });
-    video.addEventListener('playing', function () {
-      clearTimeout(startTimer);
-    });
-    video.addEventListener('ended', close);
-    video.addEventListener('error', close);
-    video.src = video.getAttribute('data-src');
-    var attempt = video.play();
-    if (attempt && typeof attempt.catch === 'function') {
-      attempt.catch(close);
-    }
   }
 
   // --- Hero 3D ----------------------------------------------------------------------------

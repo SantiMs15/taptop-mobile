@@ -25,6 +25,7 @@ $isHome = $pageId === 'home';
 <script type="application/json" id="tt-config"><?= json_for_script(analytics_client_config()) ?></script>
 <script src="<?= e(asset('js/site.js')) ?>" defer></script>
 <script src="<?= e(asset('js/analytics.js')) ?>" defer></script>
+<script src="<?= e(asset('js/liquid-metal.js')) ?>" data-vendor="<?= e(asset('vendor/paper-shaders/liquid-metal.min.js')) ?>" defer></script>
 <?php foreach ((array) ($meta['scripts'] ?? []) as $script): ?>
 <script src="<?= e(asset('js/' . $script)) ?>" defer></script>
 <?php endforeach; ?>

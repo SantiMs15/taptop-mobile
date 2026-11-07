@@ -19,20 +19,7 @@ $count = count($slides);
   </div>
 
   <?php if ($count > 1): ?>
-  <div class="stage__controls">
-    <button class="stage__rotation glass-capsule" type="button" data-rotation data-hover-hold aria-label="Pausar los destacados">
-      <?= icon('pause', 'icon icon--pause') ?><?= icon('play', 'icon icon--play') ?>
-    </button>
-    <div class="tabs switch<?= $count > 5 ? ' tabs--many' : '' ?>" data-switch data-hover-hold style="--tab-count: <?= $count ?>">
-      <span class="tabs__track glass-track" aria-hidden="true"></span>
-      <span class="switch__capsule tabs__capsule glass-capsule" aria-hidden="true"></span>
-      <div class="tabs__list switch__list" role="tablist" aria-label="Elige un destacado" data-tablist>
-        <?php foreach ($slides as $i => $slide): ?>
-        <button class="tab switch__item" type="button" role="tab" id="tab-<?= e($slide['id']) ?>" aria-controls="slide-<?= e($slide['id']) ?>" aria-selected="<?= $i === 0 ? 'true' : 'false' ?>" tabindex="<?= $i === 0 ? '0' : '-1' ?>" data-tab><?= e($slide['tab']) ?><span class="tab__progress" aria-hidden="true"></span></button>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  </div>
+  <span class="stage__timer" aria-hidden="true" data-timer></span>
   <?php endif; ?>
 
   <div class="stage__slides">
@@ -47,7 +34,7 @@ $count = count($slides);
         $cutout = $image !== null && ($image['fit'] ?? 'cover') === 'cutout';
         $mediaClass = $image === null ? '' : ($cutout ? ' slide__media--cutout' : ' slide__media--photo');
     ?>
-    <div class="slide slide--<?= e($slide['type']) ?><?= $i === 0 ? ' is-active' : '' ?>" id="slide-<?= e($slide['id']) ?>" role="tabpanel" aria-roledescription="destacado" aria-label="<?= $i + 1 ?> de <?= $count ?>" data-slide data-duration="<?= (int) $slide['duration_ms'] ?>"<?= $i === 0 ? '' : ' inert' ?>>
+    <div class="slide slide--<?= e($slide['type']) ?><?= $i === 0 ? ' is-active' : '' ?>" id="slide-<?= e($slide['id']) ?>" role="group" aria-roledescription="destacado" aria-label="<?= $i + 1 ?> de <?= $count ?>" data-slide data-duration="<?= (int) $slide['duration_ms'] ?>"<?= $i === 0 ? '' : ' inert' ?>>
       <div class="slide__media<?= $mediaClass ?>">
         <?php if ($slide['type'] === 'model'): ?>
           <?php partial('logo-animation', ['mode' => 'hero']); ?>
@@ -73,9 +60,9 @@ $count = count($slides);
         <<?= $headingTag ?> class="slide__title"><?php foreach ($words as $w => $word): ?><span class="w" style="--i: <?= $w ?>"><?= e($word) ?></span><?= $w < count($words) - 1 ? ' ' : '' ?><?php endforeach; ?></<?= $headingTag ?>>
         <p class="slide__sub"><?= e($slide['subtitle']) ?></p>
         <?php if ($ctaIsWhatsapp): ?>
-        <a class="btn btn--primary slide__cta" href="<?= e(whatsapp_link(wa_message_general())) ?>" target="_blank" rel="noopener noreferrer"<?= track_attrs('whatsapp_click', ['placement' => 'hero', 'page' => 'home']) ?>><?= e($cta['label']) ?></a>
+        <a class="btn btn--metal slide__cta" href="<?= e(whatsapp_link(wa_message_general())) ?>" target="_blank" rel="noopener noreferrer"<?= track_attrs('whatsapp_click', ['placement' => 'hero', 'page' => 'home']) ?>><?= e($cta['label']) ?></a>
         <?php else: ?>
-        <a class="btn btn--primary slide__cta" href="<?= e($cta['href']) ?>"><?= e($cta['label']) ?></a>
+        <a class="btn btn--metal slide__cta" href="<?= e($cta['href']) ?>"><?= e($cta['label']) ?></a>
         <?php endif; ?>
       </div>
     </div>

@@ -1,15 +1,14 @@
 /**
- * Hero del Inicio: carrusel con pestañas de vidrio (adaptación del controlador LTX al brief 5.1).
+ * Hero del Inicio: carrusel con flechas (adaptación del controlador LTX al brief 5.1).
  *
  * - Autoplay de 3 s (el slide del logo dura lo que indique data-duration). El tiempo lo lleva
- *   la animación CSS de la línea de progreso: pausarla es pausar el carrusel, sin timers por cuadro.
+ *   la animación CSS de un temporizador invisible: pausarla es pausar el carrusel, sin timers por cuadro.
  * - Pausa temporal al pasar el cursor por los controles o los textos, con foco de teclado,
- *   con la pestaña oculta, fuera de pantalla o mientras corre el intro. Pausa fija al tocar
- *   en móvil, al girar el logo 3D o con el botón de rotación. "Reducir movimiento": sin autoplay.
+ *   con la pestaña del navegador oculta, fuera de pantalla o mientras corre el intro. También mientras
+ *   un dedo toca el hero y unos segundos al girar el logo 3D. "Reducir movimiento": sin autoplay.
  * - Transición sin cortes: el slide nuevo solo se muestra cuando su imagen está decodificada;
  *   el anterior sigue visible hasta que el nuevo terminó de entrar. Cada petición lleva un
  *   token; las respuestas viejas se ignoran y nunca se encolan transiciones.
- * - Teclado según el patrón de pestañas de WAI-ARIA (flechas, Inicio, Fin).
  */
 (function () {
   'use strict';
@@ -22,14 +21,11 @@
   }
 
   var slides = toArray(stage.querySelectorAll('[data-slide]'));
-  var tabs = toArray(stage.querySelectorAll('[data-tab]'));
-  var tablist = stage.querySelector('[data-tablist]');
-  var switchElement = stage.querySelector('[data-switch]');
-  var rotation = stage.querySelector('[data-rotation]');
+  var timer = stage.querySelector('[data-timer]');
   var live = stage.querySelector('[data-live]');
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  if (slides.length < 2 || tabs.length !== slides.length) {
+  if (slides.length < 2 || !timer) {
     return;
   }
 
@@ -75,23 +71,17 @@
     var held = isHeld();
     stage.classList.toggle('is-stopped', state.stopped);
     stage.classList.toggle('is-held', !state.stopped && held);
-    if (rotation) {
-      rotation.setAttribute('aria-label', state.stopped ? 'Reanudar los destacados' : 'Pausar los destacados');
-    }
   }
 
   function startProgress() {
-    tabs.forEach(function (tab) {
-      tab.classList.remove('is-running');
-    });
+    timer.classList.remove('is-running');
     state.pendingAdvance = false;
     if (state.stopped) {
       return;
     }
     stage.style.setProperty('--slide-dur', slideDuration(state.selected) + 'ms');
-    var tab = tabs[state.selected];
-    void tab.offsetWidth; // reinicia la animación de progreso
-    tab.classList.add('is-running');
+    void timer.offsetWidth; // reinicia el temporizador
+    timer.classList.add('is-running');
   }
 
   function setHold(name, on) {
@@ -115,27 +105,7 @@
     syncPlayState();
   }
 
-  function play() {
-    state.stopped = false;
-    startProgress();
-    syncPlayState();
-  }
-
-  // --- Pestañas y anuncios ----------------------------------------------------------
-  function selectTab(index, moveFocus) {
-    tabs.forEach(function (tab, i) {
-      var active = i === index;
-      tab.setAttribute('aria-selected', active ? 'true' : 'false');
-      tab.tabIndex = active ? 0 : -1;
-    });
-    if (moveFocus) {
-      tabs[index].focus({ preventScroll: true });
-    }
-    if (switchElement) {
-      switchElement.dispatchEvent(new CustomEvent('tt:sync'));
-    }
-  }
-
+  // --- Anuncios --------------------------------------------------------------------
   function announce(index) {
     if (live) {
       live.textContent = 'Destacado ' + (index + 1) + ' de ' + slides.length + ': ' + slideTitle(index);
@@ -225,7 +195,6 @@
     }
     var token = ++state.token;
     state.selected = index;
-    selectTab(index, Boolean(options.focus));
     startProgress();
     if (!options.auto) {
       announce(index);
@@ -240,48 +209,16 @@
   }
 
   // --- Eventos ----------------------------------------------------------------------------
-  tabs.forEach(function (tab, index) {
-    tab.addEventListener('click', function () {
-      go(index);
-    });
-    var bar = tab.querySelector('.tab__progress');
-    if (bar) {
-      bar.addEventListener('animationend', function () {
-        if (index !== state.selected || state.stopped) {
-          return;
-        }
-        if (isHeld()) {
-          state.pendingAdvance = true;
-          return;
-        }
-        go(nextIndex(1), { auto: true });
-      });
+  timer.addEventListener('animationend', function () {
+    if (state.stopped) {
+      return;
     }
+    if (isHeld()) {
+      state.pendingAdvance = true;
+      return;
+    }
+    go(nextIndex(1), { auto: true });
   });
-
-  if (tablist) {
-    tablist.addEventListener('keydown', function (event) {
-      var current = tabs.indexOf(doc.activeElement);
-      if (current === -1) {
-        return;
-      }
-      var target = null;
-      if (event.key === 'ArrowRight') {
-        target = (current + 1) % tabs.length;
-      } else if (event.key === 'ArrowLeft') {
-        target = (current - 1 + tabs.length) % tabs.length;
-      } else if (event.key === 'Home') {
-        target = 0;
-      } else if (event.key === 'End') {
-        target = tabs.length - 1;
-      }
-      if (target === null) {
-        return;
-      }
-      event.preventDefault();
-      go(target, { focus: true });
-    });
-  }
 
   var prev = stage.querySelector('[data-prev]');
   var next = stage.querySelector('[data-next]');
@@ -290,16 +227,6 @@
   }
   if (next) {
     next.addEventListener('click', function () { go(nextIndex(1)); });
-  }
-
-  if (rotation) {
-    rotation.addEventListener('click', function () {
-      if (state.stopped) {
-        play();
-      } else {
-        stop();
-      }
-    });
   }
 
   toArray(stage.querySelectorAll('[data-hover-hold]')).forEach(function (element) {
@@ -339,25 +266,31 @@
   doc.addEventListener('tt:intro-done', function () {
     setHold('intro', false);
   });
-  doc.addEventListener('tt:carousel-stop', stop);
+  // Girar el logo 3D frena el carrusel un momento; sin botón de pausa no puede quedar detenido.
+  var logoRelease = 0;
+  doc.addEventListener('tt:carousel-stop', function () {
+    setHold('logo', true);
+    window.clearTimeout(logoRelease);
+    logoRelease = window.setTimeout(function () {
+      setHold('logo', false);
+    }, 4000);
+  });
 
-  // Táctil: tocar detiene el autoplay; deslizar cambia de slide (no sobre el logo 3D ni los controles).
+  // Táctil: el autoplay espera mientras el dedo toca; deslizar cambia de slide (no sobre el logo 3D ni las flechas).
   var swipe = null;
   stage.addEventListener('pointerdown', function (event) {
     if (event.pointerType === 'mouse') {
       return;
     }
-    var onControls = event.target.closest('.stage__controls, .stage__arrow');
-    if (!onControls) {
-      stop();
-    }
-    if (onControls || event.target.closest('model-viewer, a, button')) {
+    setHold('touch', true);
+    if (event.target.closest('model-viewer, a, button')) {
       swipe = null;
       return;
     }
     swipe = { x: event.clientX, y: event.clientY };
   });
   stage.addEventListener('pointerup', function (event) {
+    setHold('touch', false);
     if (!swipe) {
       return;
     }
@@ -369,6 +302,7 @@
     }
   });
   stage.addEventListener('pointercancel', function () {
+    setHold('touch', false);
     swipe = null;
   });
 
