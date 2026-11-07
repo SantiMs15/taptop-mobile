@@ -185,9 +185,9 @@ $real = load_json_file(APP_PATH . '/data/products.json');
 $report = $validator->validateCatalog($real);
 $realErrors = array_merge($report['errors'], ...array_map(static fn ($e) => $e['errors'], $report['products']));
 expect($realErrors === [], 'catálogo real: sin errores', $realErrors);
-expect(count($report['products']) === 27, 'catálogo real: 27 productos (Series 12 en uno solo; incluye el iPhone 1 de prueba de pago)', count($report['products']));
+expect(count($report['products']) === 26, 'catálogo real: 26 productos (Series 12 en uno solo)', count($report['products']));
 $variantTotal = array_sum(array_map(static fn ($e) => count($e['product']['variants'] ?? []), $report['products']));
-expect($variantTotal === 40, 'catálogo real: 40 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
+expect($variantTotal === 39, 'catálogo real: 39 variantes (filas de la hoja + colores con precio propio del 18 Pro Max)', $variantTotal);
 
 // Desde aquí, el catálogo real con todo disponible: lo agotado hoy no debe romper las pruebas.
 $inStock = $real;

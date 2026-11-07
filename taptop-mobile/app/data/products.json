@@ -90,16 +90,6 @@
       ]
     },
     {
-      "slug": "iphone-1",
-      "brand": "apple",
-      "category": "iphone",
-      "name": "iPhone 1",
-      "colors": [],
-      "variants": [
-        { "sku": "IP1", "storage": null, "color": null, "price_cash": 200, "price_gateway": 200 }
-      ]
-    },
-    {
       "slug": "samsung-galaxy-z-fold8-ultra",
       "brand": "samsung",
       "available": false,
