@@ -1210,6 +1210,9 @@ mark.todo {
 /* Accesorios: el lápiz es muy ancho; más bajo para que no quede pegado al botón. */
 #slide-accesorios .slide__img--cutout { height: 80%; max-width: 92%; }
 
+/* AirPods: foto se veía exagerada a tamaño completo; más pequeña. */
+#slide-airpods .slide__img--cutout { height: 72%; max-width: 78%; }
+
 @keyframes tt-float {
   0%,
   100% {
