@@ -2197,7 +2197,7 @@ mark.todo {
   max-width: 100%;
   height: clamp(320px, 72vh, 620px);
   object-fit: contain;
-  filter: drop-shadow(0 28px 36px rgb(2 8 23 / 0.55));
+  filter: blur(0) drop-shadow(0 28px 36px rgb(2 8 23 / 0.55));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -2209,6 +2209,21 @@ mark.todo {
   .js .why:not(.is-in) .why__step {
     opacity: 0;
     transform: translateY(20px);
+  }
+
+  /* El reloj espera a que el panel se abra y a que la imagen esté lista. */
+  .js .why:not(.is-in) .why__media img,
+  .js .why:not(.has-image) .why__media img {
+    opacity: 0;
+    filter: blur(14px) drop-shadow(0 28px 36px rgb(2 8 23 / 0));
+    transform: translateY(32px) scale(0.94);
+  }
+
+  .js .why.is-in.has-image .why__media img {
+    transition:
+      opacity 1100ms var(--ease-out) 450ms,
+      filter 1300ms var(--ease-out) 450ms,
+      transform 1500ms var(--ease-out) 450ms;
   }
 
   .js .why.is-in .why__media {

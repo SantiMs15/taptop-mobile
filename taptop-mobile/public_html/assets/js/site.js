@@ -263,6 +263,16 @@
     if (!why) {
       return;
     }
+    var image = why.querySelector('.why__media img');
+    function imageReady() {
+      why.classList.add('has-image');
+    }
+    if (!image || (image.complete && image.naturalWidth > 0)) {
+      imageReady();
+    } else {
+      image.addEventListener('load', imageReady);
+      image.addEventListener('error', imageReady);
+    }
     if (!('IntersectionObserver' in window)) {
       why.classList.add('is-in');
       return;
