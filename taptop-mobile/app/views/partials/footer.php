@@ -57,7 +57,7 @@ $hours = config_text('support_hours_label');
 
   <div class="container">
     <ul class="site-footer__promises">
-      <li><?= icon('truck', 'icon') ?><span>Envío gratis desde <?= e(format_price((int) config('free_shipping_min'))) ?>. Tiempo y costo de envío: se confirman por WhatsApp según tu ciudad.</span></li>
+      <li><?= icon('truck', 'icon') ?><span>Envío gratis desde <?= e(format_price((int) config('free_shipping_min'))) ?>; por debajo, <?= e(format_price((int) config('shipping_cost'))) ?>. Entrega en <?= e(delivery_label()) ?>.</span></li>
       <li><?= icon('shield', 'icon') ?><span>Garantía directa con <?= e($business) ?>: <?= e(warranty_summary()) ?>.</span></li>
     </ul>
   </div>

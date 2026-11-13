@@ -340,11 +340,13 @@ function wa_message_cart(array $priced): string
             $rows[] = sprintf('• %d × %s — %s', $line['qty'], $line['label'], format_price($line['line_cash']));
         }
     }
+    $fee = (int) ($priced['shipping']['cost_cash'] ?? 0);
+    $rows[] = '• Envío — ' . ($fee > 0 ? format_price($fee) : 'gratis');
     return sprintf(
         "Hola %s, quiero pagar por transferencia este pedido:\n%s\nTotal por transferencia: %s",
         config('business_name'),
         implode("\n", $rows),
-        format_price($priced['cash'])
+        format_price($priced['total_cash'] ?? $priced['cash'])
     );
 }
 
@@ -359,23 +361,34 @@ function wa_message_question(array $product): string
 
 /**
  * El umbral se compara con el precio que realmente se paga en cada método (6.1 del brief).
- * @return array{free: bool, partial: bool, label: string}
+ * Por debajo del umbral el envío cuesta shipping_cost; cost_* es lo que se suma en cada método.
+ * @return array{free: bool, partial: bool, label: string, cost_cash: int, cost_gateway: int}
  */
 function shipping_info(int $cash, int $gateway): array
 {
     $min = (int) config('free_shipping_min', 150000);
+    $cost = (int) config('shipping_cost', 0);
+    $fee = format_price($cost);
     $freeCash = $cash >= $min;
     $freeGateway = $gateway >= $min;
+    $costs = ['cost_cash' => $freeCash ? 0 : $cost, 'cost_gateway' => $freeGateway ? 0 : $cost];
     if ($freeCash && $freeGateway) {
-        return ['free' => true, 'partial' => false, 'label' => 'Envío gratis'];
+        return ['free' => true, 'partial' => false, 'label' => 'Envío gratis'] + $costs;
     }
     if ($freeGateway) {
-        return ['free' => false, 'partial' => true, 'label' => 'Envío gratis pagando con tarjeta o pasarela'];
+        return ['free' => false, 'partial' => true, 'label' => "Envío gratis pagando en línea; {$fee} por transferencia"] + $costs;
     }
     if ($freeCash) {
-        return ['free' => false, 'partial' => true, 'label' => 'Envío gratis pagando por consignación o transferencia'];
+        return ['free' => false, 'partial' => true, 'label' => "Envío gratis por transferencia; {$fee} pagando en línea"] + $costs;
     }
-    return ['free' => false, 'partial' => false, 'label' => 'Costo de envío por confirmar'];
+    return ['free' => false, 'partial' => false, 'label' => "Envío: {$fee}"] + $costs;
+}
+
+/** "2 a 5 días hábiles" desde delivery_days. */
+function delivery_label(): string
+{
+    [$min, $max] = array_map('intval', (array) config('delivery_days', [2, 5]));
+    return $min === $max ? "{$min} días hábiles" : "{$min} a {$max} días hábiles";
 }
 
 // ---------------------------------------------------------------------------

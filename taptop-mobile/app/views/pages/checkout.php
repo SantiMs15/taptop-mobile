@@ -33,9 +33,10 @@ $isCart = $items['source'] === 'carrito';
       <?php endforeach; ?>
     </ul>
     <dl class="cart__totals">
-      <div><dt>Total pagando en línea</dt><dd class="cart__total"><?= e(format_price($priced['gateway'])) ?></dd></div>
+      <div><dt>Envío</dt><dd><?= $priced['shipping']['cost_gateway'] > 0 ? e(format_price($priced['shipping']['cost_gateway'])) : 'Gratis' ?></dd></div>
+      <div><dt>Total pagando en línea</dt><dd class="cart__total"><?= e(format_price($priced['total_gateway'])) ?></dd></div>
     </dl>
-    <p class="cart__shipping"><?= e($priced['shipping']['label']) ?></p>
+    <p class="cart__shipping">Entrega en <?= e(delivery_label()) ?>.</p>
     <p class="cart__back"><a href="<?= e(url($items['back'])) ?>">‹ <?= $isCart ? 'Volver al carrito' : 'Volver al producto' ?></a></p>
   </div>
 
@@ -46,7 +47,7 @@ $isCart = $items['source'] === 'carrito';
     <input type="hidden" name="sku" value="<?= e($first['sku']) ?>">
     <input type="hidden" name="color" value="<?= e((string) $first['color']) ?>">
     <?php endif; ?>
-    <input type="hidden" name="total_visto" value="<?= (int) $priced['gateway'] ?>">
+    <input type="hidden" name="total_visto" value="<?= (int) $priced['total_gateway'] ?>">
 
     <?php foreach ($fields as $name => $field): ?>
     <?php if ($name === 'acepta') { continue; } ?>
@@ -82,7 +83,7 @@ $isCart = $items['source'] === 'carrito';
       <?php if ($acceptError !== null): ?><p class="field__error" id="err-acepta"><?= e($acceptError) ?></p><?php endif; ?>
     </div>
 
-    <button class="btn btn--metal" type="submit">Continuar al pago · <?= e(format_price($priced['gateway'])) ?></button>
+    <button class="btn btn--metal" type="submit">Continuar al pago · <?= e(format_price($priced['total_gateway'])) ?></button>
     <p class="checkout__note">Pago con tarjeta, PSE o Nequi en Wompi.</p>
     <?php if ($sandbox): ?>
     <p class="badge">Modo de pruebas (sandbox): no se cobra dinero real</p>

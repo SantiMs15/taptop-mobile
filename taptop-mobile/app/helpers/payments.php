@@ -401,7 +401,7 @@ function checkout_post(): void
     }
     $items = checkout_items($_POST);
     $seen = is_string($_POST['total_visto'] ?? null) ? $_POST['total_visto'] : '';
-    if ($items === null || $items['priced']['gateway'] !== (int) $seen) {
+    if ($items === null || $items['priced']['total_gateway'] !== (int) $seen) {
         header('Cache-Control: no-store');
         redirect(checkout_fallback_url($_POST, true) ?? url('/carrito', ['cambio' => 1]));
     }
@@ -415,12 +415,14 @@ function checkout_post(): void
 
     $priced = $items['priced'];
     $reference = Wompi::newReference();
-    $amountInCents = $priced['gateway'] * 100;
+    $amountInCents = $priced['total_gateway'] * 100;
     order_save($reference, [
         'source' => $items['source'],
         'lines' => $priced['lines'],
-        'gateway' => (int) $priced['gateway'],
-        'cash' => (int) $priced['cash'],
+        // gateway = total cobrado en Wompi (productos + envío); shipping_fee = el envío incluido.
+        'gateway' => (int) $priced['total_gateway'],
+        'cash' => (int) $priced['total_cash'],
+        'shipping_fee' => (int) $priced['shipping']['cost_gateway'],
         'shipping' => $result['data'],
         'acepto_datos_at' => date('c'),
         'created_at' => date('c'),

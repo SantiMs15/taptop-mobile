@@ -18,6 +18,8 @@ function policy_pages(): array
     $email = config_text('business_email');
     $whatsapp = (string) config('whatsapp_display');
     $freeShipping = format_price((int) config('free_shipping_min'));
+    $shippingCost = format_price((int) config('shipping_cost'));
+    $deliveryTime = delivery_label();
     $deviceTerm = warranty_label((int) config('warranty_months', 12));
     $accessoryTerm = warranty_label((int) config('warranty_accessory_months', 3));
     $warrantySummary = warranty_summary();
@@ -121,7 +123,7 @@ function policy_pages(): array
                     ]],
                 ]],
                 ['id' => 'envios', 'heading' => 'Envíos', 'blocks' => [
-                    ['p' => "Enviamos a toda Colombia. El envío es gratis en compras desde {$freeShipping}, según el precio que pagas con el medio elegido. Por debajo de ese valor, el costo se confirma por WhatsApp. El tiempo de entrega depende de la ciudad y también se confirma por WhatsApp."],
+                    ['p' => "Enviamos a toda Colombia. El envío es gratis en compras desde {$freeShipping}, según el precio que pagas con el medio elegido. Por debajo de ese valor, el envío cuesta {$shippingCost}. La entrega toma {$deliveryTime} después de confirmado el pago."],
                 ]],
                 ['id' => 'garantia', 'heading' => 'Garantía', 'blocks' => [
                     ['p' => "Todos los productos tienen garantía directa con {$business}: {$warrantySummary}. Si presenta un fallo, eliges cambio o reembolso. Las condiciones están en la página Garantía, cambios, reembolsos y envíos."],
@@ -193,8 +195,8 @@ function policy_pages(): array
                     ['ul' => [
                         'Enviamos a toda Colombia.',
                         "Envío gratis en compras desde {$freeShipping}, según el precio que pagas con el medio elegido.",
-                        'Por debajo de ese valor, el costo de envío se confirma por WhatsApp.',
-                        'Tiempo y costo de envío: se confirman por WhatsApp según tu ciudad.',
+                        "Por debajo de ese valor, el envío cuesta {$shippingCost}. Si pagas en línea, se suma al total.",
+                        "Tiempo de entrega: {$deliveryTime} después de confirmado el pago.",
                         'El pedido sale cuando el pago está confirmado, y te compartimos el seguimiento por WhatsApp.',
                     ]],
                 ]],

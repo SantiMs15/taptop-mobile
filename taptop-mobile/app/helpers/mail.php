@@ -98,6 +98,10 @@ function order_email(string $reference, array $order, array $transaction): array
     foreach ((array) ($order['lines'] ?? []) as $line) {
         $out[] = (int) ($line['qty'] ?? 1) . ' × ' . (string) ($line['label'] ?? '') . ' — ' . format_price((int) ($line['line_gw'] ?? 0));
     }
+    if (array_key_exists('shipping_fee', $order)) {
+        $fee = (int) $order['shipping_fee'];
+        $out[] = 'Envío: ' . ($fee > 0 ? format_price($fee) : 'gratis');
+    }
 
     return ['subject' => $subject, 'body' => implode("\n", $out) . "\n"];
 }

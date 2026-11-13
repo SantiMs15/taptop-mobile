@@ -194,13 +194,21 @@ function cart_priced(array $lines, ?callable $find = null): array
             'line_gw' => $lineGateway,
         ];
     }
+    $shipping = shipping_info($cash, $gateway);
+    if ($count === 0) {
+        $shipping['cost_cash'] = 0;
+        $shipping['cost_gateway'] = 0;
+    }
+    // cash/gateway = solo productos; total_* = lo que se paga en cada método, con el envío.
     return [
         'lines' => $priced,
         'cash' => $cash,
         'gateway' => $gateway,
+        'total_cash' => $cash + $shipping['cost_cash'],
+        'total_gateway' => $gateway + $shipping['cost_gateway'],
         'count' => $count,
         'has_unavailable' => $hasUnavailable,
-        'shipping' => shipping_info($cash, $gateway),
+        'shipping' => $shipping,
     ];
 }
 

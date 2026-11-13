@@ -41,7 +41,8 @@ $zones = (array) config('shipping_zones', []);
     <ul class="info-list">
       <li>Enviamos a toda Colombia.</li>
       <li>Envío gratis en compras desde <?= e(format_price((int) config('free_shipping_min'))) ?>, según el precio que pagas con el medio elegido.</li>
-      <li>Por debajo de ese valor, el costo de envío se confirma por WhatsApp.</li>
+      <li>Por debajo de ese valor, el envío cuesta <?= e(format_price((int) config('shipping_cost'))) ?>.</li>
+      <li>Entrega en <?= e(delivery_label()) ?> después de confirmado el pago.</li>
       <li>El pedido sale cuando el pago está confirmado y te compartimos el seguimiento por WhatsApp.</li>
     </ul>
     <?php if ($zones !== []): ?>
@@ -55,7 +56,7 @@ $zones = (array) config('shipping_zones', []);
       </tbody>
     </table>
     <?php else: ?>
-    <p class="info-block__note">Tiempo y costo de envío: se confirman por WhatsApp según tu ciudad.</p>
+    <p class="info-block__note">Tiempo de entrega: <?= e(delivery_label()) ?> en toda Colombia.</p>
     <?php endif; ?>
   </article>
 

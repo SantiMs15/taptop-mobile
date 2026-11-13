@@ -51,6 +51,8 @@ return [
 
     // --- Envíos ------------------------------------------------------------------
     'free_shipping_min' => 150000,
+    'shipping_cost' => 15000, // envío por debajo de free_shipping_min (se suma al cobro en línea)
+    'delivery_days' => [2, 5], // días hábiles de entrega, igual con o sin envío gratis
     'carrier_name' => '', // aún no definida: el sitio no nombra transportadora ni promete plazos
     // Cuando se definan: [['zone' => 'Ciudades principales', 'time' => '1 a 2 días hábiles', 'cost' => 'Gratis desde $150.000'], ...]
     'shipping_zones' => [],

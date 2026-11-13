@@ -59,15 +59,17 @@ $lineTrack = static fn (array $l): array => ['product_slug' => $l['slug'], 'sku'
   <?php endif; ?>
 
   <dl class="cart__totals">
-    <div><dt>Total pagando en línea</dt><dd class="cart__total"><?= e(format_price($cart['gateway'])) ?></dd></div>
-    <div><dt>Total por transferencia</dt><dd><?= e(format_price($cart['cash'])) ?></dd></div>
+    <div><dt>Total pagando en línea</dt><dd class="cart__total"><?= e(format_price($cart['total_gateway'])) ?></dd></div>
+    <div><dt>Total por transferencia</dt><dd><?= e(format_price($cart['total_cash'])) ?></dd></div>
   </dl>
-  <p class="cart__shipping"><?= e($cart['shipping']['label']) ?></p>
+  <?php if ($cart['count'] > 0): ?>
+  <p class="cart__shipping"><?= e($cart['shipping']['label']) ?><?= $cart['shipping']['free'] ? '' : ' (incluido en el total)' ?>. Entrega en <?= e(delivery_label()) ?>.</p>
+  <?php endif; ?>
 
   <?php if ($cart['count'] > 0): ?>
   <div class="cart__actions">
     <?php if (wompi() !== null): ?>
-    <a class="btn btn--metal" href="<?= e(url('/pago/envio', ['origen' => 'carrito'])) ?>"<?= track_attrs('begin_checkout', ['placement' => 'carrito', 'value' => $cart['gateway'], 'currency' => 'COP', 'quantity' => $cart['count']]) ?>>Pagar ahora · <?= e(format_price($cart['gateway'])) ?></a>
+    <a class="btn btn--metal" href="<?= e(url('/pago/envio', ['origen' => 'carrito'])) ?>"<?= track_attrs('begin_checkout', ['placement' => 'carrito', 'value' => $cart['total_gateway'], 'currency' => 'COP', 'quantity' => $cart['count']]) ?>>Pagar ahora · <?= e(format_price($cart['total_gateway'])) ?></a>
     <?php endif; ?>
     <a class="btn btn--wa btn--lg" href="<?= e(whatsapp_link(wa_message_cart($cart))) ?>" target="_blank" rel="noopener noreferrer"<?= track_attrs('whatsapp_click', ['placement' => 'carrito']) ?>><?= icon('whatsapp', 'icon') ?><span>Pagar por transferencia (WhatsApp)</span></a>
   </div>

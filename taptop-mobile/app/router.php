@@ -343,7 +343,7 @@ function page_llms(): void
         '',
         '- Pagos: cada producto tiene dos precios. El más bajo es por consignación, depósito en efectivo o transferencia; '
             . 'el otro es con tarjeta de crédito o débito, PSE o Nequi a través de la pasarela de pago.',
-        '- Envío gratis desde ' . format_price((int) config('free_shipping_min', 0)) . '.',
+        '- Envío gratis desde ' . format_price((int) config('free_shipping_min', 0)) . '; por debajo, ' . format_price((int) config('shipping_cost', 0)) . '. Entrega en ' . delivery_label() . '.',
         '- Garantía ' . $brand . ': ' . warranty_summary() . '.',
         '- Atención por WhatsApp ' . config('whatsapp_display') . ': ' . mb_strtolower((string) config('support_days_label'))
             . ', ' . config('support_hours_label') . ' (' . config('support_timezone_label') . ').',
@@ -519,13 +519,25 @@ function product_jsonld(array $product, array $detail, string $description): arr
             'seller' => ['@type' => 'Organization', 'name' => (string) config('business_name')],
             'hasMerchantReturnPolicy' => merchant_return_policy_jsonld(),
         ];
-        // Envío gratis a toda Colombia solo si el producto más barato ya supera el mínimo;
-        // por debajo, el costo se confirma por WhatsApp y no se publica.
-        if (min($prices) >= (int) config('free_shipping_min')) {
+        // Gratis si todo el rango supera el mínimo; shipping_cost si todo está por debajo;
+        // un rango que cruza el umbral no publica tarifa (sería falsa para parte de las variantes).
+        $min = (int) config('free_shipping_min');
+        $rate = min($prices) >= $min ? 0 : (max($prices) < $min ? (int) config('shipping_cost') : null);
+        if ($rate !== null) {
+            [$daysMin, $daysMax] = array_map('intval', (array) config('delivery_days', [2, 5]));
             $data['offers']['shippingDetails'] = [
                 '@type' => 'OfferShippingDetails',
-                'shippingRate' => ['@type' => 'MonetaryAmount', 'value' => 0, 'currency' => 'COP'],
+                'shippingRate' => ['@type' => 'MonetaryAmount', 'value' => $rate, 'currency' => 'COP'],
                 'shippingDestination' => ['@type' => 'DefinedRegion', 'addressCountry' => 'CO'],
+                'deliveryTime' => [
+                    '@type' => 'ShippingDeliveryTime',
+                    'handlingTime' => ['@type' => 'QuantitativeValue', 'minValue' => 0, 'maxValue' => 0, 'unitCode' => 'DAY'],
+                    'transitTime' => ['@type' => 'QuantitativeValue', 'minValue' => $daysMin, 'maxValue' => $daysMax, 'unitCode' => 'DAY'],
+                    'businessDays' => [
+                        '@type' => 'OpeningHoursSpecification',
+                        'dayOfWeek' => array_map(static fn (string $d): string => 'https://schema.org/' . $d, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
+                    ],
+                ],
             ];
         }
     }

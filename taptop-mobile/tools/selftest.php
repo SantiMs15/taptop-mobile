@@ -345,7 +345,11 @@ expect(array_column($slides, 'byColor') === [
 ], 'slides: foto por color, con la general como respaldo', $slides);
 
 // --- Envío, formato, WhatsApp, escape, rutas --------------------------------------
-expect(shipping_info(93000, 97000)['label'] === 'Costo de envío por confirmar', 'envío: adaptador bajo el umbral');
+$under = shipping_info(93000, 97000);
+expect($under['label'] === 'Envío: $15.000' && $under['cost_cash'] === 15000 && $under['cost_gateway'] === 15000, 'envío: adaptador bajo el umbral paga $15.000', $under);
+$part = shipping_info(149000, 152000);
+expect($part['cost_cash'] === 15000 && $part['cost_gateway'] === 0, 'envío: cobra solo en el método que no llega al umbral', $part);
+expect(delivery_label() === '2 a 5 días hábiles', 'envío: plazo de entrega', delivery_label());
 expect(shipping_info(149000, 152000)['partial'] === true, 'envío: cumple solo con pasarela');
 expect(shipping_info(150000, 155000)['free'] === true, 'envío: umbral exacto = gratis');
 expect(format_price(4650000) === '$4.650.000', 'formato COP con puntos de miles');
@@ -460,6 +464,13 @@ $priced = cart_priced($cartLines);
 $bur = find_product_by_sku('IP18PM-256-BUR')['variant'];
 $app3 = find_product_by_sku('APP3')['variant'];
 expect($priced['gateway'] === $bur['price_gateway'] + $app3['price_gateway'] && $priced['cash'] === $bur['price_cash'] + $app3['price_cash'] && $priced['count'] === 2, 'carrito: totales desde el catálogo', $priced);
+expect($priced['total_gateway'] === $priced['gateway'] && $priced['total_cash'] === $priced['cash'], 'carrito: sobre el umbral el envío es gratis', $priced);
+$cheapPriced = cart_priced([['sku' => 'APL-ADAPT-NONFC', 'color' => null, 'qty' => 1]]);
+expect($cheapPriced['total_gateway'] === $cheapPriced['gateway'] + 15000 && $cheapPriced['total_cash'] === $cheapPriced['cash'] + 15000 && $cheapPriced['count'] === 1 && str_contains(wa_message_cart($cheapPriced), 'Envío — $15.000') && str_contains(wa_message_cart($cheapPriced), 'Total por transferencia: ' . format_price($cheapPriced['cash'] + 15000)), 'carrito: bajo el umbral suma $15.000 al total y al mensaje de WhatsApp', $cheapPriced);
+$emptyPriced = cart_priced([], static fn (string $sku): ?array => null);
+expect($emptyPriced['total_gateway'] === 0 && $emptyPriced['total_cash'] === 0, 'carrito: vacío no cobra envío', $emptyPriced);
+$mailFee = order_email('TT-1', ['gateway' => 104000, 'shipping_fee' => 15000, 'lines' => []], ['amount_in_cents' => 10400000]);
+expect(str_contains($mailFee['body'], 'Envío: $15.000') && !str_contains($mailFee['subject'], 'Revisar'), 'correo: muestra el envío cobrado', $mailFee);
 expect(cart_priced([['sku' => 'NO-EXISTE', 'color' => null, 'qty' => 1]])['lines'] === [], 'carrito: sku fuera del catálogo omitido');
 expect(cart_priced([['sku' => 'AW-S12-42', 'color' => null, 'qty' => 1]])['lines'] === [], 'carrito: SKU viejo del Series 12 se descarta');
 expect(cart_set_qty($cartLines, 0, 0) === [['sku' => 'APP3', 'color' => 'Blanco', 'qty' => 1]], 'carrito: qty 0 quita la línea');
