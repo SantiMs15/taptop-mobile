@@ -72,13 +72,19 @@
       "slides": [
         { "title": "Chip A20 Pro", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-frontal.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-frontal.webp", "Negro": "/assets/images/products/iphone-18-pro-negro-frontal.webp", "Plata": "/assets/images/products/iphone-18-pro-plata-frontal.webp" } },
         { "title": "Cámara Fusion de 48 MP con apertura variable", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-camara.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-camara.webp", "Negro": "/assets/images/products/iphone-18-pro-negro-camara.webp", "Plata": "/assets/images/products/iphone-18-pro-plata-camara.webp" } },
-        { "title": "Hasta 36 h de video en la versión eSIM", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-trasera.webp", "Negro": "/assets/images/products/iphone-18-pro-negro-trasera.webp", "Plata": "/assets/images/products/iphone-18-pro-plata-trasera.webp" } }
+        { "title": "Hasta 34 h de reproducción de video", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-glaciar-trasera.webp", "Negro": "/assets/images/products/iphone-18-pro-negro-trasera.webp", "Plata": "/assets/images/products/iphone-18-pro-plata-trasera.webp" } }
       ],
       "specs": [
+        { "title": "Pantalla", "detail": "6,3\" OLED Super Retina XDR, 2622 × 1206, 460 ppi" },
         { "title": "Chip", "detail": "A20 Pro (2 nm), CPU de 6 núcleos, GPU de 7 núcleos, Neural Engine dual de 16 núcleos" },
         { "title": "Cámara principal", "detail": "Fusion de 48 MP con apertura variable (ƒ/1,48 a ƒ/4)" },
-        { "title": "Batería", "detail": "Hasta 36 h de video (versión solo eSIM)" },
+        { "title": "Batería", "detail": "Hasta 23 h de uso por carga; hasta 34 h de reproducción de video" },
+        { "title": "Carga", "detail": "Al 50 % en unos 15 min con adaptador de 60 W o más; en unos 30 min con MagSafe de 35 W o más" },
         { "title": "Conectividad", "detail": "Chip N1 (Wi-Fi 7, Bluetooth 6, Thread), módem C2, satélite" },
+        { "title": "SIM", "detail": "Doble SIM: nano SIM y eSIM (modelo para Colombia)" },
+        { "title": "Resistencia", "detail": "IP68 (hasta 6 m durante 30 min)" },
+        { "title": "Puerto", "detail": "USB-C (USB 3, hasta 10 Gb/s)" },
+        { "title": "Peso", "detail": "211 g" },
         { "title": "Sistema", "detail": "iOS 27" }
       ]
     },
@@ -90,10 +96,16 @@
         { "title": "Hasta 29 h de uso por carga", "images": { "Borgoña": "/assets/images/products/iphone-18-pro-max-borgona-trasera.webp", "Glaciar": "/assets/images/products/iphone-18-pro-max-glaciar-trasera.webp", "Plata": "/assets/images/products/iphone-18-pro-max-plata-trasera.webp", "Negro": "/assets/images/products/iphone-18-pro-max-negro-trasera.webp" } }
       ],
       "specs": [
+        { "title": "Pantalla", "detail": "6,9\" OLED Super Retina XDR, 2868 × 1320, 460 ppi" },
         { "title": "Chip", "detail": "A20 Pro (2 nm), CPU de 6 núcleos, GPU de 7 núcleos, Neural Engine dual de 16 núcleos" },
         { "title": "Cámara principal", "detail": "Fusion de 48 MP con apertura variable (ƒ/1,48 a ƒ/4)" },
         { "title": "Batería", "detail": "Hasta 29 h de uso por carga; hasta 43 h de reproducción de video" },
+        { "title": "Carga", "detail": "Al 50 % en unos 15 min con adaptador de 60 W o más; en unos 30 min con MagSafe de 35 W o más" },
         { "title": "Conectividad", "detail": "Chip N1 (Wi-Fi 7, Bluetooth 6, Thread), satélite" },
+        { "title": "SIM", "detail": "Doble SIM: nano SIM y eSIM (modelo para Colombia)" },
+        { "title": "Resistencia", "detail": "IP68 (hasta 6 m durante 30 min)" },
+        { "title": "Puerto", "detail": "USB-C (USB 3, hasta 10 Gb/s)" },
+        { "title": "Peso", "detail": "249 g" },
         { "title": "Sistema", "detail": "iOS 27" }
       ]
     },
