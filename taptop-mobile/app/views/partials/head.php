@@ -5,7 +5,7 @@
  * solo en el Inicio, solo si es la primera página de la sesión y sin "reducir movimiento".
  * @var array $meta
  */
-$canonical = absolute_url((string) $meta['path']);
+$canonical = absolute_url((string) ($meta['canonical'] ?? $meta['path']));
 $noindex = is_noindex() || !empty($meta['noindex']);
 ?>
 <meta charset="utf-8">
@@ -23,6 +23,10 @@ $noindex = is_noindex() || !empty($meta['noindex']);
 <meta property="og:description" content="<?= e($meta['description']) ?>">
 <meta property="og:url" content="<?= e($canonical) ?>">
 <meta property="og:image" content="<?= e($meta['og_image']) ?>">
+<?php if (!empty($meta['og_price'])): ?>
+<meta property="product:price:amount" content="<?= (int) $meta['og_price'] ?>">
+<meta property="product:price:currency" content="COP">
+<?php endif; ?>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="<?= e(asset('images/brand/favicon-32.png')) ?>" sizes="32x32" type="image/png">
@@ -67,3 +71,6 @@ $noindex = is_noindex() || !empty($meta['noindex']);
 <?php if ($meta['id'] === 'home'): ?>
 <script type="application/ld+json"><?= json_for_script(organization_jsonld()) ?></script>
 <?php endif; ?>
+<?php foreach ((array) ($meta['jsonld'] ?? []) as $jsonld): ?>
+<script type="application/ld+json"><?= json_for_script($jsonld) ?></script>
+<?php endforeach; ?>

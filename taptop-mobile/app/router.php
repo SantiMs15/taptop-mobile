@@ -167,8 +167,20 @@ function page_products(): void
     if ($brand !== null) {
         $heading .= ' de ' . brand_label($brand);
     }
+    $lede = catalog_lede($category, $brand);
+    // SEO: el filtro de marca no es una página propia; su canonical es la misma vista sin marca.
+    $seoTitle = $brand !== null ? $heading
+        : ($category !== null ? category_label($category) . ' originales en Colombia' : 'Celulares y tecnología Apple y Samsung originales');
+    $crumbs = [['Inicio', '/'], ['Productos', '/productos']];
+    if ($category !== null) {
+        $crumbs[] = [category_label($category), url('/productos', ['categoria' => $category])];
+    }
     render_page('products', [
-        'meta' => page_meta('products', $heading, url('/productos', ['categoria' => $category, 'marca' => $brand]), ['color-swatches.js']),
+        'meta' => page_meta('products', $seoTitle, url('/productos', ['categoria' => $category, 'marca' => $brand]), ['color-swatches.js'], [
+            'description' => seo_clip($lede),
+            'canonical' => url('/productos', ['categoria' => $category]),
+            'jsonld' => [breadcrumb_jsonld($crumbs)],
+        ]),
         'heading' => $heading,
         'lede' => catalog_lede($category, $brand),
         'cards' => sold_out_last($cards),
@@ -206,9 +218,24 @@ function page_product(string $slug): void
     }
     $ogImage = $ogImage !== null ? absolute_url($ogImage) : null;
     $navCategory = nav_category_for($product['category']);
+    $description = product_seo_description($product);
+    $prices = product_cash_prices($product);
     render_page('product-detail', [
         'meta' => page_meta('product', $product['name'], url('/productos/' . $slug), ['color-swatches.js', 'slider.js', 'cart.js'], array_filter([
             'og_image' => $ogImage,
+            'title' => product_seo_title($product),
+            'description' => $description,
+            'og_type' => 'product',
+            'og_price' => $prices !== [] ? min($prices) : null,
+            'jsonld' => [
+                product_jsonld($product, $detail, $description),
+                breadcrumb_jsonld([
+                    ['Inicio', '/'],
+                    ['Productos', '/productos'],
+                    [category_label($navCategory), url('/productos', ['categoria' => $navCategory])],
+                    [(string) $product['name'], '/productos/' . $slug],
+                ]),
+            ],
         ])),
         'product' => $detail,
         'nav_category' => $navCategory,
@@ -219,7 +246,11 @@ function page_product(string $slug): void
 function page_contact(): void
 {
     render_page('contact', [
-        'meta' => page_meta('contact', 'Contáctanos', '/contacto'),
+        'meta' => page_meta('contact', 'Contáctanos', '/contacto', [], [
+            'description' => seo_clip('Escríbenos por WhatsApp al ' . config('whatsapp_display') . ', '
+                . mb_strtolower((string) config('support_days_label')) . ' de ' . rtrim((string) config('support_hours_label'), '.')
+                . '. Te asesoramos para comprar Apple y Samsung originales.'),
+        ]),
     ]);
 }
 
@@ -246,7 +277,9 @@ function page_policy(string $key): void
     require_once APP_PATH . '/content/policies.php';
     $policy = policy_pages()[$key];
     render_page('policy', [
-        'meta' => page_meta('policy', $policy['title'], '/' . $key),
+        'meta' => page_meta('policy', $policy['title'], '/' . $key, [], [
+            'description' => seo_clip((string) ($policy['intro'] ?? '')) ?: (string) config('seo_description'),
+        ]),
         'policy' => $policy,
         'policy_key' => $key,
     ]);
@@ -274,7 +307,11 @@ function page_sitemap(): void
 {
     $catalogFile = APP_PATH . '/data/products.json';
     $lastmod = date('Y-m-d', is_file($catalogFile) ? (int) filemtime($catalogFile) : time());
-    $paths = ['/', '/productos', '/contacto', '/garantia', '/terminos', '/privacidad'];
+    $paths = ['/', '/productos'];
+    foreach (nav_category_keys() as $key) {
+        $paths[] = url('/productos', ['categoria' => $key]);
+    }
+    array_push($paths, '/contacto', '/garantia', '/terminos', '/privacidad');
     foreach (product_repository()->all() as $product) {
         $paths[] = '/productos/' . $product['slug'];
     }
@@ -373,6 +410,116 @@ function llms_product_summary(array $product): string
         $parts[] = 'colores: ' . implode(', ', $colors);
     }
     return $parts === [] ? '' : ': ' . implode(' · ', $parts);
+}
+
+// ---------------------------------------------------------------------------
+// SEO: descripciones y datos estructurados
+// ---------------------------------------------------------------------------
+
+/** Recorta a ~$max caracteres sin cortar palabras (meta description). */
+function seo_clip(string $text, int $max = 160): string
+{
+    $text = trim(preg_replace('/\s+/u', ' ', $text) ?? $text);
+    if (mb_strlen($text) <= $max) {
+        return $text;
+    }
+    $cut = mb_substr($text, 0, $max - 1);
+    $space = mb_strrpos($cut, ' ');
+    return rtrim($space !== false ? mb_substr($cut, 0, $space) : $cut, ' ,.;:') . '…';
+}
+
+/** Precios por consignación de las variantes disponibles (o de todas, si está agotado). */
+function product_cash_prices(array $product): array
+{
+    $all = [];
+    $available = [];
+    foreach ((array) ($product['variants'] ?? []) as $variant) {
+        $price = (int) ($variant['price_cash'] ?? 0);
+        if ($price <= 0) {
+            continue;
+        }
+        $all[] = $price;
+        if (!empty($product['available']) && !empty($variant['available'])) {
+            $available[] = $price;
+        }
+    }
+    return $available !== [] ? $available : $all;
+}
+
+/** "Compra iPhone 18 Pro Max original en Colombia desde $5.400.000. Garantía de 1 año…" */
+function product_seo_description(array $product): string
+{
+    $prices = product_cash_prices($product);
+    $text = 'Compra ' . $product['name'] . ' original en Colombia';
+    if ($prices !== []) {
+        $text .= (count(array_unique($prices)) > 1 ? ' desde ' : ' por ') . format_price(min($prices));
+    }
+    $text .= '. Garantía de ' . warranty_label(warranty_months_for((string) $product['category']))
+        . ' con ' . config('business_name') . ' y envío a toda Colombia.';
+    $summary = ltrim(llms_product_summary($product), ': ');
+    if ($summary !== '' && mb_strlen($text . ' ' . $summary) <= 160) {
+        $text .= ' ' . mb_strtoupper(mb_substr($summary, 0, 1)) . mb_substr($summary, 1) . '.';
+    }
+    return seo_clip($text);
+}
+
+/** Título de la ficha: "{nombre} precio en Colombia | Taptop Mobile", sin la marca si queda muy largo. */
+function product_seo_title(array $product): string
+{
+    $title = $product['name'] . ' precio en Colombia';
+    $full = $title . ' | ' . config('business_name');
+    return mb_strlen($full) <= 65 ? $full : $title;
+}
+
+/** BreadcrumbList a partir de [[nombre, ruta], …]. */
+function breadcrumb_jsonld(array $items): array
+{
+    $list = [];
+    foreach (array_values($items) as $i => [$name, $path]) {
+        $list[] = ['@type' => 'ListItem', 'position' => $i + 1, 'name' => $name, 'item' => absolute_url($path)];
+    }
+    return ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $list];
+}
+
+/** Product + AggregateOffer (precio por consignación, COP) para resultados con precio. */
+function product_jsonld(array $product, array $detail, string $description): array
+{
+    $images = [];
+    foreach ((array) ($product['colors'] ?? []) as $color) {
+        if (!empty($color['image'])) {
+            $images[] = absolute_url((string) $color['image']);
+        }
+    }
+    if ($images === [] && !empty($detail['media']['image'])) {
+        $images[] = absolute_url((string) $detail['media']['image']);
+    }
+    $prices = product_cash_prices($product);
+    $data = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Product',
+        'name' => (string) $product['name'],
+        'description' => $description,
+        'brand' => ['@type' => 'Brand', 'name' => brand_label((string) $product['brand'])],
+        'category' => category_label(nav_category_for((string) $product['category'])),
+        'url' => absolute_url('/productos/' . $product['slug']),
+    ];
+    if ($images !== []) {
+        $data['image'] = array_values(array_unique($images));
+    }
+    if ($prices !== []) {
+        $data['offers'] = [
+            '@type' => 'AggregateOffer',
+            'priceCurrency' => 'COP',
+            'lowPrice' => min($prices),
+            'highPrice' => max($prices),
+            'offerCount' => count($prices),
+            'availability' => $detail['all_sold_out'] ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+            'itemCondition' => 'https://schema.org/NewCondition',
+            'url' => absolute_url('/productos/' . $product['slug']),
+            'seller' => ['@type' => 'Organization', 'name' => (string) config('business_name')],
+        ];
+    }
+    return $data;
 }
 
 // ---------------------------------------------------------------------------

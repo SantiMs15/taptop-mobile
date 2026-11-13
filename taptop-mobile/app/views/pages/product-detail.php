@@ -28,7 +28,7 @@ $ctaTrack = $product['track'] + [
   <section class="pdp<?= $product['all_sold_out'] ? ' is-sold-out' : '' ?>" aria-labelledby="pdp-title" data-product-card>
     <div class="pdp__media<?= $product['gallery'] !== [] ? ' has-gallery' : '' ?>" data-gallery-wrap>
       <div class="pdp__plinth plinth" data-media>
-        <?php partial('product-media', ['card' => $product, 'sizes' => '(max-width: 960px) 92vw, 640px']); ?>
+        <?php partial('product-media', ['card' => $product, 'sizes' => '(max-width: 960px) 92vw, 640px', 'eager' => true]); ?>
       </div>
       <?php partial('gallery-thumbs', ['product' => $product]); ?>
     </div>

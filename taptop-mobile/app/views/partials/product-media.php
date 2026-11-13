@@ -15,7 +15,7 @@ $media = $card['media'];
   ]) ?>
   <?php if ($media['image'] !== null): ?>
   <img class="media__img" src="<?= e($media['image']) ?>" width="1200" height="1500" sizes="<?= e($sizes) ?>"
-       alt="<?= e($media['alt']) ?>" loading="lazy" decoding="async" data-media-img>
+       alt="<?= e($media['alt']) ?>"<?= !empty($eager) ? ' fetchpriority="high"' : ' loading="lazy"' ?> decoding="async" data-media-img>
   <?php endif; ?>
 <?php else: ?>
   <p class="media__pending">Foto próximamente</p>
