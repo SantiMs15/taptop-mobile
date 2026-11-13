@@ -83,6 +83,8 @@ function dispatch(string $method, string $uri): void
         page_sitemap();
     } elseif ($path === '/llms.txt') {
         page_llms();
+    } elseif ($path === '/feeds/google-merchant.xml') {
+        page_merchant_feed();
     } else {
         page_not_found();
     }
@@ -206,7 +208,11 @@ function page_product(string $slug): void
         page_not_found();
         return;
     }
-    $detail = product_presenter()->detail($product, is_string($_GET['config'] ?? null) ? $_GET['config'] : null);
+    $detail = product_presenter()->detail(
+        $product,
+        is_string($_GET['config'] ?? null) ? $_GET['config'] : null,
+        is_string($_GET['color'] ?? null) && $_GET['color'] !== '' ? $_GET['color'] : null
+    );
     // Vista previa (WhatsApp, redes): foto del color pedido en ?color=, si no la del color inicial.
     $ogImage = $detail['media']['image'];
     $colorParam = is_string($_GET['color'] ?? null) ? $_GET['color'] : '';
@@ -219,7 +225,7 @@ function page_product(string $slug): void
     $ogImage = $ogImage !== null ? absolute_url($ogImage) : null;
     $navCategory = nav_category_for($product['category']);
     $description = product_seo_description($product);
-    $prices = product_cash_prices($product);
+    $prices = product_online_prices($product);
     render_page('product-detail', [
         'meta' => page_meta('product', $product['name'], url('/productos/' . $slug), ['color-swatches.js', 'slider.js', 'cart.js'], array_filter([
             'og_image' => $ogImage,
@@ -328,6 +334,99 @@ function page_sitemap(): void
 }
 
 /**
+ * /feeds/google-merchant.xml: feed RSS 2.0 de Google Merchant Center, un ítem por variante × color
+ * (lo mismo que se puede comprar). Precio = precio en línea, igual al schema de la ficha; el enlace
+ * abre la ficha en esa variante (?color= y ?config=). Ítems sin foto se omiten (Merchant los rechaza).
+ */
+function page_merchant_feed(): void
+{
+    $min = (int) config('free_shipping_min');
+    [$daysMin, $daysMax] = array_map('intval', (array) config('delivery_days', [2, 5]));
+    $items = [];
+    foreach (product_repository()->all() as $product) {
+        $detail = product_presenter()->detail($product);
+        $entries = $detail['client']['m'];
+        $skuCount = array_count_values(array_column($entries, 'sku'));
+        $images = [];
+        foreach ($product['colors'] ?? [] as $color) {
+            $images[(string) $color['name']] = $color['image'] ?? null;
+        }
+        $description = product_seo_description($product);
+        $type = category_label(nav_category_for((string) $product['category']));
+        foreach ($entries as $entry) {
+            $found = find_product_by_sku($entry['sku']);
+            $color = $entry['color'];
+            $image = $entry['img'] ?? ($color !== null ? ($images[$color] ?? null) : $detail['media']['image']);
+            if ($found === null || $image === null) {
+                continue;
+            }
+            $id = $entry['sku'] . ($color !== null && $skuCount[$entry['sku']] > 1 ? '-' . strtoupper(color_slug($color)) : '');
+            $item = [
+                'g:id' => $id,
+                'g:item_group_id' => $product['slug'],
+                'title' => product_variant_label($product, $color, $found['variant']),
+                'description' => $description,
+                'link' => product_share_url($product, $color, $entry['sku']),
+                'g:image_link' => absolute_url($image),
+                'g:availability' => $entry['available'] ? 'in_stock' : 'out_of_stock',
+                'g:price' => $entry['gw'] . ' COP',
+                'g:condition' => 'new',
+                'g:brand' => brand_label((string) $product['brand']),
+                'g:product_type' => $type,
+            ];
+            if ($color !== null) {
+                $item['g:color'] = $color;
+            }
+            $item['g:shipping'] = [
+                'g:country' => 'CO',
+                'g:price' => ($entry['gw'] >= $min ? 0 : (int) config('shipping_cost')) . ' COP',
+                'g:min_handling_time' => '0',
+                'g:max_handling_time' => '0',
+                'g:min_transit_time' => (string) $daysMin,
+                'g:max_transit_time' => (string) $daysMax,
+            ];
+            $items[] = $item;
+        }
+    }
+    header('Content-Type: application/xml; charset=UTF-8');
+    header('X-Robots-Tag: noindex');
+    $x = static fn (string $v): string => htmlspecialchars($v, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+    echo '<?xml version="1.0" encoding="UTF-8"?>' . "
+";
+    echo '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">' . "
+<channel>
+";
+    echo '<title>' . $x((string) config('business_name')) . '</title>' . "
+";
+    echo '<link>' . $x(absolute_url('/')) . '</link>' . "
+";
+    echo '<description>' . $x('Catálogo de ' . config('business_name')) . '</description>' . "
+";
+    foreach ($items as $item) {
+        echo "<item>
+";
+        foreach ($item as $tag => $value) {
+            if (is_array($value)) {
+                echo "  <{$tag}>";
+                foreach ($value as $sub => $subValue) {
+                    echo "<{$sub}>" . $x($subValue) . "</{$sub}>";
+                }
+                echo "</{$tag}>
+";
+            } else {
+                echo "  <{$tag}>" . $x((string) $value) . "</{$tag}>
+";
+            }
+        }
+        echo "</item>
+";
+    }
+    echo "</channel>
+</rss>
+";
+}
+
+/**
  * /llms.txt: resumen en Markdown para asistentes de IA (llmstxt.org). Se arma con el catálogo
  * y la config, así no se desactualiza. Sin precios: viven solo en la página de cada producto.
  */
@@ -429,12 +528,12 @@ function seo_clip(string $text, int $max = 160): string
 }
 
 /** Precios por consignación de las variantes disponibles (o de todas, si está agotado). */
-function product_cash_prices(array $product): array
+function product_online_prices(array $product): array
 {
     $all = [];
     $available = [];
     foreach ((array) ($product['variants'] ?? []) as $variant) {
-        $price = (int) ($variant['price_cash'] ?? 0);
+        $price = (int) ($variant['price_gateway'] ?? 0);
         if ($price <= 0) {
             continue;
         }
@@ -449,7 +548,7 @@ function product_cash_prices(array $product): array
 /** "Compra iPhone 18 Pro Max original en Colombia desde $5.400.000. Garantía de 1 año…" */
 function product_seo_description(array $product): string
 {
-    $prices = product_cash_prices($product);
+    $prices = product_online_prices($product);
     $text = 'Compra ' . $product['name'] . ' original en Colombia';
     if ($prices !== []) {
         $text .= (count(array_unique($prices)) > 1 ? ' desde ' : ' por ') . format_price(min($prices));
@@ -481,7 +580,7 @@ function breadcrumb_jsonld(array $items): array
     return ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $list];
 }
 
-/** Product + AggregateOffer (precio por consignación, COP) para resultados con precio. */
+/** Product + AggregateOffer (precio en línea, COP: el que cualquiera paga; igual al feed de Google Merchant). */
 function product_jsonld(array $product, array $detail, string $description): array
 {
     $images = [];
@@ -493,7 +592,7 @@ function product_jsonld(array $product, array $detail, string $description): arr
     if ($images === [] && !empty($detail['media']['image'])) {
         $images[] = absolute_url((string) $detail['media']['image']);
     }
-    $prices = product_cash_prices($product);
+    $prices = product_online_prices($product);
     $data = [
         '@context' => 'https://schema.org',
         '@type' => 'Product',

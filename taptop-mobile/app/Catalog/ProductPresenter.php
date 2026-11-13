@@ -32,12 +32,14 @@ final class ProductPresenter
 
     /**
      * Detalle: nunca se oculta (un enlace compartido no debe romperse), a lo sumo se marca agotado.
-     * $preferredSku (de ?config=) abre en esa configuración si existe y está disponible.
+     * $preferredSku (de ?config=) abre en esa variante (configuración o capacidad) si existe y está
+     * disponible; $preferredColor (slug de ?color=) en ese color. Así cada enlace del feed de Google
+     * Merchant abre con el precio y la foto de su variante.
      */
-    public function detail(array $product, ?string $preferredSku = null): array
+    public function detail(array $product, ?string $preferredSku = null, ?string $preferredColor = null): array
     {
-        $view = $this->build($product, 'detalle', 'detalle', $this->soldOutMode, $preferredSku)
-            ?? $this->build($product, 'detalle', 'detalle', 'mark', $preferredSku);
+        $view = $this->build($product, 'detalle', 'detalle', $this->soldOutMode, $preferredSku, $preferredColor)
+            ?? $this->build($product, 'detalle', 'detalle', 'mark', $preferredSku, $preferredColor);
         $view['slides'] = $this->slides($product, $view);
         // Fotos de los slides por color, para que color-swatches.js las cambie junto con la principal.
         $view['client']['slides'] = array_map(
@@ -58,14 +60,12 @@ final class ProductPresenter
         return $this->showPlaceholders;
     }
 
-    private function build(array $product, string $placement, string $page, string $mode, ?string $preferredSku): ?array
+    private function build(array $product, string $placement, string $page, string $mode, ?string $preferredSku, ?string $preferredColor = null): ?array
     {
         $kind = placeholder_kind($product);
         $hasColors = $product['colors'] !== [];
         $colors = $hasColors ? $product['colors'] : [null];
         $configurable = ($product['options'] ?? []) !== [];
-        // ?config= solo elige entre configuraciones; en otros productos se ignora.
-        $preferredSku = $configurable ? $preferredSku : null;
 
         // Con options (configurador) cada variante es su propia opción; si no, se agrupan por capacidad/nota.
         $options = [];
@@ -159,7 +159,11 @@ final class ProductPresenter
                 $entries[$key] = $entry;
                 $allPrices[$variant['price_cash']] = true;
                 // Inicial: el más barato entre los colores con foto propia; sin fotos, el más barato.
-                $candidate = [$variant['sku'] === $preferredSku ? 0 : 1, ($color['image'] ?? null) === null ? 1 : 0, $variant['price_cash'], $newCi, $newOi];
+                $candidate = [
+                    $variant['sku'] === $preferredSku ? 0 : 1,
+                    $preferredColor !== null && $colorName !== null && color_slug($colorName) !== $preferredColor ? 1 : 0,
+                    ($color['image'] ?? null) === null ? 1 : 0, $variant['price_cash'], $newCi, $newOi,
+                ];
                 if ($bestAny === null || $candidate < $bestAny) {
                     $bestAny = $candidate;
                 }
@@ -183,11 +187,11 @@ final class ProductPresenter
         }
 
         $allSoldOut = $best === null;
-        [, , , $selColor, $selOption] = $best ?? $bestAny;
+        [, , , , $selColor, $selOption] = $best ?? $bestAny;
         $selectedKey = ($hasColors ? (string) $selColor : '_') . '|' . $selOption;
         $current = $entries[$selectedKey];
         // "Desde" solo cuando lo mostrado es lo más barato: no si ?config= eligió otra configuración.
-        $from = count($allSoldOut ? $allPrices : $availablePrices) > 1 && $current['sku'] !== $preferredSku;
+        $from = count($allSoldOut ? $allPrices : $availablePrices) > 1 && $current['sku'] !== $preferredSku && $preferredColor === null;
 
         // Opciones disponibles para el color inicial (el JS las recalcula al cambiar de color).
         foreach ($viewOptions as &$option) {
