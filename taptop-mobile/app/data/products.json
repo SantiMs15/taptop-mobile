@@ -46,9 +46,9 @@
       "category": "iphone",
       "name": "iPhone 17 Pro Max",
       "colors": [
-        { "name": "Silver", "hex": "#DCDDDF", "image": null, "available": false },
-        { "name": "Cosmic Orange", "hex": "#E5793B", "image": "/assets/images/products/iphone-17-pro-max-naranja-cosmico.webp" },
-        { "name": "Deep Blue", "hex": "#2E3B57", "image": "/assets/images/products/iphone-17-pro-max-azul-profundo.webp" }
+        { "name": "Plata", "hex": "#DCDDDF", "image": null, "available": false },
+        { "name": "Naranja cósmico", "hex": "#E5793B", "image": "/assets/images/products/iphone-17-pro-max-naranja-cosmico.webp" },
+        { "name": "Azul profundo", "hex": "#2E3B57", "image": "/assets/images/products/iphone-17-pro-max-azul-profundo.webp" }
       ],
       "variants": [
         { "sku": "IP17PM-256-ESIM", "storage": "256 GB", "note": "eSIM", "color": null, "price_cash": 4250000, "price_gateway": 4390000 },
@@ -62,11 +62,11 @@
       "category": "iphone",
       "name": "iPhone 17",
       "colors": [
-        { "name": "Black", "hex": "#2E2F33", "image": null },
-        { "name": "White", "hex": "#F3F2EE", "image": null },
-        { "name": "Mist Blue", "hex": "#B8C9DB", "image": null },
-        { "name": "Sage", "hex": "#B9C4A7", "image": null },
-        { "name": "Lavender", "hex": "#CFC3E3", "image": null }
+        { "name": "Negro", "hex": "#2E2F33", "image": null },
+        { "name": "Blanco", "hex": "#F3F2EE", "image": null },
+        { "name": "Azul neblina", "hex": "#B8C9DB", "image": null },
+        { "name": "Salvia", "hex": "#B9C4A7", "image": null },
+        { "name": "Lavanda", "hex": "#CFC3E3", "image": null }
       ],
       "variants": [
         { "sku": "IP17-256", "storage": "256 GB", "color": null, "price_cash": 3320000, "price_gateway": 3429000 }
@@ -79,11 +79,11 @@
       "category": "iphone",
       "name": "iPhone 16",
       "colors": [
-        { "name": "Black", "hex": "#3B3D40", "image": null },
-        { "name": "White", "hex": "#F2F1EC", "image": null },
-        { "name": "Pink", "hex": "#F2B8CF", "image": null },
-        { "name": "Teal", "hex": "#A6CFC8", "image": null },
-        { "name": "Ultramarine", "hex": "#8C9BF2", "image": null }
+        { "name": "Negro", "hex": "#3B3D40", "image": null },
+        { "name": "Blanco", "hex": "#F2F1EC", "image": null },
+        { "name": "Rosa", "hex": "#F2B8CF", "image": null },
+        { "name": "Verde azulado", "hex": "#A6CFC8", "image": null },
+        { "name": "Ultramar", "hex": "#8C9BF2", "image": null }
       ],
       "variants": [
         { "sku": "IP16-128", "storage": "128 GB", "color": null, "price_cash": 2850000, "price_gateway": 2944000 }
@@ -96,10 +96,10 @@
       "category": "samsung",
       "name": "Samsung Galaxy Z Fold8 Ultra",
       "colors": [
-        { "name": "Cream", "hex": "#ECE4D3", "image": null },
-        { "name": "Graphite", "hex": "#3A3C40", "image": null },
-        { "name": "Violet Shadow", "hex": "#6C6789", "image": null },
-        { "name": "Green Shadow", "hex": "#5E6C62", "image": null }
+        { "name": "Crema", "hex": "#ECE4D3", "image": null },
+        { "name": "Grafito", "hex": "#3A3C40", "image": null },
+        { "name": "Violeta sombra", "hex": "#6C6789", "image": null },
+        { "name": "Verde sombra", "hex": "#5E6C62", "image": null }
       ],
       "variants": [
         { "sku": "SGZFOLD8U-512", "storage": "512 GB", "color": null, "price_cash": 6350000, "price_gateway": 6558000 }
@@ -112,10 +112,10 @@
       "category": "samsung",
       "name": "Samsung Galaxy Z Fold8",
       "colors": [
-        { "name": "Cream", "hex": "#ECE4D3", "image": null },
-        { "name": "Graphite", "hex": "#3A3C40", "image": null },
-        { "name": "Lavender", "hex": "#C9C0E2", "image": null },
-        { "name": "Pistachio", "hex": "#C8D7B3", "image": null }
+        { "name": "Crema", "hex": "#ECE4D3", "image": null },
+        { "name": "Grafito", "hex": "#3A3C40", "image": null },
+        { "name": "Lavanda", "hex": "#C9C0E2", "image": null },
+        { "name": "Pistacho", "hex": "#C8D7B3", "image": null }
       ],
       "variants": [
         { "sku": "SGZFOLD8-512", "storage": "512 GB", "color": null, "price_cash": 5350000, "price_gateway": 5526000 }
@@ -127,10 +127,10 @@
       "category": "samsung",
       "name": "Samsung Galaxy Z Flip8",
       "colors": [
-        { "name": "Cream", "hex": "#ECE4D3", "image": null },
-        { "name": "Graphite", "hex": "#3A3C40", "image": null },
-        { "name": "Pink", "hex": "#F0C4CC", "image": null },
-        { "name": "Mint", "hex": "#BFE2CF", "image": null }
+        { "name": "Crema", "hex": "#ECE4D3", "image": null },
+        { "name": "Grafito", "hex": "#3A3C40", "image": null },
+        { "name": "Rosa", "hex": "#F0C4CC", "image": null },
+        { "name": "Menta", "hex": "#BFE2CF", "image": null }
       ],
       "variants": [
         { "sku": "SGZFLIP8-512", "storage": "512 GB", "color": null, "price_cash": 3800000, "price_gateway": 3925000 }
@@ -142,12 +142,12 @@
       "category": "samsung",
       "name": "Samsung Galaxy S26 Ultra",
       "colors": [
-        { "name": "Cobalt Violet", "hex": "#4A3E86", "image": null },
-        { "name": "Sky Blue", "hex": "#A8C8E6", "image": null },
-        { "name": "Black", "hex": "#1F2023", "image": null },
-        { "name": "White", "hex": "#F1F1F0", "image": null },
-        { "name": "Silver Shadow", "hex": "#B7B9BC", "image": null },
-        { "name": "Pink Gold", "hex": "#E6C2B4", "image": null }
+        { "name": "Violeta cobalto", "hex": "#4A3E86", "image": null },
+        { "name": "Azul cielo", "hex": "#A8C8E6", "image": null },
+        { "name": "Negro", "hex": "#1F2023", "image": null },
+        { "name": "Blanco", "hex": "#F1F1F0", "image": null },
+        { "name": "Plata sombra", "hex": "#B7B9BC", "image": null },
+        { "name": "Dorado rosado", "hex": "#E6C2B4", "image": null }
       ],
       "variants": [
         { "sku": "SGS26U-256", "storage": "256 GB", "color": null, "price_cash": 3340000, "price_gateway": 3450000 },
@@ -161,12 +161,12 @@
       "category": "samsung",
       "name": "Samsung Galaxy S26+",
       "colors": [
-        { "name": "Cobalt Violet", "hex": "#4A3E86", "image": null },
-        { "name": "Sky Blue", "hex": "#A8C8E6", "image": null },
-        { "name": "Black", "hex": "#1F2023", "image": null },
-        { "name": "White", "hex": "#F1F1F0", "image": null },
-        { "name": "Silver Shadow", "hex": "#B7B9BC", "image": null },
-        { "name": "Pink Gold", "hex": "#E6C2B4", "image": null }
+        { "name": "Violeta cobalto", "hex": "#4A3E86", "image": null },
+        { "name": "Azul cielo", "hex": "#A8C8E6", "image": null },
+        { "name": "Negro", "hex": "#1F2023", "image": null },
+        { "name": "Blanco", "hex": "#F1F1F0", "image": null },
+        { "name": "Plata sombra", "hex": "#B7B9BC", "image": null },
+        { "name": "Dorado rosado", "hex": "#E6C2B4", "image": null }
       ],
       "variants": [
         { "sku": "SGS26P-512", "storage": "512 GB", "color": null, "price_cash": 3150000, "price_gateway": 3254000 }
@@ -178,10 +178,10 @@
       "category": "samsung",
       "name": "Samsung Galaxy S25 Ultra",
       "colors": [
-        { "name": "Titanium Silverblue", "hex": "#A3B1C2", "image": null },
-        { "name": "Titanium Black", "hex": "#2E3034", "image": null },
-        { "name": "Titanium Gray", "hex": "#8E8C88", "image": null },
-        { "name": "Titanium Whitesilver", "hex": "#E2E1DC", "image": null }
+        { "name": "Gris azulado titanio", "hex": "#A3B1C2", "image": null },
+        { "name": "Negro titanio", "hex": "#2E3034", "image": null },
+        { "name": "Gris titanio", "hex": "#8E8C88", "image": null },
+        { "name": "Blanco plata titanio", "hex": "#E2E1DC", "image": null }
       ],
       "variants": [
         { "sku": "SGS25U-256", "storage": "256 GB", "color": null, "price_cash": 2900000, "price_gateway": 2996000, "available": false },

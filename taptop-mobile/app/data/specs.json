@@ -49,9 +49,9 @@
     "iphone-17-pro-max": {
       "status": "borrador",
       "slides": [
-        { "title": "Chip A19 Pro", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-frontal.webp", "Deep Blue": "/assets/images/products/iphone-17-pro-max-azul-profundo-frontal.webp" } },
-        { "title": "Tres cámaras de 48 MP", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-camara.webp", "Deep Blue": "/assets/images/products/iphone-17-pro-max-azul-profundo-camara.webp" } },
-        { "title": "Hasta 39 h de video", "images": { "Cosmic Orange": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-trasera.webp", "Deep Blue": "/assets/images/products/iphone-17-pro-max-azul-profundo-trasera.webp" } }
+        { "title": "Chip A19 Pro", "images": { "Naranja cósmico": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-frontal.webp", "Azul profundo": "/assets/images/products/iphone-17-pro-max-azul-profundo-frontal.webp" } },
+        { "title": "Tres cámaras de 48 MP", "images": { "Naranja cósmico": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-camara.webp", "Azul profundo": "/assets/images/products/iphone-17-pro-max-azul-profundo-camara.webp" } },
+        { "title": "Hasta 39 h de video", "images": { "Naranja cósmico": "/assets/images/products/iphone-17-pro-max-naranja-cosmico-trasera.webp", "Azul profundo": "/assets/images/products/iphone-17-pro-max-azul-profundo-trasera.webp" } }
       ],
       "specs": [
         { "title": "Pantalla", "detail": "6,9\" OLED Super Retina XDR, 2868 × 1320, 460 ppi, 120 Hz, 1600 nits HDR, 3000 nits en exteriores" },
