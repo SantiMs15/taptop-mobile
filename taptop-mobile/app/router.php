@@ -517,9 +517,33 @@ function product_jsonld(array $product, array $detail, string $description): arr
             'itemCondition' => 'https://schema.org/NewCondition',
             'url' => absolute_url('/productos/' . $product['slug']),
             'seller' => ['@type' => 'Organization', 'name' => (string) config('business_name')],
+            'hasMerchantReturnPolicy' => merchant_return_policy_jsonld(),
         ];
+        // Envío gratis a toda Colombia solo si el producto más barato ya supera el mínimo;
+        // por debajo, el costo se confirma por WhatsApp y no se publica.
+        if (min($prices) >= (int) config('free_shipping_min')) {
+            $data['offers']['shippingDetails'] = [
+                '@type' => 'OfferShippingDetails',
+                'shippingRate' => ['@type' => 'MonetaryAmount', 'value' => 0, 'currency' => 'COP'],
+                'shippingDestination' => ['@type' => 'DefinedRegion', 'addressCountry' => 'CO'],
+            ];
+        }
     }
     return $data;
+}
+
+/** Retracto del art. 47 Ley 1480: días desde la entrega, devolución por envío (la paga el cliente). */
+function merchant_return_policy_jsonld(): array
+{
+    return [
+        '@type' => 'MerchantReturnPolicy',
+        'applicableCountry' => 'CO',
+        'returnPolicyCountry' => 'CO',
+        'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        'merchantReturnDays' => (int) config('retracto_days', 5),
+        'returnMethod' => 'https://schema.org/ReturnByMail',
+        'merchantReturnLink' => absolute_url('/terminos#retracto'),
+    ];
 }
 
 // ---------------------------------------------------------------------------

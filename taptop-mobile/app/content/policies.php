@@ -23,6 +23,8 @@ function policy_pages(): array
     $warrantySummary = warranty_summary();
     $exchangeDays = config_text('warranty_exchange_days');
     $shippingPayer = config_text('warranty_shipping_payer');
+    $retractoDays = (int) config('retracto_days', 5);
+    $retractoRefundDays = (int) config('retracto_refund_days', 30);
 
     $seller = ['dl' => [
         'Razón social' => $legalName,
@@ -125,7 +127,14 @@ function policy_pages(): array
                     ['p' => "Todos los productos tienen garantía directa con {$business}: {$warrantySummary}. Si presenta un fallo, eliges cambio o reembolso. Las condiciones están en la página Garantía, cambios, reembolsos y envíos."],
                 ]],
                 ['id' => 'retracto', 'heading' => 'Derecho de retracto', 'blocks' => [
-                    ['p' => 'Como la compra se hace a distancia, tienes derecho de retracto en los términos del artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor). Para ejercerlo, escríbenos por WhatsApp dentro del plazo que fija la ley.'],
+                    ['p' => 'Como la compra se hace a distancia, tienes derecho de retracto según el artículo 47 de la Ley 1480 de 2011 (Estatuto del Consumidor): puedes devolver el producto aunque no tenga ninguna falla.'],
+                    ['ul' => [
+                        "Plazo: {$retractoDays} días hábiles contados desde la entrega del producto.",
+                        "Para ejercerlo, escríbenos por WhatsApp al {$whatsapp} dentro de ese plazo con tu nombre y el número de tu pedido.",
+                        'Devuelves el producto por los mismos medios y en las mismas condiciones en que lo recibiste: sin uso, completo y con su empaque y accesorios.',
+                        'El costo del envío de la devolución lo pagas tú, como lo establece la ley.',
+                        "Te devolvemos todo el dinero que pagaste, sin descuentos ni retenciones, dentro de los {$retractoRefundDays} días calendario siguientes a la fecha en que ejerciste el derecho, por el mismo medio con el que pagaste.",
+                    ]],
                 ]],
                 ['id' => 'ley', 'heading' => 'Ley aplicable', 'blocks' => [
                     ['p' => 'Estos términos se rigen por las leyes de Colombia. Si tienes un reclamo, escríbenos primero por WhatsApp; también puedes acudir a la Superintendencia de Industria y Comercio (SIC).'],
@@ -190,7 +199,7 @@ function policy_pages(): array
                     ]],
                 ]],
                 ['id' => 'retracto', 'heading' => 'Derecho de retracto', 'blocks' => [
-                    ['p' => 'Si compraste y cambiaste de opinión, revisa el derecho de retracto en Términos y condiciones.'],
+                    ['p' => "Si compraste y cambiaste de opinión, puedes devolver el producto dentro de los {$retractoDays} días hábiles siguientes a la entrega (artículo 47 de la Ley 1480 de 2011). Debe estar sin uso, completo y con su empaque. El envío de la devolución lo pagas tú, y te devolvemos todo el dinero dentro de los {$retractoRefundDays} días calendario siguientes. El detalle está en Términos y condiciones."],
                 ]],
             ],
         ],

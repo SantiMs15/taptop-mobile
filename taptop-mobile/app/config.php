@@ -62,7 +62,11 @@ return [
     'warranty_accessory_months' => 3,
     'warranty_accessory_categories' => ['airpods', 'accesorios', 'adaptadores'],
     'warranty_exchange_days' => '30', // plazo máximo del cambio o del reembolso, en días hábiles
-    'warranty_shipping_payer' => 'si confirmamos la falla, Taptop Mobile paga el envío de ida y vuelta; si no hay falla, lo paga el cliente', // quién asume el envío del cambio o la devolución
+    // Retracto (art. 47 Ley 1480 de 2011): 5 días hábiles desde la entrega; el cliente paga el envío de vuelta;
+    // el reembolso se hace dentro de 30 días calendario. Se publica en Términos, Garantía y el schema de la ficha.
+    'retracto_days' => 5,
+    'retracto_refund_days' => 30,
+    'warranty_shipping_payer' =>'si confirmamos la falla, Taptop Mobile paga el envío de ida y vuelta; si no hay falla, lo paga el cliente', // quién asume el envío del cambio o la devolución
 
     // --- Pagos (Nivel 1: enlace de pago enviado por WhatsApp; sin código de pagos) ---
     // Parámetros de la comisión, solo para el botón "sugerir" del panel (Paso 2).
