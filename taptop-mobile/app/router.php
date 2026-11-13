@@ -2,7 +2,7 @@
 /**
  * Enrutador: resuelve la ruta y prepara los datos de cada vista.
  * Rutas: /, /productos, /productos/{slug}, /contacto, /garantia, /terminos, /privacidad,
- * /robots.txt y /sitemap.xml.
+ * /robots.txt, /sitemap.xml y /llms.txt.
  * SPIKE Wompi: /pago/envio, /pago/resultado y /webhooks/wompi (ver helpers/payments.php). Todo lo demás responde 404 real.
  */
 
@@ -81,6 +81,8 @@ function dispatch(string $method, string $uri): void
         page_robots();
     } elseif ($path === '/sitemap.xml') {
         page_sitemap();
+    } elseif ($path === '/llms.txt') {
+        page_llms();
     } else {
         page_not_found();
     }
@@ -286,6 +288,91 @@ function page_sitemap(): void
         echo '  <url><loc>' . e(absolute_url($path)) . '</loc><lastmod>' . $lastmod . '</lastmod></url>' . "\n";
     }
     echo '</urlset>' . "\n";
+}
+
+/**
+ * /llms.txt: resumen en Markdown para asistentes de IA (llmstxt.org). Se arma con el catálogo
+ * y la config, así no se desactualiza. Sin precios: viven solo en la página de cada producto.
+ */
+function page_llms(): void
+{
+    $brand = (string) config('business_name');
+    $lines = [
+        '# ' . $brand,
+        '',
+        '> Tienda en línea de Colombia que vende celulares y tecnología Apple y Samsung 100 % originales: '
+            . 'iPhone, Galaxy, Mac, iPad, Apple Watch, AirPods y accesorios. Envío a toda Colombia y garantía directa de '
+            . $brand . '.',
+        '',
+        '- Pagos: cada producto tiene dos precios. El más bajo es por consignación, depósito en efectivo o transferencia; '
+            . 'el otro es con tarjeta de crédito o débito, PSE o Nequi a través de la pasarela de pago.',
+        '- Envío gratis desde ' . format_price((int) config('free_shipping_min', 0)) . '.',
+        '- Garantía ' . $brand . ': ' . warranty_summary() . '.',
+        '- Atención por WhatsApp ' . config('whatsapp_display') . ': ' . mb_strtolower((string) config('support_days_label'))
+            . ', ' . config('support_hours_label') . ' (' . config('support_timezone_label') . ').',
+        '- Precios en pesos colombianos (COP), siempre actualizados en la página de cada producto.',
+        '',
+        '## Categorías',
+        '',
+        '- [Todos los productos](' . absolute_url('/productos') . ')',
+    ];
+    foreach (nav_category_keys() as $key) {
+        $lines[] = '- [' . category_label($key) . '](' . absolute_url(url('/productos', ['categoria' => $key])) . '): '
+            . (string) config('categories.' . $key . '.lede');
+    }
+    foreach (nav_category_keys() as $key) {
+        $products = product_repository()->filter(category_data_keys($key));
+        if ($products === []) {
+            continue;
+        }
+        $lines[] = '';
+        $lines[] = '## ' . category_label($key);
+        $lines[] = '';
+        foreach ($products as $product) {
+            $lines[] = '- [' . $product['name'] . '](' . absolute_url('/productos/' . $product['slug']) . ')'
+                . llms_product_summary($product);
+        }
+    }
+    $lines[] = '';
+    $lines[] = '## Políticas y contacto';
+    $lines[] = '';
+    $lines[] = '- [Garantía, cambios y devoluciones](' . absolute_url('/garantia') . ')';
+    $lines[] = '- [Términos y condiciones](' . absolute_url('/terminos') . ')';
+    $lines[] = '- [Privacidad y datos personales](' . absolute_url('/privacidad') . ')';
+    $lines[] = '- [Contacto](' . absolute_url('/contacto') . ')';
+
+    header('Content-Type: text/plain; charset=UTF-8');
+    if (is_noindex()) {
+        header('X-Robots-Tag: noindex, nofollow');
+    }
+    echo implode("\n", $lines) . "\n";
+}
+
+/** ": 256 GB, 512 GB · colores: Negro, Plata" a partir de las variantes y colores del producto. */
+function llms_product_summary(array $product): string
+{
+    $storage = [];
+    foreach ((array) ($product['variants'] ?? []) as $variant) {
+        $value = $variant['storage'] ?? null;
+        if (is_string($value) && $value !== '' && !in_array($value, $storage, true)) {
+            $storage[] = $value;
+        }
+    }
+    $colors = [];
+    foreach ((array) ($product['colors'] ?? []) as $color) {
+        $name = is_array($color) ? ($color['name'] ?? null) : null;
+        if (is_string($name) && $name !== '' && !in_array($name, $colors, true)) {
+            $colors[] = $name;
+        }
+    }
+    $parts = [];
+    if ($storage !== []) {
+        $parts[] = implode(', ', $storage);
+    }
+    if ($colors !== []) {
+        $parts[] = 'colores: ' . implode(', ', $colors);
+    }
+    return $parts === [] ? '' : ': ' . implode(' · ', $parts);
 }
 
 // ---------------------------------------------------------------------------
