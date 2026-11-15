@@ -115,16 +115,41 @@
     });
   }
 
-  var script = document.createElement('script');
-  script.src = vendor;
-  script.async = true;
-  script.onload = function () {
-    var lib = window.TTPaperShaders;
-    var pixel = new Image();
-    pixel.onload = function () {
-      start(lib, pixel);
+  function load() {
+    var script = document.createElement('script');
+    script.src = vendor;
+    script.async = true;
+    script.onload = function () {
+      var lib = window.TTPaperShaders;
+      var pixel = new Image();
+      pixel.onload = function () {
+        start(lib, pixel);
+      };
+      pixel.src = lib.emptyPixel;
     };
-    pixel.src = lib.emptyPixel;
-  };
-  document.head.appendChild(script);
+    document.head.appendChild(script);
+  }
+
+  // Compilar el shader bloquea el hilo principal (segundos en celulares sin GPU fuerte): se espera
+  // a la primera interacción y a un momento libre, para no frenar el primer pintado (LCP/TBT).
+  // Hasta entonces se ve el borde en CSS de main.css.
+  var EVENTS = ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'wheel', 'keydown'];
+  var started = false;
+  function wake() {
+    if (started) {
+      return;
+    }
+    started = true;
+    EVENTS.forEach(function (name) {
+      window.removeEventListener(name, wake, { passive: true });
+    });
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(load, { timeout: 1500 });
+    } else {
+      window.setTimeout(load, 200);
+    }
+  }
+  EVENTS.forEach(function (name) {
+    window.addEventListener(name, wake, { passive: true });
+  });
 })();

@@ -127,127 +127,143 @@ void main() {
 }
 `;
 
-  var gl = canvas.getContext('webgl', { alpha: false, antialias: false });
-  if (!gl) {
-    return;
-  }
-
-  function compile(type, source) {
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
-  }
-
-  var vertex = compile(gl.VERTEX_SHADER, VERTEX);
-  var fragment = compile(gl.FRAGMENT_SHADER, FRAGMENT);
-  if (!vertex || !fragment) {
-    return;
-  }
-  var program = gl.createProgram();
-  gl.attachShader(program, vertex);
-  gl.attachShader(program, fragment);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    return;
-  }
-  gl.useProgram(program);
-
-  var position = gl.getAttribLocation(program, 'position');
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(position);
-  gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-  var uRes = gl.getUniformLocation(program, 'u_res');
-  var uPointer = gl.getUniformLocation(program, 'u_pointer');
-  var uTime = gl.getUniformLocation(program, 'u_time');
-
-  var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var STILL_TIME = 7.25;
-  var pointer = { x: 0.5, y: 0.5 };
-  var target = { x: 0.5, y: 0.5 };
-  var raf = 0;
-  var last = 0;
-  var elapsed = 0;
-  var visible = false;
-  var lost = false;
-
-  function draw() {
-    pointer.x += (target.x - pointer.x) * 0.035;
-    pointer.y += (target.y - pointer.y) * 0.035;
-    gl.uniform2f(uPointer, pointer.x, pointer.y);
-    gl.uniform1f(uTime, calm.matches ? STILL_TIME : elapsed);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-  }
-
-  function resize() {
-    var box = panel.getBoundingClientRect();
-    var scale = window.matchMedia('(pointer: coarse)').matches ? 0.5 : 0.75;
-    canvas.width = Math.max(1, Math.floor(box.width * scale));
-    canvas.height = Math.max(1, Math.floor(box.height * scale));
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-    if (!lost) {
-      draw();
-    }
-  }
-
-  function frame(now) {
-    elapsed += Math.min(now - last, 50) / 1000;
-    last = now;
-    draw();
-    raf = window.requestAnimationFrame(frame);
-  }
-
-  function sync() {
-    var run = visible && !document.hidden && !calm.matches && !lost;
-    if (run && !raf) {
-      last = window.performance.now();
-      raf = window.requestAnimationFrame(frame);
-    } else if (!run && raf) {
-      window.cancelAnimationFrame(raf);
-      raf = 0;
-    }
-  }
-
-  resize();
-  canvas.classList.add('is-ready');
-
-  panel.addEventListener('pointermove', function (event) {
-    if (calm.matches) {
+  // Compilar el shader bloquea el hilo principal (segundos en celulares sin GPU fuerte): solo se
+  // arranca cuando el panel está por entrar en pantalla, así no frena el primer pintado (LCP/TBT).
+  function init() {
+    var gl = canvas.getContext('webgl', { alpha: false, antialias: false });
+    if (!gl) {
       return;
     }
-    var box = panel.getBoundingClientRect();
-    target.x = Math.min(1, Math.max(0, (event.clientX - box.left) / box.width));
-    target.y = Math.min(1, Math.max(0, 1 - (event.clientY - box.top) / box.height));
-  }, { passive: true });
-  panel.addEventListener('pointerleave', function () {
-    target.x = 0.5;
-    target.y = 0.5;
-  });
 
-  if ('ResizeObserver' in window) {
-    new ResizeObserver(resize).observe(panel);
-  }
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      visible = entries[0].isIntersecting;
+    function compile(type, source) {
+      var shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+    }
+
+    var vertex = compile(gl.VERTEX_SHADER, VERTEX);
+    var fragment = compile(gl.FRAGMENT_SHADER, FRAGMENT);
+    if (!vertex || !fragment) {
+      return;
+    }
+    var program = gl.createProgram();
+    gl.attachShader(program, vertex);
+    gl.attachShader(program, fragment);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      return;
+    }
+    gl.useProgram(program);
+
+    var position = gl.getAttribLocation(program, 'position');
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+    var uRes = gl.getUniformLocation(program, 'u_res');
+    var uPointer = gl.getUniformLocation(program, 'u_pointer');
+    var uTime = gl.getUniformLocation(program, 'u_time');
+
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var STILL_TIME = 7.25;
+    var pointer = { x: 0.5, y: 0.5 };
+    var target = { x: 0.5, y: 0.5 };
+    var raf = 0;
+    var last = 0;
+    var elapsed = 0;
+    var visible = false;
+    var lost = false;
+
+    function draw() {
+      pointer.x += (target.x - pointer.x) * 0.035;
+      pointer.y += (target.y - pointer.y) * 0.035;
+      gl.uniform2f(uPointer, pointer.x, pointer.y);
+      gl.uniform1f(uTime, calm.matches ? STILL_TIME : elapsed);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    function resize() {
+      var box = panel.getBoundingClientRect();
+      var scale = window.matchMedia('(pointer: coarse)').matches ? 0.5 : 0.75;
+      canvas.width = Math.max(1, Math.floor(box.width * scale));
+      canvas.height = Math.max(1, Math.floor(box.height * scale));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      if (!lost) {
+        draw();
+      }
+    }
+
+    function frame(now) {
+      elapsed += Math.min(now - last, 50) / 1000;
+      last = now;
+      draw();
+      raf = window.requestAnimationFrame(frame);
+    }
+
+    function sync() {
+      var run = visible && !document.hidden && !calm.matches && !lost;
+      if (run && !raf) {
+        last = window.performance.now();
+        raf = window.requestAnimationFrame(frame);
+      } else if (!run && raf) {
+        window.cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    }
+
+    resize();
+    canvas.classList.add('is-ready');
+
+    panel.addEventListener('pointermove', function (event) {
+      if (calm.matches) {
+        return;
+      }
+      var box = panel.getBoundingClientRect();
+      target.x = Math.min(1, Math.max(0, (event.clientX - box.left) / box.width));
+      target.y = Math.min(1, Math.max(0, 1 - (event.clientY - box.top) / box.height));
+    }, { passive: true });
+    panel.addEventListener('pointerleave', function () {
+      target.x = 0.5;
+      target.y = 0.5;
+    });
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(resize).observe(panel);
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        sync();
+      }).observe(panel);
+    } else {
+      visible = true;
       sync();
-    }).observe(panel);
-  } else {
-    visible = true;
-    sync();
+    }
+    document.addEventListener('visibilitychange', sync);
+    calm.addEventListener('change', function () {
+      sync();
+      draw();
+    });
+    canvas.addEventListener('webglcontextlost', function (event) {
+      event.preventDefault();
+      lost = true;
+      sync();
+      canvas.classList.remove('is-ready');
+    });
   }
-  document.addEventListener('visibilitychange', sync);
-  calm.addEventListener('change', function () {
-    sync();
-    draw();
-  });
-  canvas.addEventListener('webglcontextlost', function (event) {
-    event.preventDefault();
-    lost = true;
-    sync();
-    canvas.classList.remove('is-ready');
-  });
+
+  if ('IntersectionObserver' in window) {
+    var waiting = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        waiting.disconnect();
+        init();
+      }
+    }, { rootMargin: '300px 0px' });
+    waiting.observe(panel);
+  } else {
+    init();
+  }
 })();

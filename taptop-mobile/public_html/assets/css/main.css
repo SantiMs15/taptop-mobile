@@ -1643,7 +1643,7 @@ mark.todo {
   opacity: 0;
   filter: blur(12px);
   transform: translateY(10px);
-  animation: tt-words-failsafe 0s linear 5s forwards;
+  animation: tt-words-failsafe 0s linear 4s forwards;
 }
 
 @keyframes tt-words-failsafe {
@@ -1677,7 +1677,7 @@ mark.todo {
   display: grid;
   place-items: center;
   background: #F6F6F7;
-  animation: tt-intro-failsafe 0s linear 5s forwards;
+  animation: tt-intro-failsafe 0s linear 4s forwards;
   will-change: opacity, transform, filter;
   transition: opacity 700ms var(--ease-out), filter 700ms var(--ease-out), transform 700ms var(--ease-out);
 }
@@ -1715,7 +1715,7 @@ mark.todo {
 }
 
 .intro-on .faceid__glyph {
-  animation: tt-faceid-out 220ms ease-in 2500ms forwards;
+  animation: tt-faceid-out 200ms ease-in 1800ms forwards;
 }
 
 .intro-on .faceid__bracket {
@@ -1739,8 +1739,8 @@ mark.todo {
 
 .intro-on .faceid__scan {
   animation:
-    tt-faceid-show 1ms linear 700ms forwards,
-    tt-faceid-scan 900ms cubic-bezier(0.645, 0.045, 0.355, 1) 700ms 2 alternate both;
+    tt-faceid-show 1ms linear 600ms forwards,
+    tt-faceid-scan 600ms cubic-bezier(0.645, 0.045, 0.355, 1) 600ms 2 alternate both;
 }
 
 .faceid .faceid__check {
@@ -1749,7 +1749,7 @@ mark.todo {
 }
 
 .intro-on .faceid__check {
-  animation: tt-faceid-check 400ms cubic-bezier(0.34, 1.4, 0.64, 1) 2720ms forwards;
+  animation: tt-faceid-check 400ms cubic-bezier(0.34, 1.4, 0.64, 1) 2000ms forwards;
 }
 
 @keyframes tt-faceid-draw {

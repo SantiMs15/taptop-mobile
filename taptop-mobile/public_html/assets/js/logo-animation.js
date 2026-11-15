@@ -3,7 +3,7 @@
  *
  * Intro: escaneo estilo Face ID, animado en CSS, solo en la primera página de la sesión y solo si
  * es el Inicio (head.php ya decidió y puso <html class="intro-on">). Se cierra solo, con un clic o
- * con Escape; si este archivo no carga, el CSS lo oculta solo a los 5 s.
+ * con Escape; si este archivo no carga, el CSS lo oculta solo a los 4 s.
  *
  * Hero 3D: <model-viewer> autoalojado, cargado después del contenido, en un momento
  * ocioso y solo con el escenario a la vista. Plan B: imagen fija con movimiento reducido,
@@ -27,7 +27,7 @@
     }
 
     var closed = false;
-    var timer = setTimeout(close, 3500);
+    var timer = setTimeout(close, 2600);
 
     function close() {
       if (closed) {
