@@ -1,6 +1,6 @@
 <?php
 /**
- * Header fijo: logo 3D, Inicio · Productos · Contáctanos y botón de WhatsApp.
+ * Header fijo: logo 3D, Inicio · Productos · Tips · Contáctanos y botón de WhatsApp.
  * En el Inicio flota transparente sobre el escenario y se vuelve vidrio al hacer scroll.
  * @var bool $overlay
  * @var string $page
@@ -10,6 +10,7 @@ $cartLabel = 'Carrito, ' . $cartCount . ($cartCount === 1 ? ' producto' : ' prod
 $links = [
     ['label' => 'Inicio', 'href' => '/', 'current' => $page === 'home'],
     ['label' => 'Productos', 'href' => '/productos', 'current' => in_array($page, ['products', 'product'], true)],
+    ['label' => 'Tips', 'href' => '/tips', 'current' => $page === 'tips'],
     ['label' => 'Contáctanos', 'href' => '/contacto', 'current' => $page === 'contact'],
 ];
 ?>

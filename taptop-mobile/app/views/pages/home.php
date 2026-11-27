@@ -4,6 +4,7 @@
  * @var array $hero
  * @var list<array> $featured
  * @var list<array> $categories
+ * @var list<array> $tips
  */
 $business = (string) config('business_name');
 $freeShipping = format_price((int) config('free_shipping_min'));
@@ -48,6 +49,34 @@ $indexCategories = array_filter($categories, static fn (array $item): bool => $i
           <?php partial('product-card', ['card' => $card]); ?>
         <?php endforeach; ?>
       </div>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<?php if ($tips !== []): ?>
+<section class="section tips" aria-labelledby="tips-title">
+  <div class="container tips__inner">
+    <header class="tips__head">
+      <p class="tips__eyebrow">Tips</p>
+      <h2 class="section-title tips__title" id="tips-title">Antes de comprar tu celular</h2>
+      <p class="tips__lede">Capacidad, batería, pantalla y cómo saber si es original.</p>
+    </header>
+    <ol class="tips__grid">
+      <?php foreach ($tips as $i => $tip): ?>
+      <li>
+        <a class="tips__card" href="<?= e($tip['href']) ?>">
+          <span class="tips__num" aria-hidden="true"><?= e(str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT)) ?></span>
+          <div class="tips__body">
+            <h3 class="tips__card-title"><?= e($tip['title']) ?></h3>
+            <p class="tips__card-text"><?= e($tip['text']) ?></p>
+          </div>
+        </a>
+      </li>
+      <?php endforeach; ?>
+    </ol>
+    <div class="tips__cta">
+      <a class="btn btn--metal" href="/tips">Ver todos los tips</a>
     </div>
   </div>
 </section>

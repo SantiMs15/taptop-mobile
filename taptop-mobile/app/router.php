@@ -69,6 +69,8 @@ function dispatch(string $method, string $uri): void
         page_product($match[1]);
     } elseif ($path === '/carrito') {
         page_cart();
+    } elseif ($path === '/tips') {
+        page_tips();
     } elseif ($path === '/contacto') {
         page_contact();
     } elseif (in_array(ltrim($path, '/'), POLICY_PAGES, true)) {
@@ -128,6 +130,7 @@ function page_meta(string $id, ?string $title, string $path, array $scripts = []
 
 function page_home(): void
 {
+    require_once APP_PATH . '/content/tips.php';
     $presenter = product_presenter();
     $featured = [];
     foreach (product_repository()->findMany((array) config('home_featured', [])) as $product) {
@@ -142,6 +145,7 @@ function page_home(): void
         'hero' => load_hero_slides(),
         'featured' => array_slice($featured, 0, (int) config('home_featured_limit', 8)),
         'categories' => category_nav(null, null),
+        'tips' => home_tips(),
     ]);
 }
 
@@ -246,6 +250,14 @@ function page_product(string $slug): void
         'product' => $detail,
         'nav_category' => $navCategory,
         'changed' => isset($_GET['cambio']),
+    ]);
+}
+
+/** /tips: por ahora vacía y fuera de Google (noindex, sin sitemap) hasta que tenga artículos. */
+function page_tips(): void
+{
+    render_page('tips', [
+        'meta' => page_meta('tips', 'Tips', '/tips', [], ['noindex' => true]),
     ]);
 }
 
